@@ -49,7 +49,7 @@ h2 {
 
 .form-control {
   /* input field */
-  width: 900px !important; 
+  width: 800px !important; 
   border-radius: 5px; 
   border: 1px solid #ccc; 
 }
@@ -91,6 +91,29 @@ h2 {
 
 .thumbnail-link:hover {
   text-decoration: underline; 
+}
+
+/* Carousel base class */
+.carousel {
+  height: 500px;
+  margin-bottom: 60px;
+}
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+  z-index: 10;
+}
+
+/* Declare heights because of positioning of img element */
+.carousel .item {
+  height: 500px;
+  background-color: #777;
+}
+.carousel-inner > .item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 500px;
 }
 
 .jumbotron {
