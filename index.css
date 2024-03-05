@@ -1,0 +1,99 @@
+body {
+  min-height: 2000px;
+  padding-top: 70px;
+}
+/*nav bar*/
+.navbar-brand {
+  background-image: url('./images/logo.png');
+  background-size: contain; /* Adjust the background image size */
+  background-repeat: no-repeat; /* Ensure the background image does not repeat */
+  width: 110px; /* Set the width of the icon */
+  height: 110px; /* Set the height of the icon */
+  padding: 5px; /* Optional padding around the icon */
+}
+
+.navbar-default {
+    background-image: url('./images/fantasy-scene.jpg');
+    background-size: cover; /* Adjust the background image size */
+    background-repeat: no-repeat; /* Ensure the background image does not repeat */
+    background-position: center; /* Center the background image */
+    border-color: transparent; /* Optionally, you may set border color to transparent */
+    height:120px;
+}
+
+.navbar-default .navbar-nav > li > a {
+  margin-top:20px;
+  color: #fff;
+  font-size: 20px;
+}
+.navbar-default .navbar-nav > li > a:hover {
+  color: rgb(255, 166, 0); 
+  font-style: italic;
+  font-size: 22px;
+}
+
+.search-title{
+  /*search bar */
+  margin-top: 80px;
+}
+h2 {
+  /*title above search bar*/
+  color: #333;
+  font-family: 'Lucida Handwriting';
+}
+
+.form-inline {
+  /*search bar container */
+  text-align: center;
+}
+
+.form-control {
+  /* input field */
+  width: 900px !important; 
+  border-radius: 5px; 
+  border: 1px solid #ccc; 
+}
+
+.btn-primary {
+  /* search button */
+  border-radius: 5px; 
+  background-color: #654dee; 
+  color: #fff; 
+  border: none; 
+}
+
+.btn-primary:hover {
+  /* hover for the search button */
+  background-color: #4b39b1; 
+}
+
+/*featured items*/
+.row {
+  margin-top: 30px;
+}
+
+.thumbnail {
+  border: none;
+  background-color: transparent;
+}
+
+.thumbnail img {
+  width: 100%;
+}
+
+.caption {
+  text-align: center;
+}
+
+.thumbnail-link {
+  text-decoration: none; /* Remove underline for the link */
+}
+
+.thumbnail-link:hover {
+  text-decoration: underline; 
+}
+
+.jumbotron {
+  background-color: #555;
+  color: #fff; /* Lighter text color for better contrast */
+}
