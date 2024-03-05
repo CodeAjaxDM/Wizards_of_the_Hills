@@ -159,10 +159,11 @@ h2 {
   font-size: 20px;
 }
 
-.footer-link{
+.footer-column a{
   color: #fff;
+  display: block; 
 }
 
-.footer-link:hover{
+.footer-column a:hover{
   color: rgb(255, 166, 0);
 }
