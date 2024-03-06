@@ -12,24 +12,10 @@
 
   <title>Wizards of the Hills</title>
 
-  <!-- Bootstrap core CSS -->
   <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
 
-  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-  <!-- <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">-->
-
-  <!-- Custom styles for this template -->
   <link href="index.css" rel="stylesheet">
 
-  <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-  <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-  <!--<script src="../../assets/js/ie-emulation-modes-warning.js"></script>-->
-
-  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-  <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
 </head>
 
 <body>
@@ -44,17 +30,17 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#"></a>
+        <a class="navbar-brand" href="index.html"></a>
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li><a href="#about">About</a></li>
+          <li><a href="index.html">Home</a></li>
           <li><a href="#contact">Contact</a></li>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
               aria-expanded="false">Browse <span class="caret"></span></a>
             <ul class="dropdown-menu">
-              <li><a href="#">Rule books </a></li>
+              <li><a href="ruleBooks.html">Rule books </a></li>
               <li><a href="#">Magical items </a></li>
               <li><a href="#">Character options </a></li>
               <li><a href="#">Prewritten adventures </a></li>
@@ -66,7 +52,7 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li><a href="../navbar/">Login</a></li>
-          <li><a href="../navbar-static-top/">My Library</a></li>
+          <li><a href="userPage.html">Account</a></li>
           <li><a href="./going-somewhere">Wishlist </a></li>
           <li><a href="./going-somewhere">My Cart </a></li>
         </ul>
@@ -75,20 +61,20 @@
   </nav>
 
   <div class="container">
-  
+
     <!-- Search bar -->
-    <h2 class="search-title mb-3">Find your next great adventure...</h2>
     <form class="form-inline mb-3">
       <div class="form-group">
-        <input type="text" class="form-control" id="searchQuery" placeholder="Enter your search query">
+        <input type="text" class="form-control" id="searchQuery" placeholder="Find your next great adventure...">
       </div>
       <button type="submit" class="btn btn-primary">Search</button>
     </form>
-  
-    <!--Featured categories-->
+
+    <!--Featured items-->
+    <h2>Featured</h2>
     <div class="row">
       <div class="col-sm-3">
-        <a href="link-to-owlfolk.com" class="thumbnail-link">
+        <a href="owlfolkExpansion.html" class="thumbnail-link">
           <div class="thumbnail">
             <img src="./images/owl.jpg" alt="The Owlfolk Expansion">
             <div class="caption">
@@ -99,7 +85,7 @@
         </a>
       </div>
       <div class="col-sm-3">
-        <a href="link-to-companion-animals.com" class="thumbnail-link">
+        <a href="companionAnimalsExpanded.html" class="thumbnail-link">
           <div class="thumbnail">
             <img src="./images/rat.jpg" alt="Companion Animals Expanded (5e)">
             <div class="caption">
@@ -110,7 +96,7 @@
         </a>
       </div>
       <div class="col-sm-3">
-        <a href="link-to-spellbook.com" class="thumbnail-link">
+        <a href="nextLevelSpellbook.html" class="thumbnail-link">
           <div class="thumbnail">
             <img src="./images/wizard.jpeg" alt="Next Level Spellbooks">
             <div class="caption">
@@ -121,7 +107,7 @@
         </a>
       </div>
       <div class="col-sm-3">
-        <a href="link-to-ethmoria.com" class="thumbnail-link">
+        <a href="escapeFromEthmoria.html" class="thumbnail-link">
           <div class="thumbnail">
             <img src="./images/spooky.jpg" alt="Escape from Ethmoria">
             <div class="caption">
@@ -132,8 +118,11 @@
         </a>
       </div>
     </div>
-  
+
+    <div class="divider"></div>
+
     <!-- Product carousel -->
+    <h2 class="mb-3">Browse Categories</h2>
     <div id="myCarousel" class="carousel slide" data-ride="carousel">
       <!-- Indicators -->
       <ol class="carousel-indicators">
@@ -179,7 +168,7 @@
             <div class="carousel-caption">
               <h1>Explore Rule Books</h1>
               <p>D&D but in space! But in minecraft! But in LOTR! Whatever you want!</p>
-              <p><a class="btn btn-lg btn-primary" href="#" role="button">Browse</a></p>
+              <p><a class="btn btn-lg btn-primary" href="ruleBooks.html" role="button">Browse</a></p>
             </div>
           </div>
         </div>
@@ -193,21 +182,37 @@
         <span class="sr-only">Next</span>
       </a>
     </div><!-- /.carousel -->
+  </div>
 
-  
-    <!-- Main component for a primary marketing message or call to action
-    <div class="jumbotron">
-      <h1>Navbar example</h1>
-      <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It
-        includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-      <p>To see the difference between static and fixed top navbars, just scroll.</p>
-      <p>
-        <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
-      </p>
-    </div>
-  
-  </div> --> 
 
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-links-container">
+        <div class="footer-column">
+          <p class="footer-brand"></p>
+        </div>
+        <div class="footer-column">
+          <!-- First column of links -->
+          <h3>Donate</h3>
+          <a href="index.html">Patreon</a>
+          <a href="index.html">Ko-fi</a>
+          <a href="index.html">Paypal</a>
+        </div>
+        <div class="footer-column">
+          <!-- Second column of links -->
+          <h3>Contact us</h3>
+          <a href="index.html">Email</a>
+        </div>
+        <div class="footer-column">
+          <!-- Third column of links -->
+          <h3>Information</h3>
+          <a href="index.html">About us</a>
+          <a href="index.html">Privacy policy</a>
+          <a href="index.html">Newsletter</a>
+        </div>
+      </div>
+  </footer>
 
   <!-- Bootstrap core JavaScript
     ================================================== -->
