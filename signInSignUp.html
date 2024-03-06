@@ -10,13 +10,14 @@
   <meta name="author" content="">
   <link rel="icon" href="../../favicon.ico">
 
-  <title>Edit content page</title>
+  <title>sing-in/Sign-up</title>
 
   <!-- Bootstrap core CSS -->
   <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
   <!-- Custom styles for this template -->
   <link href="userPages.css" rel="stylesheet">
-  <script src="userPages.js"></script>
+  <script src="signInSignUp.js"></script>
+  
 
 </head>
 
@@ -62,53 +63,50 @@
     </div>
   </nav>
 
+  <div class="nav-spacer"></div>
+  
   <div class="container">
-    <div class="nav-spacer"></div>
 
+    <!-- Header -->
     <div class="row">
-      <div class="col-md-6">
-        <!-- Item Image -->
-        <img src="images\Lamia_Tera_Milteir.webp" alt="Item Image" class="img-fluid item-image">
+      <div class="col-md-6 offset-md-3">
+          <div class="singIn-form-container" id="signin">
+              <h2>Sign In</h2>
+              <form action="#" method="post">
+                  <div class="singIn-form-group">
+                      <label for="email">Email address</label>
+                      <input type="email" class="singIn-form-control" id="email" name="email" required>
+                  </div>
+                  <div class="singIn-form-group">
+                      <label for="password">Password</label>
+                      <input type="password" class="singIn-form-control" id="password" name="password" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Sign In</button>
+              </form>
+              <hr>
+              <p>Don't have an account? <a href="#" id="signup-link">Sign Up</a></p>
+          </div>
+          <div class="singIn-form-container" id="signup" style="display: none;">
+              <h2>Sign Up</h2>
+              <form action="#" method="post">
+                  <div class="singIn-form-group">
+                      <label for="name">Name</label>
+                      <input type="text" class="singIn-form-control" id="name" name="name" required>
+                  </div>
+                  <div class="singIn-form-group">
+                      <label for="email">Email address</label>
+                      <input type="email" class="singIn-form-control" id="email" name="email" required>
+                  </div>
+                  <div class="singIn-form-group">
+                      <label for="password">Password</label>
+                      <input type="password" class="singIn-form-control" id="password" name="password" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Sign Up</button>
+              </form>
+              <hr>
+              <p>Already have an account? <a href="#" id="signin-link">Sign In</a></p>
+          </div>
       </div>
-      <div class="col-md-6">
-        <!-- Item Details Form -->
-        <h2>Edit Item Details</h2>
-        <form method="GET" action="creatorPage.html">
-          <div class="form-group">
-            <label for="title">Title</label>
-            <input type="text" class="form-control" id="title" placeholder="Enter title" required>
-          </div>
-          <div class="form-group">
-            <label for="description">Description</label>
-            <textarea class="form-control" id="description" rows="3" placeholder="Enter description"
-              required></textarea>
-          </div>
-          <div class="form-group">
-            <label for="price">Price</label>
-            <input type="number" class="form-control" id="price" placeholder="Enter price" required>
-          </div>
-          <div id="fileInputs">
-            <!-- Initial file input field -->
-            <div class="form-group">
-              <label for="file1">Content File(s) User Gets on Purchase</label>
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" id="file1" name="file1">
-                <label class="custom-file-label" for="file1">Choose file</label>
-              </div>
-            </div>
-          </div>
-          <div>
-            <button type="button" class="btn btn-primary" id="addFileInput">Add Another File</button>
-          </div>
-          <!-- Add more form fields as needed -->
-          <!-- Submit Button -->
-          <div class="tiny-spacer"></div>
-          <div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </div>
-        </form>
-      </div>
-    </div>
   </div>
 
   </div>
