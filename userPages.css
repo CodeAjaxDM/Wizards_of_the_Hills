@@ -136,3 +136,88 @@ body {
     .tiny-spacer{
         padding: 3px;
     }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background-color: #ccc;
+    }
+    
+    /* featured items carousel */
+    .carousel {
+      height: 500px;
+      margin-bottom: 60px;
+    }
+    
+    .carousel-caption {
+      z-index: 10;
+    }
+    
+    .carousel .item {
+      height: 500px;
+      background-color: #777;
+    }
+    .carousel-inner > .item > img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      height: 500px;
+    }
+    
+    .footer {
+      position: bottom;
+      bottom: 0;
+      width: 100%;
+      height: 130px;
+      background-color: #333;
+      color: #fff;
+      display: flex;
+    }
+    
+    /*footer */
+    .footer-brand {
+      /*wizards of the hills logo*/
+      background-image: url('./images/logo.png');
+      background-size: contain; 
+      background-repeat: no-repeat; 
+      width: 110px; 
+      height: 110px;
+      padding: 5px; 
+      margin-top: 10px;
+    }
+    
+    .footer-links-container{
+      display: flex;
+    }
+    
+    .footer-column{
+      flex: 1;
+      text-align: left;
+    }
+    
+    .footer-column h3{
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+    
+    .footer-column a{
+      color: #fff;
+      display: block; 
+    }
+    
+    .footer-column a:hover{
+      color: rgb(255, 166, 0);
+    }
+    .author-page-header{
+      background-color: rgb(128, 73, 85);
+      color: rgb(255, 166, 0);
+    }
+    .author-support-section{
+      background-color: rgb(47, 36, 68);
+      color: rgb(255, 166, 0);
+      padding-bottom: 10px;
+    }
+    .support-spacer{
+      padding: 20px;
+    }
