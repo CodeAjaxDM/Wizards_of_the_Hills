@@ -10,12 +10,14 @@
   <meta name="author" content="">
   <link rel="icon" href="../../favicon.ico">
 
-  <title>User Page</title>
+  <title>sing-in/Sign-up</title>
 
   <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
   <!-- Custom styles for this template -->
   <link href="userPages.css" rel="stylesheet">
+  <script src="signInSignUp.js"></script>
+  
 
 </head>
 
@@ -61,89 +63,55 @@
     </div>
   </nav>
 
+  <div class="nav-spacer"></div>
+  
   <div class="container">
 
     <!-- Header -->
-    <div class="nav-spacer"></div>
-
-    <header class="user-page-header">
-      <div class="container text-white text-center">
-        <h1>Welcome to Your User Page</h1>
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+          <div class="singIn-form-container" id="signin">
+              <h2>Sign In</h2>
+              <form action="#" method="post">
+                  <div class="singIn-form-group">
+                      <label for="email">Email address</label>
+                      <input type="email" class="singIn-form-control" id="email" name="email" required>
+                  </div>
+                  <div class="singIn-form-group">
+                      <label for="password">Password</label>
+                      <input type="password" class="singIn-form-control" id="password" name="password" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Sign In</button>
+              </form>
+              <hr>
+              <p>Don't have an account? <a href="#" id="signup-link">Sign Up</a></p>
+          </div>
+          <div class="singIn-form-container" id="signup" style="display: none;">
+              <h2>Sign Up</h2>
+              <form action="#" method="post">
+                  <div class="singIn-form-group">
+                      <label for="name">Name</label>
+                      <input type="text" class="singIn-form-control" id="name" name="name" required>
+                  </div>
+                  <div class="singIn-form-group">
+                      <label for="email">Email address</label>
+                      <input type="email" class="singIn-form-control" id="email" name="email" required>
+                  </div>
+                  <div class="singIn-form-group">
+                      <label for="password">Password</label>
+                      <input type="password" class="singIn-form-control" id="password" name="password" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Sign Up</button>
+              </form>
+              <hr>
+              <p>Already have an account? <a href="#" id="signin-link">Sign In</a></p>
+          </div>
       </div>
-    </header>
-    <div class="text-center">
-      <a href="creatorPage.html">
-        <h4>My Content Creator Page </h4>
-      </a>
-    </div>
-
-    <!-- Purchased Content Section -->
-
-    <section class="content-section">
-      <h2 class="text-center">My Purchased Content</h2>
-      <div class="row content-viewer">
-        <div class="col-sm-3">
-          <a href="link-to-owlfolk.com" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/owl.jpg" alt="The Owlfolk Expansion">
-              <div class="caption">
-                <h3>The Owlfolk Expansion</h3>
-              </div>
-            </div>
-          </a>
-          <button href="./download-link.zip" class="content-download"> Download</button>
-        </div>
-        <div class="col-sm-3">
-          <a href="link-to-companion-animals.com" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/rat.jpg" alt="Companion Animals Expanded (5e)">
-              <div class="caption">
-                <h3>Companion Animals Expanded (5e)</h3>
-              </div>
-            </div>
-          </a>
-          <button href="./download-link.zip" class="content-download"> Download</button>
-        </div>
-        <div class="col-sm-3">
-          <a href="link-to-spellbook.com" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/wizard.jpeg" alt="Next Level Spellbooks">
-              <div class="caption">
-                <h3>Next Level Spellbooks</h3>
-              </div>
-            </div>
-          </a>
-          <button href="./download-link.zip" class="content-download"> Download</button>
-        </div>
-        <div class="col-sm-3">
-          <a href="link-to-ethmoria.com" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/spooky.jpg" alt="Escape from Ethmoria">
-              <div class="caption">
-                <h3>Escape from Ethmoria (Adventure) </h3>
-              </div>
-            </div>
-          </a>
-          <button href="./download-link.zip" class="content-download"> Download</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Supported Authors Section -->
-    <section class="bg-light">
-      <div class="container">
-        <h2 class="text-center">Supported Authors</h2>
-        <ul class="author-list text-center">
-          <!-- Example list of supported authors -->
-          <li><a href="author1.html">Author 1</a></li>
-          <li><a href="author2.html">Author 2</a></li>
-          <li><a href="author3.html">Author 3</a></li>
-        </ul>
-      </div>
-    </section>
+  </div>
 
   </div>
 
+  
   <div class="nav-spacer"></div>
   <!-- Footer -->
   <footer class="footer">
