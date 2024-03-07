@@ -10,12 +10,12 @@
   <meta name="author" content="">
   <link rel="icon" href="../../favicon.ico">
 
-  <title>User Page</title>
+  <title>Content Creator Page</title>
 
   <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
   <!-- Custom styles for this template -->
-  <link href="userPages.css" rel="stylesheet">
+  <link href="/pages/userPage/userPages.css" rel="stylesheet">
 
 </head>
 
@@ -53,7 +53,7 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li><a href="../navbar/">Login</a></li>
-          <li><a href="userPage.html">Account</a></li>
+          <li><a href="/pages/userPage.html">Account</a></li>
           <li><a href="./going-somewhere">Wishlist </a></li>
           <li><a href="./going-somewhere">My Cart </a></li>
         </ul>
@@ -68,82 +68,144 @@
 
     <header class="user-page-header">
       <div class="container text-white text-center">
-        <h1>Welcome to Your User Page</h1>
+        <h1>Welcome to Your Content Creator Page</h1>
       </div>
     </header>
     <div class="text-center">
-      <a href="creatorPage.html">
-        <h4>My Content Creator Page </h4>
+      <a href="/pages/userPage.html">
+        <h4>My User Page </h3>
       </a>
     </div>
 
     <!-- Purchased Content Section -->
 
     <section class="content-section">
-      <h2 class="text-center">My Purchased Content</h2>
+      <h2 class="text-center">Published Content</h2>
       <div class="row content-viewer">
         <div class="col-sm-3">
           <a href="link-to-owlfolk.com" class="thumbnail-link">
             <div class="thumbnail">
-              <img src="./images/owl.jpg" alt="The Owlfolk Expansion">
+              <img src="/images/owl.jpg" alt="The Owlfolk Expansion">
               <div class="caption">
                 <h3>The Owlfolk Expansion</h3>
+                <p>$9.99</p>
               </div>
             </div>
           </a>
-          <button href="./download-link.zip" class="content-download"> Download</button>
+          <div class="content-download">
+            <a href="/pages/EditCreation.html" class="btn btn-info" role="button">Edit</a>
+          </div>
         </div>
         <div class="col-sm-3">
           <a href="link-to-companion-animals.com" class="thumbnail-link">
             <div class="thumbnail">
-              <img src="./images/rat.jpg" alt="Companion Animals Expanded (5e)">
+              <img src="/images/rat.jpg" alt="Companion Animals Expanded (5e)">
               <div class="caption">
                 <h3>Companion Animals Expanded (5e)</h3>
+                <p>FREE</p>
               </div>
             </div>
           </a>
-          <button href="./download-link.zip" class="content-download"> Download</button>
+          <div class="content-download">
+            <a href="/pages/EditCreation.html" class="btn btn-info" role="button">Edit</a>
+          </div>
         </div>
         <div class="col-sm-3">
           <a href="link-to-spellbook.com" class="thumbnail-link">
             <div class="thumbnail">
-              <img src="./images/wizard.jpeg" alt="Next Level Spellbooks">
+              <img src="/images/wizard.jpeg" alt="Next Level Spellbooks">
               <div class="caption">
                 <h3>Next Level Spellbooks</h3>
+                <p>$12.49</p>
               </div>
             </div>
           </a>
-          <button href="./download-link.zip" class="content-download"> Download</button>
+          <div class="content-download">
+            <a href="/pages/EditCreation.html" class="btn btn-info" role="button">Edit</a>
+          </div>
         </div>
         <div class="col-sm-3">
           <a href="link-to-ethmoria.com" class="thumbnail-link">
             <div class="thumbnail">
-              <img src="./images/spooky.jpg" alt="Escape from Ethmoria">
+              <img src="/images/spooky.jpg" alt="Escape from Ethmoria">
               <div class="caption">
                 <h3>Escape from Ethmoria (Adventure) </h3>
+                <p>$22.39</p>
               </div>
             </div>
           </a>
-          <button href="./download-link.zip" class="content-download"> Download</button>
+          <div class="content-download">
+            <a href="/pages/EditCreation.html" class="btn btn-info" role="button">Edit</a>
+          </div>
         </div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2 class="text-center">Unpublished Content</h2>
+      <div class="row content-viewer">
+        <div class="col-sm-4">
+          <a href="link-to-Monstrous_Myths.com" class="thumbnail-link">
+            <div class="thumbnail">
+              <img src="images\Lamia_Tera_Milteir.webp" alt="Monstrous Myths">
+              <div class="caption">
+                <h3>Monstrous Myths</h3>
+                <p>$1.99</p>
+              </div>
+            </div>
+          </a>
+          <div class="content-download">
+            <a href="/pages/EditCreation.html" class="btn btn-info" role="button">Edit</a>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <a href="link-to-Elementals.com" class="thumbnail-link">
+            <div class="thumbnail">
+              <img src="images\elemental.png" alt="Elementals ETC">
+              <div class="caption">
+                <h3>Elementals etc</h3>
+                <p>3.99</p>
+              </div>
+            </div>
+          </a>
+          <div class="content-download">
+            <a href="/pages/EditCreation.html" class="btn btn-info" role="button">Edit</a>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <a href="link-to-outdoor-encounters.com" class="thumbnail-link">
+            <div class="thumbnail">
+              <img src="/images\beach.jpg" alt="outdoor encounters">
+              <div class="caption">
+                <h3>outdoor encounters</h3>
+                <p>$12.49</p>
+              </div>
+            </div>
+          </a>
+          <div class="content-download">
+            <a href="/pages/EditCreation.html" class="btn btn-info" role="button">Edit</a>
+          </div>
+        </div>
+
       </div>
     </section>
 
     <!-- Supported Authors Section -->
     <section class="bg-light">
       <div class="container">
-        <h2 class="text-center">Supported Authors</h2>
+        <h2 class="text-center">Your Top Contributors</h2>
         <ul class="author-list text-center">
           <!-- Example list of supported authors -->
-          <li><a href="author1.html">Author 1</a></li>
-          <li><a href="author2.html">Author 2</a></li>
-          <li><a href="author3.html">Author 3</a></li>
+          <li><a href="/pages/userPage.html">User 1</a></li>
+          <li><a href="/pages/userPage.html">User 2</a></li>
+          <li><a href="/pages/userPage.html">User 3</a></li>
         </ul>
       </div>
     </section>
 
   </div>
 
+  
   <div class="nav-spacer"></div>
   <!-- Footer -->
   <footer class="footer">
