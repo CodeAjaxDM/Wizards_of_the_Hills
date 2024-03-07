@@ -21,13 +21,9 @@ img {
 .navbar-default {
   background-image: url('./images/fantasy-scene.jpg');
   background-size: cover;
-  /* Adjust the background image size */
   background-repeat: no-repeat;
-  /* Ensure the background image does not repeat */
   background-position: center;
-  /* Center the background image */
   border-color: transparent;
-  /* Optionally, you may set border color to transparent */
   height: 120px;
 }
 
@@ -178,4 +174,9 @@ h2 {
 
 .footer-column a:hover {
   color: rgb(255, 166, 0);
+}
+
+.big-spacer {
+  height: 100px;
+  width: 100%;
 }
