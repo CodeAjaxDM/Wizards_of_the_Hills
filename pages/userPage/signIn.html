@@ -10,12 +10,11 @@
   <meta name="author" content="">
   <link rel="icon" href="../../favicon.ico">
 
-  <title>User Page</title>
+  <title>Wizards of the Hills</title>
 
-  <!-- Bootstrap core CSS -->
   <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
-  <!-- Custom styles for this template -->
-  <link href="userPages.css" rel="stylesheet">
+
+  <link href="/pages/userPage/userPages.css" rel="stylesheet">
 
 </head>
 
@@ -60,90 +59,46 @@
     </div>
   </nav>
 
+  <div class="nav-spacer"></div>
+  <div class="big-spacer"></div>
+
   <div class="container">
 
-    <!-- Header -->
-    <div class="nav-spacer"></div>
-
-    <h2> Welcome to your User Page</h2>
-    <div class="text-center">
-      <a href="/pages/userPage/creatorPage.html">
-        <h4>My Content Creator Page </h4>
-      </a>
+    <div class="row">
+      <div class="col-md-4"></div>
+      <div class="col-md-6">
+        <div class="singIn-form-container" id="signin">
+          <h2>Sign In</h2>
+          <div class="divider"></div>
+          <div class="tiny-spacer"></div>
+          <div class="tiny-spacer"></div>
+          <div class="tiny-spacer"></div>
+          <form action="#" method="post">
+            <label for="email">Email address</label>
+            <div class="input-wrapper">
+              <div class="singIn-form-group">
+                <input type="email" class="singIn-form-control" id="email" name="email" required>
+              </div>
+            </div>
+            <label for="password">Password</label>
+            <div class="input-wrapper">
+              <div class="singIn-form-group">
+                <input type="password" class="singIn-form-control" id="password" name="password" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Sign In</button>
+          </form>
+          <hr>
+          <p>Don't have an account? <a href="/pages/userPage/signUp.html" id="signup-link">Sign Up</a></p>
+        </div>
+      </div>
     </div>
-    <div class="divider"></div>
-    <!-- Purchased Content Section -->
-
-    <section class="content-section">
-      <h2 class="text-center">My Purchased Content</h2>
-      <div class="row content-viewer">
-        <div class="col-sm-3">
-          <a href="/pages/itemPages/owlfolkExpansion.html" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/owl.jpg" alt="The Owlfolk Expansion">
-              <div class="caption">
-                <h3>The Owlfolk Expansion</h3>
-              </div>
-            </div>
-          </a>
-          <button href="#" class="content-download"> Download</button>
-        </div>
-        <div class="col-sm-3">
-          <a href="/pages/itemPages/companionAnimalsExpanded.html" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/rat.jpg" alt="Companion Animals Expanded (5e)">
-              <div class="caption">
-                <h3>Companion Animals Expanded (5e)</h3>
-              </div>
-            </div>
-          </a>
-          <button href="#" class="content-download"> Download</button>
-        </div>
-        <div class="col-sm-3">
-          <a href="/pages/itemPages/nextLevelSpellbook.html" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/wizard.jpeg" alt="Next Level Spellbooks">
-              <div class="caption">
-                <h3>Next Level Spellbooks</h3>
-              </div>
-            </div>
-          </a>
-          <button href="#" class="content-download"> Download</button>
-        </div>
-        <div class="col-sm-3">
-          <a href="/pages/itemPages/escapeFromEthmoria.html" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/spooky.jpg" alt="Escape from Ethmoria">
-              <div class="caption">
-                <h3>Escape from Ethmoria (Adventure) </h3>
-              </div>
-            </div>
-          </a>
-          <button href="#" class="content-download"> Download</button>
-        </div>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- Supported Authors Section -->
-    <section class="bg-light">
-      <div class="container">
-        <h2 class="text-center">Supported Authors</h2>
-        <ul class="author-list text-center">
-          <!-- Example list of supported authors -->
-          <li><a href="#">Author 1</a></li>
-          <li><a href="#">Author 2</a></li>
-          <li><a href="#">Author 3</a></li>
-        </ul>
-      </div>
-    </section>
-
+    <div class="big-spacer"></div>
+    <div class="big-spacer"></div>
   </div>
 
-  <div class="big-spacer"></div>
-  <div class="big-spacer"></div>
-  <div class="big-spacer"></div>
+
+  <div class="nav-spacer"></div>
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
@@ -154,25 +109,24 @@
         <div class="footer-column">
           <!-- First column of links -->
           <h3>Donate</h3>
-          <a href="index.html">Patreon</a>
-          <a href="index.html">Ko-fi</a>
-          <a href="index.html">Paypal</a>
+          <a href="/index.html">Patreon</a>
+          <a href="/index.html">Ko-fi</a>
+          <a href="/index.html">Paypal</a>
         </div>
         <div class="footer-column">
           <!-- Second column of links -->
           <h3>Contact us</h3>
-          <a href="index.html">Email</a>
+          <a href="/index.html">Email</a>
         </div>
         <div class="footer-column">
           <!-- Third column of links -->
           <h3>Information</h3>
-          <a href="index.html">About us</a>
-          <a href="index.html">Privacy policy</a>
-          <a href="index.html">Newsletter</a>
+          <a href="/index.html">About us</a>
+          <a href="/index.html">Privacy policy</a>
+          <a href="/index.html">Newsletter</a>
         </div>
       </div>
   </footer>
-
 
   <!-- Bootstrap core JavaScript
     ================================================== -->
