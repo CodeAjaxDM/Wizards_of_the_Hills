@@ -10,13 +10,12 @@
   <meta name="author" content="">
   <link rel="icon" href="../../favicon.ico">
 
-  <title>Edit content page</title>
+  <title>User Page</title>
 
   <!-- Bootstrap core CSS -->
   <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
   <!-- Custom styles for this template -->
-  <link href="/pages/userPage/userPages.css" rel="stylesheet">
-  <script src="/pages/userPage/userPages.js"></script>
+  <link href="userPages.css" rel="stylesheet">
 
 </head>
 
@@ -42,21 +41,20 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
               aria-expanded="false">Browse <span class="caret"></span></a>
             <ul class="dropdown-menu">
-              <li><a href="/pages/dropdown-menu/ruleBooks.html">Rule books </a></li>
-              <li><a href="#">Magical items </a></li>
-              <li><a href="#">Character options </a></li>
-              <li><a href="#">Prewritten adventures </a></li>
+              <li><a href="/pages/categories/ruleBooks.html">Rule books </a></li>
+              <li><a href="/pages/categories/magicalItems.html">Magical items </a></li>
+              <li><a href="/pages/categories/characterOptions.html">Character options </a></li>
+              <li><a href="/pages/categories/prewrittenAdventures.html">Prewritten adventures </a></li>
               <li role="separator" class="divider"></li>
               <li class="dropdown-header"></li>
-              <li><a href="#">Browse all</a></li>
+              <li><a href="/pages/categories//browseAll.html">Browse all</a></li>
             </ul>
           </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="../navbar/">Login</a></li>
+          <li><a href="#">Login</a></li>
           <li><a href="/pages/userPage/userPage.html">Account</a></li>
-          <li><a href="./going-somewhere">Wishlist </a></li>
-          <li><a href="./going-somewhere">My Cart </a></li>
+          <li><a href="/pages/cartPage/cartPage.html">My Cart </a></li>
         </ul>
       </div><!--/.nav-collapse -->
     </div>
@@ -106,6 +104,15 @@
           <div>
             <button type="submit" class="btn btn-primary">Submit</button>
           </div>
+          <div class="tiny-spacer"></div>
+          <div>
+            <button type="save" class="btn btn-primary">Save</button>
+          </div>
+          <div class="text-center">
+            <a href="/pages/userPage/creatorPage.html">
+              <h4>Back to My Content Creator Page </h4>
+            </a>
+          </div>
         </form>
       </div>
     </div>
@@ -113,8 +120,10 @@
 
   </div>
 
-  
-  <div class="nav-spacer"></div>
+  <div class="big-spacer"></div>
+  <div class="big-spacer"></div>
+  <div class="big-spacer"></div>
+  <div class="big-spacer"></div>
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
@@ -125,21 +134,21 @@
         <div class="footer-column">
           <!-- First column of links -->
           <h3>Donate</h3>
-          <a href="index.html">Patreon</a>
-          <a href="index.html">Ko-fi</a>
-          <a href="index.html">Paypal</a>
+          <a href="/index.html">Patreon</a>
+          <a href="/index.html">Ko-fi</a>
+          <a href="/index.html">Paypal</a>
         </div>
         <div class="footer-column">
           <!-- Second column of links -->
           <h3>Contact us</h3>
-          <a href="index.html">Email</a>
+          <a href="/index.html">Email</a>
         </div>
         <div class="footer-column">
           <!-- Third column of links -->
           <h3>Information</h3>
-          <a href="index.html">About us</a>
-          <a href="index.html">Privacy policy</a>
-          <a href="index.html">Newsletter</a>
+          <a href="/index.html">About us</a>
+          <a href="/index.html">Privacy policy</a>
+          <a href="/index.html">Newsletter</a>
         </div>
       </div>
   </footer>
@@ -150,7 +159,7 @@
   <!-- Placed at the end of the document so the pages load faster -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-  <script src="../../dist/js/bootstrap.min.js"></script>
+  <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
   <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>

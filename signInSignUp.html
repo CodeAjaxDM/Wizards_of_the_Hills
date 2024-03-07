@@ -10,14 +10,11 @@
   <meta name="author" content="">
   <link rel="icon" href="../../favicon.ico">
 
-  <title>sing-in/Sign-up</title>
+  <title>Wizards of the Hills</title>
 
-  <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-  <!-- Custom styles for this template -->
-  <link href="userPages.css" rel="stylesheet">
-  <script src="signInSignUp.js"></script>
-  
+  <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+
+  <link href="/index.css" rel="stylesheet">
 
 </head>
 
@@ -33,85 +30,86 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.html"></a>
+        <a class="navbar-brand" href="/index.html"></a>
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li><a href="index.html">Home</a></li>
+          <li><a href="/index.html">Home</a></li>
           <li><a href="#contact">Contact</a></li>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
               aria-expanded="false">Browse <span class="caret"></span></a>
             <ul class="dropdown-menu">
-              <li><a href="ruleBooks.html">Rule books </a></li>
-              <li><a href="#">Magical items </a></li>
-              <li><a href="#">Character options </a></li>
-              <li><a href="#">Prewritten adventures </a></li>
+              <li><a href="/pages/categories/ruleBooks.html">Rule books </a></li>
+              <li><a href="/pages/categories/magicalItems.html">Magical items </a></li>
+              <li><a href="/pages/categories/characterOptions.html">Character options </a></li>
+              <li><a href="/pages/categories/prewrittenAdventures.html">Prewritten adventures </a></li>
               <li role="separator" class="divider"></li>
               <li class="dropdown-header"></li>
-              <li><a href="#">Browse all</a></li>
+              <li><a href="/pages/categories//browseAll.html">Browse all</a></li>
             </ul>
           </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="../navbar/">Login</a></li>
-          <li><a href="userPage.html">Account</a></li>
-          <li><a href="./going-somewhere">Wishlist </a></li>
-          <li><a href="./going-somewhere">My Cart </a></li>
+          <li><a href="#">Login</a></li>
+          <li><a href="/pages/userPage/userPage.html">Account</a></li>
+          <li><a href="/pages/cartPage/cartPage.html">My Cart </a></li>
         </ul>
       </div><!--/.nav-collapse -->
     </div>
   </nav>
 
   <div class="nav-spacer"></div>
-  
+  <div class="big-spacer"></div>
+
   <div class="container">
 
     <!-- Header -->
     <div class="row">
       <div class="col-md-6 offset-md-3">
-          <div class="singIn-form-container" id="signin">
-              <h2>Sign In</h2>
-              <form action="#" method="post">
-                  <div class="singIn-form-group">
-                      <label for="email">Email address</label>
-                      <input type="email" class="singIn-form-control" id="email" name="email" required>
-                  </div>
-                  <div class="singIn-form-group">
-                      <label for="password">Password</label>
-                      <input type="password" class="singIn-form-control" id="password" name="password" required>
-                  </div>
-                  <button type="submit" class="btn btn-primary">Sign In</button>
-              </form>
-              <hr>
-              <p>Don't have an account? <a href="#" id="signup-link">Sign Up</a></p>
-          </div>
-          <div class="singIn-form-container" id="signup" style="display: none;">
-              <h2>Sign Up</h2>
-              <form action="#" method="post">
-                  <div class="singIn-form-group">
-                      <label for="name">Name</label>
-                      <input type="text" class="singIn-form-control" id="name" name="name" required>
-                  </div>
-                  <div class="singIn-form-group">
-                      <label for="email">Email address</label>
-                      <input type="email" class="singIn-form-control" id="email" name="email" required>
-                  </div>
-                  <div class="singIn-form-group">
-                      <label for="password">Password</label>
-                      <input type="password" class="singIn-form-control" id="password" name="password" required>
-                  </div>
-                  <button type="submit" class="btn btn-primary">Sign Up</button>
-              </form>
-              <hr>
-              <p>Already have an account? <a href="#" id="signin-link">Sign In</a></p>
-          </div>
+        <div class="singIn-form-container" id="signin">
+          <h2>Sign In</h2>
+          <form action="#" method="post">
+            <div class="singIn-form-group">
+              <label for="email">Email address</label>
+              <input type="email" class="singIn-form-control" id="email" name="email" required>
+            </div>
+            <div class="singIn-form-group">
+              <label for="password">Password</label>
+              <input type="password" class="singIn-form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Sign In</button>
+          </form>
+          <hr>
+          <p>Don't have an account? <a href="#" id="signup-link">Sign Up</a></p>
+        </div>
+        <div class="singIn-form-container" id="signup" style="display: none;">
+          <h2>Sign Up</h2>
+          <form action="#" method="post">
+            <div class="singIn-form-group">
+              <label for="name">Name</label>
+              <input type="text" class="singIn-form-control" id="name" name="name" required>
+            </div>
+            <div class="singIn-form-group">
+              <label for="email">Email address</label>
+              <input type="email" class="singIn-form-control" id="email" name="email" required>
+            </div>
+            <div class="singIn-form-group">
+              <label for="password">Password</label>
+              <input type="password" class="singIn-form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+          </form>
+          <hr>
+          <p>Already have an account? <a href="#" id="signin-link">Sign In</a></p>
+        </div>
       </div>
+    </div>
+    <div class="big-spacer"></div>
+    <div class="big-spacer"></div>
   </div>
 
-  </div>
 
-  
   <div class="nav-spacer"></div>
   <!-- Footer -->
   <footer class="footer">
@@ -123,32 +121,31 @@
         <div class="footer-column">
           <!-- First column of links -->
           <h3>Donate</h3>
-          <a href="index.html">Patreon</a>
-          <a href="index.html">Ko-fi</a>
-          <a href="index.html">Paypal</a>
+          <a href="/index.html">Patreon</a>
+          <a href="/index.html">Ko-fi</a>
+          <a href="/index.html">Paypal</a>
         </div>
         <div class="footer-column">
           <!-- Second column of links -->
           <h3>Contact us</h3>
-          <a href="index.html">Email</a>
+          <a href="/index.html">Email</a>
         </div>
         <div class="footer-column">
           <!-- Third column of links -->
           <h3>Information</h3>
-          <a href="index.html">About us</a>
-          <a href="index.html">Privacy policy</a>
-          <a href="index.html">Newsletter</a>
+          <a href="/index.html">About us</a>
+          <a href="/index.html">Privacy policy</a>
+          <a href="/index.html">Newsletter</a>
         </div>
       </div>
   </footer>
-
 
   <!-- Bootstrap core JavaScript
     ================================================== -->
   <!-- Placed at the end of the document so the pages load faster -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-  <script src="../../dist/js/bootstrap.min.js"></script>
+  <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
   <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>
