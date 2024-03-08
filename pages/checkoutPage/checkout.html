@@ -67,10 +67,16 @@
     <!-- Checkout -->
     <div class="container" style="padding-bottom: 20px;">
         <div class="payment-info">
-            <h1>Card details</h1>
-            <p>Card type</p>
+            <h1 style="padding-left: 20px;">Card details</h1>
+            <p style="text-align: center;">Card type</p>
 
             <div class="cards">
+                <label class="radio" style="border: 0px;"><input type="radio" name="card" value="payment" checked>
+                    <span style="border: 0px;">
+                        <img width="0" src="https://img.icons8.com/color/48/000000/mastercard.png" />
+                        <p></p>
+                    </span>
+                </label>
                 <label class="radio"><input type="radio" name="card" value="payment" checked>
                     <span>
                         <img width="70" src="https://img.icons8.com/color/48/000000/mastercard.png" />
@@ -97,22 +103,22 @@
                 </label>
             </div>
             <br>
-            <div>
+            <div style="padding-left: 20px; padding-right: 20px;">
                 <label class="credit-card-label">Name on card</label>
                 <input type="text" class="form-control credit-inputs" placeholder="Name">
             </div>
             <br>
-            <div>
+            <div style="padding-left: 20px; padding-right: 20px;">
                 <label class="credit-card-label">Card number</label>
                 <input type="text" class="form-control credit-inputs" placeholder="0000 0000 0000 0000">
             </div>
             <br>
             <div class="extra-card-info">
-                <div class="col-md-3">
+                <div class="col-sm-2">
                     <label class="credit-card-label">Date</label>
                     <input type="text" class="form-control credit-inputs" placeholder="12/24">
                 </div>
-                <div class="col-md-3">
+                <div class="col-sm-2">
                     <label class="credit-card-label">CVV</label>
                     <input type="text" class="form-control credit-inputs" placeholder="000">
                 </div>

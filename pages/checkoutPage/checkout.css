@@ -11,16 +11,13 @@ body {
     padding: 10px;
     border-radius: 6px;
     color: #fff;
-    /* font-weight: bold; */
-}
-
-.p-about {
-    font-size: 12px;
 }
 
 .cards {
+    padding-right: 40px;
     display: flex;
     align-content: center;
+    justify-content: center;
 }
 
 label.radio {
@@ -28,22 +25,17 @@ label.radio {
 }
 
 label.radio input {
-    /* position: absolute; */
-    /* top: 0; */
-    /* left: 0; */
     visibility: hidden;
     pointer-events: none;
 }
 
 label.radio span {
-    padding: 1px 12px;
+    text-align: center;
+    padding: 1px 20px;
     border: 2px solid #ada9a9;
     display: inline-block;
     color: white;
     border-radius: 3px;
-    /* text-transform: uppercase; */
-    /* font-size: 11px; */
-    /* font-weight: 300; */
 }
 
 label.radio input:checked+span {
@@ -60,7 +52,7 @@ label.radio input:checked+span {
 
 .credit-inputs::placeholder {
     color: #fff;
-    font-size: 13px;
+    font-size: 20px;
 }
 
 .credit-card-label {
@@ -79,6 +71,8 @@ label.radio input:checked+span {
 .extra-card-info {
     display: flex;
     justify-content: flex-start;
+    padding-left: 5px;
+    padding-right: 20px;
 }
 
 .line {
@@ -86,12 +80,14 @@ label.radio input:checked+span {
 }
 
 .information span {
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 500;
 }
 
 .information {
     margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .items {
