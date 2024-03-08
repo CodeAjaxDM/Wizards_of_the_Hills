@@ -1,0 +1,236 @@
+body {
+    padding-top: 70px;
+  }
+  /*nav bar*/
+  .navbar-brand {
+    background-image: url('../../images/logo.png');
+    background-size: contain; /* Adjust the background image size */
+    background-repeat: no-repeat; /* Ensure the background image does not repeat */
+    width: 110px; /* Set the width of the icon */
+    height: 110px; /* Set the height of the icon */
+    padding: 5px; /* Optional padding around the icon */
+  }
+  
+  .navbar-default {
+      background-image: url('../../images/fantasy-scene.jpg');
+      background-size: cover; /* Adjust the background image size */
+      background-repeat: no-repeat; /* Ensure the background image does not repeat */
+      background-position: center; /* Center the background image */
+      border-color: transparent; /* Optionally, you may set border color to transparent */
+      height:120px;
+  }
+  
+  .navbar-default .navbar-nav > li > a {
+    margin-top:20px;
+    color: #fff;
+    font-size: 20px;
+  }
+  .navbar-default .navbar-nav > li > a:hover {
+    color: rgb(255, 166, 0); 
+    font-style: italic;
+    font-size: 22px;
+  }
+  
+  .search-title{
+    /*search bar */
+    margin-top: 80px;
+  }
+  h2 {
+    /*title above search bar*/
+    color: #333;
+    font-family: 'Lucida Handwriting';
+  }
+  
+  .btn-primary {
+    /* search button */
+    border-radius: 5px; 
+    background-color: #654dee; 
+    color: #fff; 
+    border: none; 
+  }
+  
+  .btn-primary:hover {
+    /* hover for the search button */
+    background-color: #4b39b1; 
+  }
+  
+  /*featured items*/
+  .row {
+    margin-top: 30px;
+  }
+  
+  .thumbnail {
+    border: none;
+    background-color: transparent;
+  }
+  
+  .thumbnail img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .caption {
+    text-align: center;
+  }
+  
+  .thumbnail-link {
+    text-decoration: none; /* Remove underline for the link */
+  }
+  
+  .thumbnail-link:hover {
+    text-decoration: underline; 
+  }
+  
+  .jumbotron {
+    background-color: #555;
+    color: #fff; /* Lighter text color for better contrast */
+  }
+       
+    /* Custom styles */
+    .content-section {
+        
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    .author-list {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .author-list li {
+        margin-bottom: 10px;
+    }
+
+    .author-list a {
+        text-decoration: none;
+        color: #007bff; /* Bootstrap's primary color */
+    }
+
+    .author-list a:hover {
+        color: #0056b3; /* Bootstrap's secondary color */
+    }
+
+    .nav-spacer{
+        margin-top: 55px;
+    }
+
+    .user-page-header{
+        background-color: rgb(107, 85, 85);
+    }
+
+    .content-download{
+        margin: 0;
+        position: absolute;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+        
+    .item-image {
+        max-width: 100%; /* Set the maximum width of the image to 100% of its container */
+        height: auto; /* Allow the height to adjust automatically to maintain aspect ratio */
+    }
+
+    .tiny-spacer{
+        padding: 3px;
+    }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background-color: #ccc;
+    }
+    
+    /* featured items carousel */
+    .carousel {
+      height: 500px;
+      margin-bottom: 60px;
+    }
+    
+    .carousel-caption {
+      z-index: 10;
+    }
+    
+    .carousel .item {
+      height: 500px;
+      background-color: #777;
+    }
+    .carousel-inner > .item > img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      height: 500px;
+    }
+    
+    .footer {
+      position: bottom;
+      bottom: 0;
+      width: 100%;
+      height: 130px;
+      background-color: #333;
+      color: #fff;
+      display: flex;
+    }
+    
+    /*footer */
+    .footer-brand {
+      /*wizards of the hills logo*/
+      background-image: url('../../images/logo.png');
+      background-size: contain; 
+      background-repeat: no-repeat; 
+      width: 110px; 
+      height: 110px;
+      padding: 5px; 
+      margin-top: 10px;
+    }
+    
+    .footer-links-container{
+      display: flex;
+    }
+    
+    .footer-column{
+      flex: 1;
+      text-align: left;
+    }
+    
+    .footer-column h3{
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+    
+    .footer-column a{
+      color: #fff;
+      display: block; 
+    }
+    
+    .footer-column a:hover{
+      color: rgb(255, 166, 0);
+    }
+    .author-page-header{
+      background-color: rgb(128, 73, 85);
+      color: rgb(255, 166, 0);
+    }
+    .author-support-section{
+      background-color: rgb(47, 36, 68);
+      color: rgb(255, 166, 0);
+      padding-bottom: 10px;
+    }
+    .support-spacer{
+      padding: 20px;
+    }
+  .singIn-form-container {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 5px;
+      box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+  }
+  .singIn-form-container h2 {
+      margin-bottom: 20px;
+  }
+  .singIn-form-group {
+      margin-bottom: 20px;
+  }
