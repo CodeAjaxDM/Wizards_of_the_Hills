@@ -10,7 +10,7 @@ img {
 /*nav bar*/
 .navbar-brand {
   /*wizards of the hills logo*/
-  background-image: url('./images/logo.png');
+  background-image: url('/images/logo.png');
   background-size: contain;
   background-repeat: no-repeat;
   width: 110px;
@@ -19,7 +19,7 @@ img {
 }
 
 .navbar-default {
-  background-image: url('./images/fantasy-scene.jpg');
+  background-image: url('/images/fantasy-scene.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -144,7 +144,7 @@ h2 {
 
 .footer-brand {
   /*wizards of the hills logo*/
-  background-image: url('./images/logo.png');
+  background-image: url('/images/logo.png');
   background-size: contain;
   background-repeat: no-repeat;
   width: 110px;
