@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="userPage" content="">
+  <link rel="icon" href="../../favicon.ico">
+
+  <title>User Page</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <!-- Custom styles for this template -->
+  <link href="../../stylesheets/userPages.css" rel="stylesheet">
+  <script src="userPages.js"></script>
+
+</head>
+
+<body>
+  <%- include('../../header.ejs') %>
+  <div class="container">
+
+    <!-- Header -->
+    <div class="nav-spacer"></div>
+
+    <h2> Welcome to your User Page</h2>
+    <div class="text-center">
+      <a href="/pages/userPage/creatorPage">
+        <h4>My Content Creator Page </h4>
+      </a>
+    </div>
+    <div class="divider"></div>
+    <!-- Purchased Content Section -->
+
+    <section class="content-section">
+      <h2 class="text-center">My Purchased Content</h2>
+      <div class="row content-viewer">
+        <div class="col-sm-3">
+          <a href="/pages/itemPages/owlfolkExpansion" class="thumbnail-link">
+            <div class="thumbnail">
+              <img src="/images/owl.jpg" alt="The Owlfolk Expansion">
+              <div class="caption">
+                <h3>The Owlfolk Expansion</h3>
+              </div>
+            </div>
+          </a>
+          <button href="#" class="content-download"> Download</button>
+        </div>
+        <div class="col-sm-3">
+          <a href="/pages/itemPages/companionAnimalsExpanded" class="thumbnail-link">
+            <div class="thumbnail">
+              <img src="/images/rat.jpg" alt="Companion Animals Expanded (5e)">
+              <div class="caption">
+                <h3>Companion Animals Expanded (5e)</h3>
+              </div>
+            </div>
+          </a>
+          <button href="#" class="content-download"> Download</button>
+        </div>
+        <div class="col-sm-3">
+          <a href="/pages/itemPages/nextLevelSpellbook" class="thumbnail-link">
+            <div class="thumbnail">
+              <img src="/images/wizard.jpeg" alt="Next Level Spellbooks">
+              <div class="caption">
+                <h3>Next Level Spellbooks</h3>
+              </div>
+            </div>
+          </a>
+          <button href="#" class="content-download"> Download</button>
+        </div>
+        <div class="col-sm-3">
+          <a href="/pages/itemPages/escapeFromEthmoria" class="thumbnail-link">
+            <div class="thumbnail">
+              <img src="/images/spooky.jpg" alt="Escape from Ethmoria">
+              <div class="caption">
+                <h3>Escape from Ethmoria (Adventure) </h3>
+              </div>
+            </div>
+          </a>
+          <button href="#" class="content-download"> Download</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- Supported Authors Section -->
+    <section class="bg-light">
+      <div class="container">
+        <h2 class="text-center">Supported Authors</h2>
+        <ul class="author-list text-center">
+          <!-- Example list of supported authors -->
+          <li><a href="#">Author 1</a></li>
+          <li><a href="#">Author 2</a></li>
+          <li><a href="#">Author 3</a></li>
+        </ul>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="big-spacer"></div>
+  <div class="big-spacer"></div>
+  <div class="big-spacer"></div>
+  <%- include('../../footer.ejs') %>
+
+
+  <!-- Bootstrap core JavaScript
+    ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+  <script src="/js/bootstrap.min.js"></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+
+</html>

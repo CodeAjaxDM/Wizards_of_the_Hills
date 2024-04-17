@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="editCreation" content="">
+  <link rel="icon" href="../../favicon.ico">
+
+  <title>Edit Creation Page</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <!-- Custom styles for this template -->
+  <link href="../../stylesheets/userPages.css" rel="stylesheet">
+  <script src="userPages.js"></script>
+
+</head>
+
+<body>
+  <%- include('../../header.ejs') %>
+
+  <div class="container">
+    <div class="nav-spacer"></div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <!-- Item Image -->
+        <img src="/images/Lamia_Tera_Milteir.webp" alt="Item Image" class="img-fluid item-image">
+      </div>
+      <div class="col-md-6">
+        <!-- Item Details Form -->
+        <h2>Edit Item Details</h2>
+        <form method="GET" action="/pages/creatorPage">
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" placeholder="Enter title" required>
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" rows="3" placeholder="Enter description"
+              required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="price">Price</label>
+            <input type="number" class="form-control" id="price" placeholder="Enter price" required>
+          </div>
+          <div id="fileInputs">
+            <!-- Initial file input field -->
+            <div class="form-group">
+              <label for="file1">Content File(s) User Gets on Purchase</label>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="file1" name="file1">
+                <label class="custom-file-label" for="file1">Choose file</label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <button type="button" class="btn btn-primary" id="addFileInput">Add Another File</button>
+          </div>
+          <!-- Add more form fields as needed -->
+          <!-- Submit Button -->
+          <div class="tiny-spacer"></div>
+          <div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+          <div class="tiny-spacer"></div>
+          <div>
+            <button type="save" class="btn btn-primary">Save</button>
+          </div>
+          <div class="text-center">
+            <a href="/pages/userPage/creatorPage">
+              <h4>Back to My Content Creator Page </h4>
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+  <div class="big-spacer"></div>
+  <div class="big-spacer"></div>
+  <div class="big-spacer"></div>
+  <div class="big-spacer"></div>
+  <%- include('../../footer.ejs') %>
+
+
+  <!-- Bootstrap core JavaScript
+    ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+  <script src="/js/bootstrap.min.js"></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+
+</html>
