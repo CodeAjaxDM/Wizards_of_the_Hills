@@ -13,17 +13,16 @@
   <title>Sign-up Page</title>
 
   <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
   <!-- Custom styles for this template -->
-  <link href="userPages.css" rel="stylesheet">
-  <script src="userPages.js"></script>
+  <link href="../../stylesheets/userPages.css" rel="stylesheet">
+  <script src="signInSignUp.js"></script>
 
 </head>
 
 <body>
-  <%- include('views/pages/header.ejs') %>
+    <%- include('../../header.ejs') %>
 
-  
   <div class="nav-spacer"></div>
   <div class="big-spacer"></div>
 
@@ -62,7 +61,7 @@
                       <button type="submit" class="btn btn-primary">Sign Up</button>
                   </form>
                   <hr>
-                  <p>Already have an account? <a href="/pages/userPage/signIn.ejs" id="signup-link">Sign In</a></p>
+                  <p>Already have an account? <a href="/pages/userPage/signIn" id="signup-link">Sign In</a></p>
               </div>
           </div>
       </div>
@@ -72,7 +71,7 @@
 
 
   <div class="nav-spacer"></div>
-  <%- include('views/pages/footer.ejs') %>
+  <%- include('../../footer.ejs') %>
 
 
   <!-- Bootstrap core JavaScript
@@ -80,7 +79,7 @@
   <!-- Placed at the end of the document so the pages load faster -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-  <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
   <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
   <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>

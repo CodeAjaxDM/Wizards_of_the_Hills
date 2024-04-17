@@ -1,9 +1,17 @@
 var express = require('express');
 const User = require('../models/User');
 var router = express.Router();
+var path = require('path');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  if(req.query.msg){
+    res.locals.msg = req.query.msg
+  }
+  res.render('index');
+});
+
+router.get('/index', function(req, res, next) {
   if(req.query.msg){
     res.locals.msg = req.query.msg
   }
@@ -30,52 +38,40 @@ router.get('/logout', function(req,res, next){
   }
 })
 
-/* GET user page. */
-router.get('/pages/userPage/userPage', function(req, res, next) {
-  if(req.query.msg){
-    res.locals.msg = req.query.msg
-  }
-  res.render('/pages/userPage/userPage');
+// Define an array of routes and their corresponding page names
+const routes = [
+  'userPage/userPage',
+  'userPage/authorPage',
+  'userPage/creatorPage',
+  'userPage/EditCreation',
+  'userPage/signIn',
+  'userPage/signUp',
+  'itemPages/companionAnimalsExpanded',
+  'itemPages/escapeFromEthmoria',
+  'itemPages/nextLevelSpellbook',
+  'itemPages/owlfolkExpansion',
+  'categories/browseAll',
+  'categories/characterOptions',
+  'categories/magicalItems',
+  'categories/prewrittenAdventures',
+  'categories/ruleBooks',
+  'checkoutPage/checkout',
+  'cartPage/cartPage',
+];
+
+// Iterate over the routes array to define the routes dynamically
+routes.forEach(route => {
+  const path = `/pages/${route}`;
+  const renderPath = `pages/${route}`;
+  
+  router.get(path, function(req, res, next) {
+    if (req.query.msg) {
+      res.locals.msg = req.query.msg;
+    }
+    res.render(renderPath);
+  });
 });
 
-/* GET author page. */
-router.get('/pages/userPage/authorPage', function(req, res, next) {
-  if(req.query.msg){
-    res.locals.msg = req.query.msg
-  }
-  res.render('/pages/userPage/authorPage');
-});
 
-/* GET user page. */
-router.get('/pages/userPage/creatorPage', function(req, res, next) {
-  if(req.query.msg){
-    res.locals.msg = req.query.msg
-  }
-  res.render('/pages/userPage/creatorPage');
-});
-
-/* GET user page. */
-router.get('/pages/userPage/EditCreation', function(req, res, next) {
-  if(req.query.msg){
-    res.locals.msg = req.query.msg
-  }
-  res.render('/pages/userPage/EditCreation');
-});
-
-/* GET user page. */
-router.get('/pages/userPage/signIn', function(req, res, next) {
-  if(req.query.msg){
-    res.locals.msg = req.query.msg
-  }
-  res.render('/pages/userPage/signIn');
-});
-
-/* GET user page. */
-router.get('/pages/userPage/signUp', function(req, res, next) {
-  if(req.query.msg){
-    res.locals.msg = req.query.msg
-  }
-  res.render('/pages/userPage/signUp');
-});
 
 module.exports = router;

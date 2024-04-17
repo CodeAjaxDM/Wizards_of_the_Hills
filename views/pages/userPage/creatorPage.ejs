@@ -13,23 +13,23 @@
   <title>Creator Page</title>
 
   <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
   <!-- Custom styles for this template -->
-  <link href="userPages.css" rel="stylesheet">
+  <link href="../../stylesheets/userPages.css" rel="stylesheet">
+  <script src="userPages.js"></script>
 
 </head>
 
 <body>
-  <%- include('views/pages/header.ejs') %>
+  <%- include('../../header.ejs') %>
 
   <div class="container">
 
-    <!-- Header -->
-    <div class="nav-spacer"></div>
+  <div class="nav-spacer"></div>
 
     <h2> Welcome to your Content Creator</h2>
     <div class="text-center">
-      <a href="/pages/userPage/userPage.ejs">
+      <a href="/pages/userPage/userPage">
         <h4>My User Page </h4>
       </a>
     </div>
@@ -158,9 +158,9 @@
         <h2 class="text-center">Your Top Contributors</h2>
         <ul class="author-list text-center">
           <!-- Example list of supported authors -->
-          <li><a href="/pages/userPage/userPage.ejs">User 1</a></li>
-          <li><a href="/pages/userPage/userPage.ejs">User 2</a></li>
-          <li><a href="/pages/userPage/userPage.ejs">User 3</a></li>
+          <li><a href="/pages/userPage/userPage">User 1</a></li>
+          <li><a href="/pages/userPage/userPage">User 2</a></li>
+          <li><a href="/pages/userPage/userPage">User 3</a></li>
         </ul>
       </div>
     </section>
@@ -168,7 +168,7 @@
 
 
   <div class="nav-spacer"></div>
-  <%- include('views/pages/footer.ejs') %>
+  <%- include('../../footer.ejs') %>
 
 
   <!-- Bootstrap core JavaScript
@@ -176,7 +176,7 @@
   <!-- Placed at the end of the document so the pages load faster -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-  <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
   <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
   <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>

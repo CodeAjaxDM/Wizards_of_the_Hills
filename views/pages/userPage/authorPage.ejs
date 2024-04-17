@@ -13,18 +13,18 @@
   <title>Author Page</title>
 
   <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
   <!-- Custom styles for this template -->
-  <link href="userPages.css" rel="stylesheet">
+  <link href="../../stylesheets/userPages.css" rel="stylesheet">
+  <script src="userPages.js"></script>
 
 </head>
 
 <body>
-  <%- include('views/pages/header.ejs') %>
+
+  <%- include('../../header.ejs') %>
 
   <div class="container">
-
-    <!-- Header -->
     <div class="nav-spacer"></div>
 
     <!-- Support the author-->
@@ -89,7 +89,7 @@
     <section class="content-section">
       <div class="row content-viewer">
         <div class="col-sm-3">
-          <a href="/pages/itemPages/owlfolkExpansion.ejs" class="thumbnail-link">
+          <a href="/pages/itemPages/owlfolkExpansion" class="thumbnail-link">
             <div class="thumbnail">
               <img src="/images/owl.jpg" alt="The Owlfolk Expansion">
               <div class="caption">
@@ -100,7 +100,7 @@
           </a>
         </div>
         <div class="col-sm-3">
-          <a href="/pages/itemPages/companionAnimalsExpanded.ejs" class="thumbnail-link">
+          <a href="/pages/itemPages/companionAnimalsExpanded" class="thumbnail-link">
             <div class="thumbnail">
               <img src="/images/rat.jpg" alt="Companion Animals Expanded (5e)">
               <div class="caption">
@@ -111,7 +111,7 @@
           </a>
         </div>
         <div class="col-sm-3">
-          <a href="/pages/itemPages/nextLevelSpellbook.ejs" class="thumbnail-link">
+          <a href="/pages/itemPages/nextLevelSpellbook" class="thumbnail-link">
             <div class="thumbnail">
               <img src="/images/wizard.jpeg" alt="Next Level Spellbooks">
               <div class="caption">
@@ -122,7 +122,7 @@
           </a>
         </div>
         <div class="col-sm-3">
-          <a href="/pages/itemPages/escapeFromEthmoria.ejs" class="thumbnail-link">
+          <a href="/pages/itemPages/escapeFromEthmoria" class="thumbnail-link">
             <div class="thumbnail">
               <img src="/images/spooky.jpg" alt="Escape from Ethmoria">
               <div class="caption">
@@ -138,7 +138,7 @@
     <section class="content-section">
       <div class="row content-viewer">
         <div class="col-sm-3">
-          <a href="/pages/itemPages/nextLevelSpellbook.ejs" class="thumbnail-link">
+          <a href="/pages/itemPages/nextLevelSpellbook" class="thumbnail-link">
             <div class="thumbnail">
               <img src="/images/book7.jpg" alt="LOTR Tabletop Rule Book v1.0">
               <div class="caption">
@@ -149,7 +149,7 @@
           </a>
         </div>
         <div class="col-sm-3">
-          <a href="/pages/itemPages/nextLevelSpellbook.ejs" class="thumbnail-link">
+          <a href="/pages/itemPages/nextLevelSpellbook" class="thumbnail-link">
             <div class="thumbnail">
               <img src="/images/book9.jpg" alt="MAGIC UNCHAINED">
               <div class="caption">
@@ -160,7 +160,7 @@
           </a>
         </div>
         <div class="col-sm-3">
-          <a href="/pages/itemPages/nextLevelSpellbook.ejs" class="thumbnail-link">
+          <a href="/pages/itemPages/nextLevelSpellbook" class="thumbnail-link">
             <div class="thumbnail">
               <img src="/images/book4.jpg" alt="Alignment Remastered">
               <div class="caption">
@@ -171,7 +171,7 @@
           </a>
         </div>
         <div class="col-sm-3">
-          <a href="/pages/itemPages/nextLevelSpellbook.ejs" class="thumbnail-link">
+          <a href="/pages/itemPages/nextLevelSpellbook" class="thumbnail-link">
             <div class="thumbnail">
               <img src="/images/book5.jpg" alt="Spirit World Revisted">
               <div class="caption">
@@ -188,7 +188,7 @@
 
 
   <div class="nav-spacer"></div>
-  <%- include('views/pages/footer.ejs') %>
+  <%- include('../../footer.ejs') %>
 
 
   <!-- Bootstrap core JavaScript
@@ -196,7 +196,7 @@
   <!-- Placed at the end of the document so the pages load faster -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-  <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
   <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
   <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>
