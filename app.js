@@ -53,6 +53,8 @@ app.use(function(err, req, res, next) {
 async function setup() {
   const subu = await User.create({ username: "subu", password: "1234" });
   console.log("subu instance created...")
+  const adam = await User.create({ username: "Adam", password: "123" });
+  console.log("Adam instance created...")
 }
 
 sequelize.sync({ force: true }).then(()=>{
