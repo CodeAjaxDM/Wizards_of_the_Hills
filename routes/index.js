@@ -74,16 +74,19 @@ routes.forEach(route => {
   const renderPath = `pages/${route}`;
 
   router.get(path, function (req, res, next) {
+    // Prepare the data object to pass to the view,
+    let data = {};
     if (req.query.msg) {
-      res.locals.msg = req.query.msg;
+      data.msg = req.query.msg;  // Store message in data object to pass to EJS template
     }
-    if (renderPath === `pages/userPage/EditCreation`) {
-      const imagePath = '/images/rat.jpg';
-      res.render(renderPath, { imagePath: imagePath });
+
+    // Special handling for certain pages, like EditCreation
+    if (renderPath === 'pages/userPage/EditCreation') {
+      data.imagePath = '/images/rat.jpg';  // Additional data specific to this page
     }
-    else {
-      res.render(renderPath);
-    }
+
+    // Render the appropriate EJS template with the data object
+    res.render(renderPath, data);
   });
 });
 
