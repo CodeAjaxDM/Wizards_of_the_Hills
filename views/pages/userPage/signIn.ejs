@@ -23,58 +23,57 @@
 <body>
   <%- include('../../header.ejs') %>
 
-  <div class="nav-spacer"></div>
-  <div class="big-spacer"></div>
+    <div class="nav-spacer"></div>
+    <div class="big-spacer"></div>
 
-  <div class="container">
+    <div class="container">
 
-    <div class="row">
-      <div class="col-md-4"></div>
-      <div class="col-md-6">
-        <div class="singIn-form-container" id="signin">
-          <h2>Sign In</h2>
-          <div class="divider"></div>
-          <div class="tiny-spacer"></div>
-          <div class="tiny-spacer"></div>
-          <div class="tiny-spacer"></div>
-          <form action="#" method="post">
-            <label for="username">Username</label>
-            <div class="input-wrapper">
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-6">
+          <div class="singIn-form-container" id="signin">
+            <h2>Sign In</h2>
+            <div class="divider"></div>
+            <div class="tiny-spacer"></div>
+            <div class="tiny-spacer"></div>
+            <div class="tiny-spacer"></div>
+            <form action="/pages/userPage/signIn" method="post">
+              <label for="username">Username</label>
+              <div class="input-wrapper">
                 <div class="singIn-form-group">
-                    <input type="username" class="singIn-form-control" id="username" name="username"
-                        required>
+                  <input type="username" class="singIn-form-control" id="username" name="username" required>
                 </div>
-            </div>
-            <label for="password">Password</label>
-            <div class="input-wrapper">
-              <div class="singIn-form-group">
-                <input type="password" class="singIn-form-control" id="password" name="password" required>
               </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Sign In</button>
-          </form>
-          <hr>
-          <p>Don't have an account? <a href="/pages/userPage/signUp" id="signup-link">Sign Up</a></p>
+              <label for="password">Password</label>
+              <div class="input-wrapper">
+                <div class="singIn-form-group">
+                  <input type="password" class="singIn-form-control" id="password" name="password" required>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Sign In</button>
+            </form>
+            <hr>
+            <p>Don't have an account? <a href="/pages/userPage/signUp" id="signup-link">Sign Up</a></p>
+          </div>
         </div>
       </div>
+      <div class="big-spacer"></div>
+      <div class="big-spacer"></div>
     </div>
-    <div class="big-spacer"></div>
-    <div class="big-spacer"></div>
-  </div>
 
 
-  <div class="nav-spacer"></div>
-  <%- include('../../footer.ejs') %>
+    <div class="nav-spacer"></div>
+    <%- include('../../footer.ejs') %>
 
 
-  <!-- Bootstrap core JavaScript
+      <!-- Bootstrap core JavaScript
     ================================================== -->
-  <!-- Placed at the end of the document so the pages load faster -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-  <script src="/js/bootstrap.min.js"></script>
-  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-  <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+      <!-- Placed at the end of the document so the pages load faster -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+      <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+      <script src="/js/bootstrap.min.js"></script>
+      <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+      <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>
 
 </html>
