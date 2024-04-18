@@ -2,6 +2,8 @@ var express = require('express');
 const User = require('../models/User');
 var router = express.Router();
 var path = require('path');
+const multer = require('multer');
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -68,10 +70,57 @@ routes.forEach(route => {
     if (req.query.msg) {
       res.locals.msg = req.query.msg;
     }
+    if(renderPath === `pages/userPage/EditCreation`)
+    {
+      const imagePath = '/images/rat.jpg';
+      res.render(renderPath, { imagePath: imagePath });
+    }
+    else
+    {
     res.render(renderPath);
+    }
   });
 });
 
 
+// Multer storage settings
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/images'); // Destination folder
+  },
+  filename: function (req, file, cb) {
+    cb(null, 'uploadedImage' + path.extname(file.originalname)); // File name
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 500 // 500MB limit, adjust as needed
+  }
+});
+
+const simple_upload = multer({ dest: './public/images' }); // Default destination
+
+router.post('/pages/userPage/EditCreation', upload.single('displayImage'), function(req, res, next) {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+
+  // Get the uploaded image path
+  const imagePath = '/images/' + req.file.filename;
+  console.log(imagePath)
+
+  // Redirect to the same page with the uploaded image path as a query parameter
+  res.redirect('/pages/userPage/EditCreation?imagePath=' + imagePath);
+});
+
+
+router.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    return res.status(500).send(err.message);
+  }
+  next(err);
+});
 
 module.exports = router;
