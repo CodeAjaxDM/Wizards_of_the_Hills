@@ -152,7 +152,10 @@ const storage = multer.diskStorage({
     }
   },
   filename: function (req, file, cb) {
-    cb(null, 'uploadedImage' + path.extname(file.originalname)); // File name
+    // Generate a unique filename
+    const uniqueFilename = Date.now() + '-' + file.originalname;
+    
+    cb(null, uniqueFilename); // File name
   }
 });
 
