@@ -6,10 +6,12 @@ h4 {
     color: #333;
     font-family: 'Lucida Handwriting';
     text-align: center;
-    font-size: 30px;
+    font-size: 60px;
 }
 
 .item-page-container {
+    margin-left: 200px;
+    margin-right: 200px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -30,14 +32,4 @@ h4 {
     margin-left: 20px;
     margin-right: 20px;
     margin-bottom: 20px;
-}
-
-.more-options-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
-.more-options {
-    flex: 1;
 }
