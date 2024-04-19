@@ -24,25 +24,25 @@ router.use('/pages/cartPage', requireLogin);
 router.use('/pages/checkoutPage', requireLogin);
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  if(req.query.msg){
+router.get('/', function (req, res, next) {
+  if (req.query.msg) {
     res.locals.msg = req.query.msg
   }
   res.render('index');
 });
 
-router.get('/index', function(req, res, next) {
-  if(req.query.msg){
+router.get('/index', function (req, res, next) {
+  if (req.query.msg) {
     res.locals.msg = req.query.msg
   }
   res.render('index');
 });
 
-router.get('/logout', function(req,res, next){
-  if(req.session.user){
+router.get('/logout', function (req, res, next) {
+  if (req.session.user) {
     req.session.destroy()
     res.redirect("/?msg=logout")
-  }else {
+  } else {
     res.redirect("/")
   }
 })
@@ -72,40 +72,49 @@ const routes = [
 routes.forEach(route => {
   const path = `/pages/${route}`;
   const renderPath = `pages/${route}`;
-  
-  router.get(path, function(req, res, next) {
+
+  router.get(path, function (req, res, next) {
+    // Prepare the data object to pass to the view,
+    let data = {};
     if (req.query.msg) {
-      res.locals.msg = req.query.msg;
+      data.msg = req.query.msg;  // Store message in data object to pass to EJS template
     }
-    if(renderPath === `pages/userPage/EditCreation`)
-    {
-      const imagePath = '/images/rat.jpg';
-      res.render(renderPath, { imagePath: imagePath });
+
+    // Special handling for certain pages, like EditCreation
+    if (renderPath === 'pages/userPage/EditCreation') {
+      data.imagePath = '/images/rat.jpg';  // Additional data specific to this page
     }
-    else
-    {
-    res.render(renderPath);
-    }
+
+    // Render the appropriate EJS template with the data object
+    res.render(renderPath, data);
   });
 });
 
 router.post('/pages/userPage/signIn', async (req, res) => {
-  const user = await User.findUser(req.body.username, req.body.password);
-  
-  if (user !== null) {
-    // Create a session for the user
-    req.session.user = user;
+  const { username, password } = req.body;
+  try {
+    const user = await User.findOne({ where: { username: username } });
+    if (!user) {
+      return res.status(401).redirect('/pages/userPage/signIn?msg=User not found');
+    }
 
-    // Check if there's a returnTo URL in session
-    const returnTo = req.session.returnTo || '/index';
+    if (password == user.password) {
+      console.log("Sign-in successful")
 
-    // Redirect the user to the returnTo URL
-    res.redirect(returnTo);
+      // Create a session for the user
+      req.session.user = user.dataValues;
 
-    // Clear the returnTo URL from session
-    delete req.session.returnTo;
-  } else {
-    res.redirect("/pages/userPage/signIn?msg=fail");
+      // Check if there's a returnTo URL in session
+      const returnTo = req.session.returnTo || '/index';
+
+      // Redirect the user to the returnTo URL
+      res.redirect(returnTo);
+    } else {
+      res.redirect('/pages/userPage/signIn?msg=Incorrect password');
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).redirect('/pages/userPage/signIn?msg=Error logging in');
   }
 });
 
@@ -113,8 +122,8 @@ router.post('/pages/userPage/signIn', async (req, res) => {
 router.post('/pages/userPage/signUp', async (req, res) => {
   try {
     const user = await User.findUser(req.body.username, req.body.password);
-    
-    if(user !== null){
+
+    if (user !== null) {
       req.session.user = user;
       res.redirect(`/userPage`);
     } else {
@@ -140,7 +149,7 @@ const storage = multer.diskStorage({
     if (req.session.user && req.session.user.username) {
       // Define the destination directory based on the username
       const usernameDir = `./public/users/${req.session.user.username}`;
-      
+
       // Create the directory if it doesn't exist
       if (!fs.existsSync(usernameDir)) {
         fs.mkdirSync(usernameDir, { recursive: true });
@@ -154,7 +163,7 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     // Generate a unique filename
     const uniqueFilename = Date.now() + '-' + file.originalname;
-    
+
     cb(null, uniqueFilename); // File name
   }
 });
@@ -167,7 +176,7 @@ const upload = multer({
   }
 });
 
-router.post('/pages/userPage/EditCreation', upload.single('displayImage'), function(req, res, next) {
+router.post('/pages/userPage/EditCreation', upload.single('displayImage'), function (req, res, next) {
   if (!req.file) {
     return res.status(400).send('No file uploaded.');
   }
