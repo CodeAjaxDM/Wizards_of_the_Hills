@@ -6,6 +6,7 @@ var path = require('path');
 const multer = require('multer');
 const fs = require('fs');
 const bodyParser = require('body-parser');
+const sequelize = require('../db');
 
 function requireLogin(req, res, next) {
   const allowedPaths = ['/signIn', '/signUp'];
@@ -400,35 +401,60 @@ router.post('/pages/userPage/EditCreation', upload.single('displayImage'), async
 
 router.post('/updateAuthorName', async function(req, res) {
   const newAuthorName = req.body.authorName;
-  try {
-    const user = await User.findByPk(req.session.user.username);
-    if (user) {
-      const existingUserWithSameAuthorName = await User.findOne({
-        where: {
-          authorName: newAuthorName
-        }
-      });
+  const oldAuthorName = req.session.user.authorName; // Get the old author name from session
 
-      if (existingUserWithSameAuthorName && existingUserWithSameAuthorName.username !== user.username) {
-        // If the author name is not unique
-        req.session.msg = 'Author name taken';
-      } else {
-        // If the author name is unique, update the user's author name
-        user.authorName = newAuthorName;
-        await user.save();
-        req.session.msg = 'Successfully updated';
+  try {
+    // Check if the new author name is already taken
+    const existingUserWithSameAuthorName = await User.findOne({
+      where: {
+        authorName: newAuthorName
       }
-    } else {
-      res.status(404).send('User not found');
+    });
+
+    if (existingUserWithSameAuthorName && existingUserWithSameAuthorName.username !== req.session.user.username) {
+      // If the author name is not unique
+      req.session.msg = 'Author name taken';
+      return res.redirect('/pages/userPage/creatorPage?msg=' + req.session.msg);
     }
-    // Redirect to the creatorPage with the message
-    res.redirect('/pages/userPage/creatorPage?msg=' + req.session.msg);
+
+    // Use a transaction to ensure data integrity
+    await sequelize.transaction(async (t) => {
+      // Update the current user's author name
+      const user = await User.findByPk(req.session.user.username, { transaction: t });
+      if (user) {
+        user.authorName = newAuthorName;
+        await user.save({ transaction: t });
+
+        // Update all items with the old author name to use the new author name
+        const [updatedItemCount, updatedItemRows] = await Item.update(
+          { authorName: newAuthorName },
+          {
+            where: {
+              authorName: oldAuthorName,
+              ownedByAuthor: true
+            },
+            returning: true, // Ensure that updated rows are returned
+            transaction: t
+          }
+        );
+
+        if (updatedItemCount !== updatedItemRows.length) {
+          // If the number of updated items doesn't match the number of items returned, the update failed
+          throw new Error('Item update failed');
+        }
+      }
+    });
+
+    req.session.user.authorName = newAuthorName; // Update session data
+    req.session.msg = 'Successfully updated';
   } catch (error) {
     console.error('Error updating author name:', error);
-    res.status(500).send('Error updating author name');
+    req.session.msg = 'Error updating author name';
   }
-});
 
+  // Redirect to the creatorPage with the message
+  res.redirect('/pages/userPage/creatorPage?msg=' + req.session.msg);
+});
 
 router.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
