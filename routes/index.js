@@ -225,6 +225,7 @@ router.post('/add-to-cart', async (req, res) => {
       // Add new item to cart
       req.session.cart.push({
         itemNumber: item.itemNumber,
+        itemImageUrl: item.itemImageUrl,
         name: item.name,
         price: item.price,
         quantity: 1 // Start with a quantity of 1
