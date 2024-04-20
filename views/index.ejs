@@ -5,25 +5,15 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <link rel="icon" href="../../favicon.ico">
-
   <title>Wizards of the Hills</title>
-
   <link rel="stylesheet" href="/css/bootstrap.min.css" />
   <link href="/fonts/glyphicons-halflings-regular.woff2" rel="stylesheet">
   <link href="stylesheets/index.css" rel="stylesheet">
-
 </head>
 
 <body>
   <%- include('header.ejs') %>
-
     <div class="container">
-
-      <!-- Search bar -->
       <form class="form-inline mb-3">
         <div class="form-group">
           <input type="text" class="form-control" id="searchQuery" placeholder="Find your next great adventure...">
@@ -31,67 +21,30 @@
         <button type="submit" class="btn btn-primary">Search</button>
       </form>
 
-      <!--Featured items-->
       <h2>Featured</h2>
       <div class="row">
-        <div class="col-sm-3">
-          <a href="/pages/itemPages/owlfolkExpansion" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/owl.jpg" alt="The Owlfolk Expansion">
-              <div class="caption">
-                <h3>The Owlfolk Expansion</h3>
-                <p>$9.99</p>
+        <% featuredItems.forEach(item=> { %>
+          <div class="col-sm-3">
+            <a href="/item/<%= item.itemNumber %>" class="thumbnail-link">
+              <div class="thumbnail">
+                <img src="<%= item.imageUrl %>" alt="<%= item.name %>">
+                <div class="caption">
+                  <h3>
+                    <%= item.name %>
+                  </h3>
+                  <p>$<%= item.price.toFixed(2) %>
+                  </p>
+                </div>
               </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-sm-3">
-          <a href="/pages/itemPages/companionAnimalsExpanded" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/rat.jpg" alt="Companion Animals Expanded (5e)">
-              <div class="caption">
-                <h3>Companion Animals Expanded (5e)</h3>
-                <p>FREE</p>
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-sm-3">
-          <a href="/pages/itemPages/nextLevelSpellbook" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/wizard.jpeg" alt="Next Level Spellbooks">
-              <div class="caption">
-                <h3>Next Level Spellbooks</h3>
-                <p>$12.49</p>
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="col-sm-3">
-          <a href="/pages/itemPages/escapeFromEthmoria" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/spooky.jpg" alt="Escape from Ethmoria">
-              <div class="caption">
-                <h3>Escape from Ethmoria (Adventure) </h3>
-                <p>$22.39</p>
-              </div>
-            </div>
-          </a>
-        </div>
+            </a>
+          </div>
+          <% }); %>
       </div>
       <%- include('categoriesCarousel.ejs') %>
     </div>
-
     <%- include('footer.ejs') %>
-
-      <!-- Bootstrap core JavaScript
-    ================================================== -->
-      <!-- Placed at the end of the document so the pages load faster -->
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-      <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
       <script src="/js/bootstrap.min.js"></script>
-      <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-      <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>
 
 </html>

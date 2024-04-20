@@ -1,5 +1,6 @@
 var express = require('express');
 const User = require('../models/User');
+const Item = require('../models/Item');
 var router = express.Router();
 var path = require('path');
 const multer = require('multer');
@@ -23,29 +24,80 @@ router.use('/pages/userPage', requireLogin);
 router.use('/pages/cartPage', requireLogin);
 router.use('/pages/checkoutPage', requireLogin);
 
+const app = express();
+
+app.set('view engine', 'ejs'); // Set EJS as the view engine
+app.set('views', path.join(__dirname, 'views')); // Set the directory where express looks for views
+
+
 /* GET home page. */
-router.get('/', function (req, res, next) {
-  if (req.query.msg) {
-    res.locals.msg = req.query.msg
+router.get('/', async function (req, res, next) {
+  try {
+    // Fetch featured items, example using findAll
+    const featuredItems = await Item.findAll({
+      limit: 4 // Assuming you're featuring 4 items
+    });
+
+    if (req.query.msg) {
+      res.locals.msg = req.query.msg;
+    }
+    // Pass featured items to the view
+    res.render('index', { featuredItems });
+  } catch (error) {
+    next(error);
   }
-  res.render('index');
 });
 
-router.get('/index', function (req, res, next) {
-  if (req.query.msg) {
-    res.locals.msg = req.query.msg
+router.get('/index', function (req, res) {
+  res.redirect('/');
+}); //redirect '/index' to just '/'
+
+router.get('/item/:itemNumber', async function (req, res, next) {
+  try {
+    const item = await Item.findOne({ where: { itemNumber: req.params.itemNumber } });
+    if (item) {
+      res.render('itemPage', {
+        itemName: item.name,
+        itemDescription: item.description,
+        itemPrice: item.price === 0 ? 'FREE' : `$${item.price.toFixed(2)}`,
+        authorName: item.authorName,
+        authorWebsite: item.authorWebsite || '#', // Provide a fallback URL
+        itemImageUrl: item.imageUrl
+      });
+    } else {
+      res.status(404).send('Item not found');
+    }
+  } catch (error) {
+    next(error);
   }
-  res.render('index');
 });
 
-router.get('/logout', function (req, res, next) {
-  if (req.session.user) {
-    req.session.destroy()
-    res.redirect("/?msg=logout")
+router.post('/login', async function (req, res, next) {
+  const user = await User.findUser(req.body.username, req.body.password)
+  if (user !== null) {
+    req.session.user = user
+    res.redirect("/courses")
   } else {
-    res.redirect("/")
+    res.redirect("/?msg=fail")
   }
-})
+});
+
+router.get('/logout', function (req, res) {
+  if (req.session.user) {
+    req.session.destroy(function (err) {
+      if (err) {
+        console.error('Session destruction error:', err);
+        return next(err);
+      }
+      // Redirect to the home page with a logout message
+      res.redirect('/?msg=logout');
+    });
+  } else {
+    // If the user is not logged in, simply redirect to the home page
+    res.redirect('/');
+  }
+});
+
 
 // Define an array of routes and their corresponding page names
 const routes = [
@@ -74,35 +126,26 @@ routes.forEach(route => {
   const renderPath = `pages/${route}`;
 
   router.get(path, function (req, res, next) {
-    // Prepare the data object to pass to the view,
-    let data = {};
     if (req.query.msg) {
       data.msg = req.query.msg;  // Store message in data object to pass to EJS template
     }
-
-    // Special handling for certain pages, like EditCreation
-    if (renderPath === 'pages/userPage/EditCreation') {
-      data.imagePath = '/images/rat.jpg';  // Additional data specific to this page
+    if (renderPath === `pages/userPage/EditCreation`) {
+      const imagePath = '/images/rat.jpg';
+      res.render(renderPath, { imagePath: imagePath });
     }
-
-    // Render the appropriate EJS template with the data object
-    res.render(renderPath, data);
+    else {
+      res.render(renderPath);
+    }
   });
 });
 
 router.post('/pages/userPage/signIn', async (req, res) => {
-  const { username, password } = req.body;
   try {
-    const user = await User.findOne({ where: { username: username } });
-    if (!user) {
-      return res.status(401).redirect('/pages/userPage/signIn?msg=User not found');
-    }
+    const user = await User.findUser(req.body.username, req.body.password);
 
-    if (password == user.password) {
-      console.log("Sign-in successful")
-
+    if (user !== null) {
       // Create a session for the user
-      req.session.user = user.dataValues;
+      req.session.user = user;
 
       // Check if there's a returnTo URL in session
       const returnTo = req.session.returnTo || '/index';
@@ -117,6 +160,7 @@ router.post('/pages/userPage/signIn', async (req, res) => {
     res.status(500).redirect('/pages/userPage/signIn?msg=Error logging in');
   }
 });
+
 
 
 router.post('/pages/userPage/signUp', async (req, res) => {

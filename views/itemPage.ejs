@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+        <%= itemName %> - Author Page
+    </title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link href="/stylesheets/itemPages.css" rel="stylesheet">
+</head>
+
+<body>
+    <%- include('header.ejs') %>
+        <main>
+            <div class="big-spacer"></div>
+            <div class="item-container">
+                <div class="item-details">
+                    <h2>
+                        <%= itemName %>
+                    </h2>
+                    <div class="divider"></div>
+                    <div class="item-page-container">
+                        <img class="item-hero-image" src="<%= itemImageUrl %>" alt="<%= itemName %>">
+                        <div class="item-page-description">
+                            <p>
+                                <%= itemDescription %>
+                            </p>
+                            <p>
+                                <%= itemPrice %>
+                            </p>
+                            <p>Created by: <a href="<%= authorWebsite %>">
+                                    <%= authorName %>
+                                </a></p>
+                            <button>Add to Cart</button>
+                        </div>
+                        <%- include('exploreCarousel.ejs') %>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <%- include('footer.ejs') %>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+            <script src="/js/bootstrap.min.js"></script>
+</body>
+
+</html>
