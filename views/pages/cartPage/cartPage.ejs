@@ -32,39 +32,82 @@
                         <thead>
                             <tr>
                                 <th>Product</th>
-                                <th> </th>
-                                <th> </th>
                                 <th class="text-center">Price</th>
-                                <th> </th>
+                                <th>Action</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             <% if (items && items.length> 0) { %>
-                                <% items.forEach(function(item) { %>
-                                    <tr>
-                                        <td><img src="<%= item.imageUrl %>" alt="<%= item.name %>" style="width: 50px;">
-                                        </td>
-                                        <td>
-                                            <%= item.name %>
-                                        </td>
-                                        <td>
-                                            <%= item.quantity %>
-                                        </td>
-                                        <td>$<%= (item.price).toFixed(2) %>
-                                        </td>
-                                        <td>
-                                            <form action="/remove-from-cart" method="post">
-                                                <input type="hidden" name="itemNumber" value="<%= item.itemNumber %>">
-                                                <button type="submit" class="btn btn-danger">Remove</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    <% }); %>
-                                        <% } else { %>
-                                            <tr>
-                                                <td colspan="5">Your cart is empty.</td>
-                                            </tr>
-                                            <% } %>
+                                <% let subtotal=0; %>
+                                    <% items.forEach(function(item) { %>
+                                        <tr>
+                                            <td class="col-sm-8 col-md-6">
+                                                <div class="media">
+                                                    <a class="thumbnail pull-left" href="#">
+                                                        <img class="media-object" src="<%= item.imageUrl %>"
+                                                            alt="<%= item.name %>" style="width: 72px; height: 72px;">
+                                                    </a>
+                                                    <div class="media-body">
+                                                        <h4 class="media-heading"><a href="#">
+                                                                <%= item.name %>
+                                                            </a></h4>
+                                                        <h5 class="media-heading"> by <a href="#">User</a></h5>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center"><strong>$<%= item.price.toFixed(2) %></strong></td>
+                                            <td>
+                                                <form action="/remove-from-cart" method="post">
+                                                    <input type="hidden" name="itemNumber"
+                                                        value="<%= item.itemNumber %>">
+                                                    <button type="submit" class="btn btn-danger"><span
+                                                            class="glyphicon glyphicon-remove"></span> Remove</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <% subtotal +=item.price * (item.quantity || 1); %>
+                                            <% }); %>
+                                                <tr>
+                                                    <td>Subtotal</td>
+                                                    <td class="text-right"><strong>$<%= subtotal.toFixed(2) %></strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Estimated tax (10%)</td>
+                                                    <td class="text-right"><strong>$<%= (subtotal * 0.10).toFixed(2) %>
+                                                        </strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Total</td>
+                                                    <td class="text-right"><strong>$<%= (subtotal + subtotal *
+                                                                0.10).toFixed(2) %></strong></td>
+                                                </tr>
+                                                <% } else { %>
+                                                    <tr>
+                                                        <td colspan="5">Your cart is empty.</td>
+                                                    </tr>
+                                                    <% } %>
+                                                        <tr>
+                                                            <td> </td>
+                                                            <td> </td>
+                                                            <td> </td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-default"
+                                                                    onclick="location.href='/index'">
+                                                                    <span
+                                                                        class="glyphicon glyphicon-shopping-cart"></span>
+                                                                    Continue Shopping
+                                                                </button>
+                                                            </td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-success"
+                                                                    onclick="location.href='/pages/checkoutPage/checkout'">
+                                                                    Checkout <span
+                                                                        class="glyphicon glyphicon-play"></span>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
                         </tbody>
                         <script>
                             function removeItem(itemNumber) {
