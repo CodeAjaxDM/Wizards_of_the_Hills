@@ -61,6 +61,19 @@
           <small class="form-text text-muted">Please enter a valid dollar amount (e.g., 10.99).</small>
         </div>
 
+
+        <!-- Category Dropdown -->
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select class="form-control" id="category" name="category">
+              <option value="">Select Category</option>
+              <option value="Rule books" <% if (category === 'Rule books') { %>selected<% } %>>Rule books</option>
+              <option value="Magical items" <% if (category === 'Magical items') { %>selected<% } %>>Magical items</option>
+              <option value="Character options" <% if (category === 'Character options') { %>selected<% } %>>Character options</option>
+              <option value="Prewritten adventures" <% if (category === 'Prewritten adventures') { %>selected<% } %>>Prewritten adventures</option>
+          </select>
+        </div>
+
           <div id="fileInputs">
             <!-- Initial file input field -->
             <div class="form-group">

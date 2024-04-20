@@ -157,6 +157,7 @@ routes.forEach(route => {
           data.price = item.price || '';
           data.publishStatus = item.published ? 'publish' : 'unpublish';
           data.itemNumber = item.itemNumber;
+          data.category = item.category || '';
         } else {
           return res.status(404).send('Item not found');
         }
@@ -172,6 +173,7 @@ routes.forEach(route => {
       data.price = '';
       data.publishStatus = 'unpublish';
       data.itemNumber = false;
+      data.category = '';
     }
     
     if (renderPath === 'pages/userPage/creatorPage') {
@@ -330,6 +332,7 @@ router.post('/pages/userPage/EditCreation', upload.single('displayImage'), async
     const itemNumber = req.body.itemNumber || false;
     const itemCount = await Item.count();  // Count all items
     const newItemNumber = itemCount + 1;  // Generate the next item number
+    const category = req.body.category || "";
     
     console.log(imagePath, title, description, price, publishStatus, itemNumber, newItemNumber);
 
@@ -345,6 +348,7 @@ router.post('/pages/userPage/EditCreation', upload.single('displayImage'), async
         item.price = price;
         item.published = published;
         item.imageUrl = imagePath;
+        item.category = category;
       }
     } else {
       // If itemNumber is not provided, create a new item
@@ -355,7 +359,8 @@ router.post('/pages/userPage/EditCreation', upload.single('displayImage'), async
         price: price,
         authorName: req.session.user.authorName,
         published: published,
-        imageUrl: imagePath
+        imageUrl: imagePath,
+        category: category
       });
     }
     await item.save();
