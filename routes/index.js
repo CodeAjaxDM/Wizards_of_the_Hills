@@ -82,7 +82,11 @@ routes.forEach(route => {
 
     // Special handling for certain pages, like EditCreation
     if (renderPath === 'pages/userPage/EditCreation') {
-      data.imagePath = '/images/rat.jpg';  // Additional data specific to this page
+        // Fetch title, description, and price from query parameters
+        data.imagePath = req.query.imagePath || '/images/rat.jpg';
+        data.title = req.query.title || '';
+        data.description = req.query.description || '';
+        data.price = req.query.price || '';
     }
 
     // Render the appropriate EJS template with the data object
@@ -180,16 +184,34 @@ const upload = multer({
 });
 
 router.post('/pages/userPage/EditCreation', upload.single('displayImage'), function (req, res, next) {
-  if (!req.file) {
-    return res.status(400).send('No file uploaded.');
+  try {
+    // Get the uploaded image path
+
+    // Check the value of the 'action' parameter from the form
+    const action = req.body.action;
+
+    if (action === 'discard') {
+      // Redirect back to the ContentCreator page
+      return res.redirect('/pages/userPage/creatorPage');
+    }
+    
+    const imagePath = req.file ? '/images/' + req.file.filename : '/images/rat.jpg';
+
+    // Capture title, description, and price from form data
+    const title = req.body.title || "";
+    const description = req.body.description || "";
+    const price = req.body.price || "";
+
+    console.log(imagePath, title, description, price);
+
+    // Here you would typically update the database with the new data
+    // For now, let's just send a success response
+    res.json({ success: true, imagePath, title, description, price });
+
+  } catch (error) {
+    console.error('Error processing form data:', error);
+    res.json({ success: false, message: 'Error processing form data' });
   }
-
-  // Get the uploaded image path
-  const imagePath = '/images/' + req.file.filename;
-  console.log(imagePath)
-
-  // Redirect to the same page with the uploaded image path as a query parameter
-  res.redirect('/pages/userPage/EditCreation?imagePath=' + imagePath);
 });
 
 
