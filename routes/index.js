@@ -84,72 +84,76 @@ router.post('/login', async function (req, res, next) {
 
 router.get('/logout', function (req, res, next) {
   if (req.session.user) {
-    req.session.destroy()
-    res.redirect("/?msg=logout")
-  } else {
-    res.redirect("/")
-  }
-})
+    router.get('/logout', function (req, res, next) {
+      if (req.session.user) {
+        req.session.destroy()
+        res.redirect("/?msg=logout")
+      } else {
+      } else {
+        res.redirect("/")
+      }
+    })
 
-// Define an array of routes and their corresponding page names
-const routes = [
-  'userPage/userPage',
-  'userPage/authorPage',
-  'userPage/creatorPage',
-  'userPage/EditCreation',
-  'userPage/signIn',
-  'userPage/signUp',
-  'itemPages/companionAnimalsExpanded',
-  'itemPages/escapeFromEthmoria',
-  'itemPages/nextLevelSpellbook',
-  'itemPages/owlfolkExpansion',
-  'categories/browseAll',
-  'categories/characterOptions',
-  'categories/magicalItems',
-  'categories/prewrittenAdventures',
-  'categories/ruleBooks',
-  'checkoutPage/checkout',
-  'cartPage/cartPage',
-];
+    // Define an array of routes and their corresponding page names
+    const routes = [
+      'userPage/userPage',
+      'userPage/authorPage',
+      'userPage/creatorPage',
+      'userPage/EditCreation',
+      'userPage/signIn',
+      'userPage/signUp',
+      'itemPages/companionAnimalsExpanded',
+      'itemPages/escapeFromEthmoria',
+      'itemPages/nextLevelSpellbook',
+      'itemPages/owlfolkExpansion',
+      'categories/browseAll',
+      'categories/characterOptions',
+      'categories/magicalItems',
+      'categories/prewrittenAdventures',
+      'categories/ruleBooks',
+      'checkoutPage/checkout',
+      'cartPage/cartPage',
+    ];
 
-// Iterate over the routes array to define the routes dynamically
-routes.forEach(route => {
-  const path = `/pages/${route}`;
-  const renderPath = `pages/${route}`;
+    // Iterate over the routes array to define the routes dynamically
+    routes.forEach(route => {
+      const path = `/pages/${route}`;
+      const renderPath = `pages/${route}`;
 
-  router.get(path, function (req, res, next) {
-    if (req.query.msg) {
-      res.locals.msg = req.query.msg;
-    }
-    if (renderPath === `pages/userPage/EditCreation`) {
-      const imagePath = '/images/rat.jpg';
-      res.render(renderPath, { imagePath: imagePath });
-    }
-    else {
-      res.render(renderPath);
+      router.get(path, function (req, res, next) {
+        if (req.query.msg) {
+          data.msg = req.query.msg;  // Store message in data object to pass to EJS template
+        }
+        if (renderPath === `pages/userPage/EditCreation`) {
+          const imagePath = '/images/rat.jpg';
+          res.render(renderPath, { imagePath: imagePath });
+        }
+        else {
+          res.render(renderPath);
+        }
+      });
+    });
+
+    router.post('/pages/userPage/signIn', async (req, res) => {
+      const user = await User.findUser(req.body.username, req.body.password);
+
+      if (user !== null) {
+        // Create a session for the user
+        req.session.user = user;
+
+        // Check if there's a returnTo URL in session
+        const returnTo = req.session.returnTo || '/index';
+
+        // Redirect the user to the returnTo URL
+        res.redirect(returnTo);
+      } else {
+        res.redirect('/pages/userPage/signIn?msg=Incorrect password');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).redirect('/pages/userPage/signIn?msg=Error logging in');
     }
   });
-});
-
-router.post('/pages/userPage/signIn', async (req, res) => {
-  const user = await User.findUser(req.body.username, req.body.password);
-
-  if (user !== null) {
-    // Create a session for the user
-    req.session.user = user;
-
-    // Check if there's a returnTo URL in session
-    const returnTo = req.session.returnTo || '/index';
-
-    // Redirect the user to the returnTo URL
-    res.redirect(returnTo);
-
-    // Clear the returnTo URL from session
-    delete req.session.returnTo;
-  } else {
-    res.redirect("/pages/userPage/signIn?msg=fail");
-  }
-});
 
 
 router.post('/pages/userPage/signUp', async (req, res) => {
