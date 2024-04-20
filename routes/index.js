@@ -59,6 +59,7 @@ router.get('/item/:itemNumber', async function (req, res, next) {
         itemName: item.name,
         itemDescription: item.description,
         itemPrice: item.price === 0 ? 'FREE' : `$${item.price.toFixed(2)}`,
+        itemNumber: item.itemNumber,
         authorName: item.authorName,
         authorWebsite: item.authorWebsite || '#', // Provide a fallback URL
         itemImageUrl: item.imageUrl
@@ -132,15 +133,20 @@ routes.forEach(route => {
 
     // Special handling for certain pages, like EditCreation
     if (renderPath === 'pages/userPage/EditCreation') {
-        // Fetch title, description, and price from query parameters
-        data.imagePath = req.query.imagePath || '/images/rat.jpg';
-        data.title = req.query.title || '';
-        data.description = req.query.description || '';
-        data.price = req.query.price || '';
+      // Fetch title, description, and price from query parameters
+      data.imagePath = req.query.imagePath || '/images/rat.jpg';
+      data.title = req.query.title || '';
+      data.description = req.query.description || '';
+      data.price = req.query.price || '';
     }
     else if (renderPath === 'pages/userPage/creatorPage') {
       const user = await User.findByPk(req.session.user.username);
       data.authorName = user ? user.authorName : '';
+    }
+    else if (renderPath === 'pages/cartPage/cartPage') {
+      res.render('pages/cartPage/cartPage', {
+        items: req.session.cart || []
+      });
     }
 
     // Render the appropriate EJS template with the data object
@@ -183,7 +189,7 @@ router.post('/pages/userPage/signUp', async (req, res) => {
     if (user !== null) {
       console.log("Sign-in successful")
       req.session.user = user;
-      
+
       // Check if there's a returnTo URL in session
       const returnTo = req.session.returnTo || '/index';
 
@@ -204,6 +210,41 @@ router.post('/pages/userPage/signUp', async (req, res) => {
   }
 });
 
+router.post('/add-to-cart', async (req, res) => {
+  const { itemNumber } = req.body; // Ensure this matches the name attribute in the form
+  const item = await Item.findOne({ where: { itemNumber: itemNumber } });
+
+  if (item) {
+    if (!req.session.cart) {
+      req.session.cart = [];
+    }
+    const cartItem = req.session.cart.find(i => i.itemNumber === item.itemNumber);
+    if (cartItem) {
+      cartItem.quantity += 1; // Increment quantity if item already in cart
+    } else {
+      // Add new item to cart
+      req.session.cart.push({
+        itemNumber: item.itemNumber,
+        name: item.name,
+        price: item.price,
+        quantity: 1 // Start with a quantity of 1
+      });
+    }
+
+    res.redirect('/pages/cartPage/cartPage'); // Redirect to the cart page
+  } else {
+    res.status(404).send('Item not found');
+  }
+});
+
+router.post('/remove-from-cart', (req, res) => {
+  const { itemNumber } = req.body;
+  if (req.session.cart) {
+    req.session.cart = req.session.cart.filter(item => item.itemNumber !== itemNumber);
+  }
+
+  res.redirect('/pages/cartPage/cartPage'); // Re-render cart for changes
+});
 
 // Multer storage settings
 const storage = multer.diskStorage({
@@ -247,14 +288,14 @@ router.post('/pages/userPage/EditCreation', upload.single('displayImage'), funct
       // Redirect back to the ContentCreator page
       return res.redirect('/pages/userPage/creatorPage');
     }
-    
+
     const imagePath = req.file ? '/images/' + req.file.filename : '/images/rat.jpg';
 
     // Capture title, description, and price from form data
     const title = req.body.title || "";
     const description = req.body.description || "";
     const price = req.body.price || "";
-    
+
     console.log(imagePath, title, description, price);
 
     // Here you would typically update the database with the new data
@@ -267,7 +308,7 @@ router.post('/pages/userPage/EditCreation', upload.single('displayImage'), funct
   }
 });
 
-router.post('/updateAuthorName', async function(req, res) {
+router.post('/updateAuthorName', async function (req, res) {
   const newAuthorName = req.body.authorName;
   try {
     const user = await User.findByPk(req.session.user.username);
