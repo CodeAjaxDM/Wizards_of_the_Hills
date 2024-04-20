@@ -20,43 +20,65 @@
 //   }
 // };
 
-//2nd migration
+// //2nd migration
+// 'use strict';
+
+// module.exports = {
+//   up: async (queryInterface, Sequelize) => {
+//     // Add isAdmin to Users table
+//     await queryInterface.addColumn('Users', 'isAdmin', {
+//       type: Sequelize.BOOLEAN,
+//       allowNull: false,
+//       defaultValue: false
+//     });
+
+//     // Add published to Items table
+//     await queryInterface.addColumn('Items', 'published', {
+//       type: Sequelize.BOOLEAN,
+//       allowNull: false,
+//       defaultValue: false
+//     });
+
+//     // Modify imageUrl to allow null in Items table
+//     await queryInterface.changeColumn('Items', 'imageUrl', {
+//       type: Sequelize.STRING,
+//       allowNull: true
+//     });
+//   },
+
+//   down: async (queryInterface, Sequelize) => {
+//     // Remove isAdmin from Users table
+//     await queryInterface.removeColumn('Users', 'isAdmin');
+
+//     // Remove published from Items table
+//     await queryInterface.removeColumn('Items', 'published');
+
+//     // Restore imageUrl to disallow null in Items table
+//     await queryInterface.changeColumn('Items', 'imageUrl', {
+//       type: Sequelize.STRING,
+//       allowNull: false
+//     });
+//   }
+// };
+
+
+//3rd migration:
+
 'use strict';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    // Add isAdmin to Users table
-    await queryInterface.addColumn('Users', 'isAdmin', {
+    // Add ownedByAuthor to Items table
+    await queryInterface.addColumn('Items', 'ownedByAuthor', {
       type: Sequelize.BOOLEAN,
       allowNull: false,
-      defaultValue: false
-    });
-
-    // Add published to Items table
-    await queryInterface.addColumn('Items', 'published', {
-      type: Sequelize.BOOLEAN,
-      allowNull: false,
-      defaultValue: false
-    });
-
-    // Modify imageUrl to allow null in Items table
-    await queryInterface.changeColumn('Items', 'imageUrl', {
-      type: Sequelize.STRING,
-      allowNull: true
+      defaultValue: true
     });
   },
 
   down: async (queryInterface, Sequelize) => {
-    // Remove isAdmin from Users table
-    await queryInterface.removeColumn('Users', 'isAdmin');
-
-    // Remove published from Items table
-    await queryInterface.removeColumn('Items', 'published');
-
-    // Restore imageUrl to disallow null in Items table
-    await queryInterface.changeColumn('Items', 'imageUrl', {
-      type: Sequelize.STRING,
-      allowNull: false
-    });
+    // Remove ownedByAuthor from Items table
+    await queryInterface.removeColumn('Items', 'ownedByAuthor');
   }
 };
+

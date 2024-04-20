@@ -5,6 +5,7 @@ var router = express.Router();
 var path = require('path');
 const multer = require('multer');
 const fs = require('fs');
+const bodyParser = require('body-parser');
 
 function requireLogin(req, res, next) {
   const allowedPaths = ['/signIn', '/signUp'];
@@ -23,6 +24,7 @@ function requireLogin(req, res, next) {
 router.use('/pages/userPage', requireLogin);
 router.use('/pages/cartPage', requireLogin);
 router.use('/pages/checkoutPage', requireLogin);
+router.use(bodyParser.urlencoded({ extended: true }));
 
 const app = express();
 
@@ -192,14 +194,16 @@ routes.forEach(route => {
         publishedItems = await Item.findAll({
           where: {
             authorName: user.authorName,
-            published: true
+            published: true,
+            ownedByAuthor: true
           },
         });
     
         unpublishedItems = await Item.findAll({
           where: {
             authorName: user.authorName,
-            published: false
+            published: false,
+            ownedByAuthor: true
           },
         });
         
@@ -215,6 +219,25 @@ routes.forEach(route => {
     res.render(renderPath, data);
 
   });
+});
+
+router.get('/deleteItem', async function(req, res) {
+  const itemNumber = req.query.itemNumber;
+  try {
+    const item = await Item.findOne({ where: { itemNumber: itemNumber } });
+    if (item) {
+      item.ownedByAuthor = false; // Mark item as not owned by the author
+      await item.save();
+      req.session.msg = 'Item removed successfully';
+    } else {
+      req.session.msg = 'Item not found';
+    }
+  } catch (error) {
+    console.error('Error updating item:', error);
+    req.session.msg = 'Error updating item';
+  }
+  
+  res.redirect('/pages/userPage/creatorPage?msg=' + req.session.msg);
 });
 
 router.post('/pages/userPage/signIn', async (req, res) => {

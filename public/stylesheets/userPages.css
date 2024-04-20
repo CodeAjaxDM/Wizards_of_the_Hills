@@ -246,6 +246,12 @@
   flex-shrink: 0; /* Prevent item title and price from shrinking */
 }
 
+.content-actions .btn {
+  margin-right: 10px; 
+}
 
+.delete-btn {
+  margin-left: 10px; 
+}
 
 

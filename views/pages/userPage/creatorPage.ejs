@@ -70,24 +70,28 @@
   <% if (authorName && publishedItems && publishedItems.length > 0) { %>
     <div class="row content-viewer">
       <% publishedItems.forEach((item, index) => { %>
-        <div class="col-sm-3">
-          <div class="thumbnail">
-            <a href="/pages/item/<%= item.itemNumber %>" class="thumbnail-link">
-              <div class="image-wrapper">
-                <img src="<%= item.imageUrl || '/images/default-image.jpg' %>" alt="<%= item.name %>" class="item-image">
+        <% if (item.ownedByAuthor) { %>
+          <div class="col-sm-3">
+            <div class="thumbnail">
+              <a href="/pages/item/<%= item.itemNumber %>" class="thumbnail-link">
+                <div class="image-wrapper">
+                  <img src="<%= item.imageUrl || '/images/default-image.jpg' %>" alt="<%= item.name %>" class="item-image">
+                </div>
+              </a>
+              <div class="caption">
+                <h3 class="item-title"><%= item.name %></h3>
+                <p class="item-price"><%= item.price === 0 ? 'FREE' : '$' + item.price %></p>
+                <div class="content-actions">
+                  <a href="/pages/userPage/EditCreation?itemNumber=<%= item.itemNumber %>" class="btn btn-info" role="button">Edit</a>
+                  <button class="btn btn-danger delete-btn" data-item-number="<%= item.itemNumber %>">Delete</button>
+                </div>
               </div>
-            </a>
-            <div class="caption">
-              <h3 class="item-title"><%= item.name %></h3>
-              <p class="item-price"><%= item.price === 0 ? 'FREE' : '$' + item.price %></p>
-              <div class="content-actions">
-                <a href="/pages/userPage/EditCreation?itemNumber=<%= item.itemNumber %>" class="btn btn-info" role="button">Edit</a>
-              </div>
+
             </div>
           </div>
-        </div>
-        <% if ((index + 1) % 4 === 0) { %>
-          </div><div class="row content-viewer">
+          <% if ((index + 1) % 4 === 0) { %>
+            </div><div class="row content-viewer">
+          <% } %>
         <% } %>
       <% }); %>
     </div>
@@ -102,24 +106,27 @@
   <% if (authorName && unpublishedItems && unpublishedItems.length > 0) { %>
     <div class="row content-viewer">
       <% unpublishedItems.forEach((item, index) => { %>
-        <div class="col-sm-3">
-          <div class="thumbnail">
-            <a href="/pages/item/<%= item.itemNumber %>" class="thumbnail-link">
-              <div class="image-wrapper">
-                <img src="<%= item.imageUrl || '/images/default-image.jpg' %>" alt="<%= item.name %>" class="item-image">
-              </div>
-            </a>
-            <div class="caption">
-              <h3 class="item-title"><%= item.name %></h3>
-              <p class="item-price"><%= item.price === 0 ? 'FREE' : '$' + item.price %></p>
-              <div class="content-actions">
-                <a href="/pages/userPage/EditCreation?itemNumber=<%= item.itemNumber %>" class="btn btn-info" role="button">Edit</a>
+        <% if (item.ownedByAuthor) { %>
+          <div class="col-sm-3">
+            <div class="thumbnail">
+              <a href="/pages/item/<%= item.itemNumber %>" class="thumbnail-link">
+                <div class="image-wrapper">
+                  <img src="<%= item.imageUrl || '/images/default-image.jpg' %>" alt="<%= item.name %>" class="item-image">
+                </div>
+              </a>
+              <div class="caption">
+                <h3 class="item-title"><%= item.name %></h3>
+                <p class="item-price"><%= item.price === 0 ? 'FREE' : '$' + item.price %></p>
+                <div class="content-actions">
+                  <a href="/pages/userPage/EditCreation?itemNumber=<%= item.itemNumber %>" class="btn btn-info" role="button">Edit</a>
+                  <button class="btn btn-danger delete-btn" data-item-number="<%= item.itemNumber %>">Delete</button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <% if ((index + 1) % 4 === 0) { %>
-          </div><div class="row content-viewer">
+          <% if ((index + 1) % 4 === 0) { %>
+            </div><div class="row content-viewer">
+          <% } %>
         <% } %>
       <% }); %>
     </div>
@@ -170,6 +177,21 @@
       });
     }
   });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.delete-btn').forEach(button => {
+      button.addEventListener('click', function(event) {
+        const itemNumber = event.target.getAttribute('data-item-number');
+        const confirmation = confirm('Are you sure you want to delete this item?');
+
+        if (confirmation) {
+          // Redirect to delete item route
+          window.location.href = `/deleteItem?itemNumber=${itemNumber}`;
+        }
+      });
+    });
+  });
+  
   
 </script>
 

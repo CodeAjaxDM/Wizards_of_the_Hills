@@ -45,7 +45,12 @@ const Item = sequelize.define('Item', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false // Default value set to false
-    }
+    },
+    ownedByAuthor: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true // Default value set to true
+    },
 });
 
 Item.belongsToMany(User, {
