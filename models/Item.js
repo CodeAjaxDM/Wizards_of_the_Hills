@@ -34,6 +34,10 @@ const Item = sequelize.define('Item', {
     filePath: {
         type: Sequelize.STRING, // Path to the .zip file
         allowNull: true
+    },
+    category: {
+        type: DataTypes.STRING,
+        allowNull: true
     }
 });
 

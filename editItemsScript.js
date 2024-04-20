@@ -14,6 +14,7 @@ async function updateItem() {
             //price: 10.99, 
             //description: 'Updated description here.', 
             //imageUrl: '/images/owl.jpg' 
+            //category: 'character options'
         };
 
         // Update item
