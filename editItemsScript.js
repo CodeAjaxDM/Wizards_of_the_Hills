@@ -8,12 +8,12 @@ async function updateItem() {
         await sequelize.sync(); // Make sure your database is synced before updating data
         console.log("Database synced!");
 
-        const itemNumberToUpdate = '001'; // The unique identifier for the item you want to update
+        const itemNumberToUpdate = '007'; // The unique identifier for the item you want to update
         const updatedValues = {
             //YOUR CHANGES WOULD GO HERE! 
             //price: 10.99, 
             //description: 'Updated description here.', 
-            //imageUrl: '/images/owl.jpg' 
+            imageUrl: '/images/item-bundle.png'
             //category: 'character options'
         };
 
