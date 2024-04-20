@@ -1,5 +1,6 @@
 const sequelize = require('../db')
 const { Model, DataTypes } = require('sequelize')
+const Purchase = require('./Purchase');
 
 class User extends Model {
 
@@ -17,6 +18,20 @@ class User extends Model {
         }
     }
 
+    static async updateAuthorName(username, newAuthorName) {
+      try {
+        const user = await User.findByPk(username);
+        if (user) {
+          user.authorName = newAuthorName;
+          await user.save();
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.error('Error updating author name:', error);
+        return false;
+      }
+    }
 }
 
 User.init({
@@ -28,10 +43,21 @@ User.init({
   password: {
     type: DataTypes.STRING,
     allowNull: false
-  }
+  },
+  authorName: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue: null
+  },
 }, {
   sequelize, 
   modelName: 'User'
+});
+
+User.hasMany(Purchase, {
+  foreignKey: 'userId',
+  sourceKey: 'username',
+  onDelete: 'CASCADE'
 });
 
 module.exports = User

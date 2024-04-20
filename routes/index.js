@@ -29,7 +29,6 @@ const app = express();
 app.set('view engine', 'ejs'); // Set EJS as the view engine
 app.set('views', path.join(__dirname, 'views')); // Set the directory where express looks for views
 
-
 /* GET home page. */
 router.get('/', async function (req, res, next) {
   try {
@@ -98,7 +97,6 @@ router.get('/logout', function (req, res) {
   }
 });
 
-
 // Define an array of routes and their corresponding page names
 const routes = [
   'userPage/userPage',
@@ -125,27 +123,44 @@ routes.forEach(route => {
   const path = `/pages/${route}`;
   const renderPath = `pages/${route}`;
 
-  router.get(path, function (req, res, next) {
+  router.get(path, async function (req, res, next) {
+    // Prepare the data object to pass to the view,
+    let data = {};
     if (req.query.msg) {
       data.msg = req.query.msg;  // Store message in data object to pass to EJS template
     }
-    if (renderPath === `pages/userPage/EditCreation`) {
-      const imagePath = '/images/rat.jpg';
-      res.render(renderPath, { imagePath: imagePath });
+
+    // Special handling for certain pages, like EditCreation
+    if (renderPath === 'pages/userPage/EditCreation') {
+        // Fetch title, description, and price from query parameters
+        data.imagePath = req.query.imagePath || '/images/rat.jpg';
+        data.title = req.query.title || '';
+        data.description = req.query.description || '';
+        data.price = req.query.price || '';
     }
-    else {
-      res.render(renderPath);
+    else if (renderPath === 'pages/userPage/creatorPage') {
+      const user = await User.findByPk(req.session.user.username);
+      data.authorName = user ? user.authorName : '';
     }
+
+    // Render the appropriate EJS template with the data object
+    res.render(renderPath, data);
   });
 });
 
 router.post('/pages/userPage/signIn', async (req, res) => {
+  const { username, password } = req.body;
   try {
-    const user = await User.findUser(req.body.username, req.body.password);
+    const user = await User.findOne({ where: { username: username } });
+    if (!user) {
+      return res.status(401).redirect('/pages/userPage/signIn?msg=User not found');
+    }
 
-    if (user !== null) {
+    if (password == user.password) {
+      console.log("Sign-in successful")
+
       // Create a session for the user
-      req.session.user = user;
+      req.session.user = user.dataValues;
 
       // Check if there's a returnTo URL in session
       const returnTo = req.session.returnTo || '/index';
@@ -161,22 +176,26 @@ router.post('/pages/userPage/signIn', async (req, res) => {
   }
 });
 
-
-
 router.post('/pages/userPage/signUp', async (req, res) => {
   try {
     const user = await User.findUser(req.body.username, req.body.password);
 
     if (user !== null) {
+      console.log("Sign-in successful")
       req.session.user = user;
-      res.redirect(`/userPage`);
+      
+      // Check if there's a returnTo URL in session
+      const returnTo = req.session.returnTo || '/index';
+
+      // Redirect the user to the returnTo URL
+      res.redirect(returnTo);
     } else {
       const newUser = await User.create({
         username: req.body.username,
         password: req.body.password
       });
       console.log(newUser)
-      res.redirect("/pages/userPage/signIn?msg=please sign in");
+      res.redirect("/pages/userPage/signIn?msg=Account Created Successfully! Please Sign In to Continue");
     }
   } catch (error) {
     // Handle Sequelize validation or database errors
@@ -193,7 +212,6 @@ const storage = multer.diskStorage({
     if (req.session.user && req.session.user.username) {
       // Define the destination directory based on the username
       const usernameDir = `./public/users/${req.session.user.username}`;
-
       // Create the directory if it doesn't exist
       if (!fs.existsSync(usernameDir)) {
         fs.mkdirSync(usernameDir, { recursive: true });
@@ -207,11 +225,9 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     // Generate a unique filename
     const uniqueFilename = Date.now() + '-' + file.originalname;
-
     cb(null, uniqueFilename); // File name
   }
 });
-
 
 const upload = multer({
   storage: storage,
@@ -221,18 +237,52 @@ const upload = multer({
 });
 
 router.post('/pages/userPage/EditCreation', upload.single('displayImage'), function (req, res, next) {
-  if (!req.file) {
-    return res.status(400).send('No file uploaded.');
+  try {
+    // Get the uploaded image path
+
+    // Check the value of the 'action' parameter from the form
+    const action = req.body.action;
+
+    if (action === 'discard') {
+      // Redirect back to the ContentCreator page
+      return res.redirect('/pages/userPage/creatorPage');
+    }
+    
+    const imagePath = req.file ? '/images/' + req.file.filename : '/images/rat.jpg';
+
+    // Capture title, description, and price from form data
+    const title = req.body.title || "";
+    const description = req.body.description || "";
+    const price = req.body.price || "";
+    
+    console.log(imagePath, title, description, price);
+
+    // Here you would typically update the database with the new data
+    // For now, let's just send a success response
+    res.json({ success: true, imagePath, title, description, price });
+
+  } catch (error) {
+    console.error('Error processing form data:', error);
+    res.json({ success: false, message: 'Error processing form data' });
   }
-
-  // Get the uploaded image path
-  const imagePath = '/images/' + req.file.filename;
-  console.log(imagePath)
-
-  // Redirect to the same page with the uploaded image path as a query parameter
-  res.redirect('/pages/userPage/EditCreation?imagePath=' + imagePath);
 });
 
+router.post('/updateAuthorName', async function(req, res) {
+  const newAuthorName = req.body.authorName;
+  try {
+    const user = await User.findByPk(req.session.user.username);
+    if (user) {
+      user.authorName = newAuthorName;
+      await user.save();
+      res.redirect('/pages/userPage/creatorPage');
+    } else {
+      res.status(404).send('User not found');
+    }
+  } catch (error) {
+    console.error('Error updating author name:', error);
+    res.status(500).send('Error updating author name');
+  }
+});
 
 router.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {

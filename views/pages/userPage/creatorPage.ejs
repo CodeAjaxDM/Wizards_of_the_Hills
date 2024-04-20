@@ -35,8 +35,24 @@
     </div>
     <div class="divider"></div>
 
-    <!-- Purchased Content Section -->
+  <!-- Edit Author Name Section -->
+  <section class="content-section">
+    <h2 class="text-center">Edit Author Name</h2>
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3">
+        <form id="editAuthorForm" action="/updateAuthorName" method="post">
+          <div class="form-group">
+            <label for="authorName">Author Name:</label>
+            <input type="text" class="form-control" id="authorName" name="authorName" value="<%= authorName %>" readonly>
+          </div>
+          <button type="button" id="editBtn" class="btn btn-primary">Edit</button>
+          <button type="submit" id="submitBtn" class="btn btn-success" style="display: none;">Submit</button>
+        </form>
+      </div>
+    </div>
+  </section>
 
+    <!-- Published Content Section -->
     <section class="content-section">
       <h2 class="text-center">Published Content</h2>
       <div class="row content-viewer">
@@ -180,5 +196,21 @@
   <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
   <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const editBtn = document.getElementById('editBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const authorNameInput = document.getElementById('authorName');
+
+    editBtn.addEventListener('click', function() {
+      authorNameInput.removeAttribute('readonly');
+      editBtn.style.display = 'none';
+      submitBtn.style.display = 'inline-block';
+    });
+
+  });
+</script>
+
 
 </html>

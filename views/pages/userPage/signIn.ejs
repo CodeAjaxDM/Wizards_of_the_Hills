@@ -37,13 +37,13 @@
             <div class="tiny-spacer"></div>
             <div class="tiny-spacer"></div>
             <div class="tiny-spacer"></div>
-            <% if (typeof msg !=='undefined' ) { %>
-              <div style="color: red;">
-                <p>
-                  <%= msg %>
-                </p>
+            <% if (typeof msg !== 'undefined') { %>
+              <div style="<%= msg.includes('Successfully') ? 'color: green;' : 'color: red;' %>">
+                  <p>
+                      <%= msg %>
+                  </p>
               </div>
-              <% } %>
+          <% } %>
                 <form action="/pages/userPage/signIn" method="post">
                   <label for="username">Username</label>
                   <div class="input-wrapper">

@@ -25,7 +25,11 @@
 
   <div class="container">
     <div class="nav-spacer"></div>
-
+    <div class="text-center mt-4"> <!-- Center align and add margin top -->
+      <a href="/pages/userPage/creatorPage">
+        <h4>Back to My Content Creator Page </h4>
+      </a>
+    </div>   
     <div class="row">
       <div class="col-md-6">
         <!-- Item Image -->
@@ -34,27 +38,24 @@
         <div class="tiny-spacer"></div>
         <button type="button" class="btn btn-secondary" id="editImageButton">Edit Display Image</button>
         <input type="file" id="imageUpload" name="displayImage" style="display:none;">
-        <div>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-        </form>
       </div>      
       <div class="col-md-6">
         <!-- Item Details Form -->
         <h2>Edit Item Details</h2>
-        <form method="GET" action="/pages/userPage/creatorPage">
           <div class="form-group">
             <label for="title">Title</label>
-            <input type="text" class="form-control" id="title" placeholder="Enter title" required>
+            <input type="text" class="form-control" id="title"  name="title" placeholder="Enter title" required>
           </div>
           <div class="form-group">
             <label for="description">Description</label>
-            <textarea class="form-control" id="description" rows="3" placeholder="Enter description"
+            <textarea class="form-control" id="description" rows="3" name="description" placeholder="Enter description"
               required></textarea>
           </div>
           <div class="form-group">
             <label for="price">Price</label>
-            <input type="number" class="form-control" id="price" placeholder="Enter price" required>
+            <input type="number" class="form-control" id="price" placeholder="Enter price" name="price" 
+                  required step="0.01" pattern="^\d+(\.\d{1,2})?$">
+            <small class="form-text text-muted">Please enter a valid dollar amount (e.g., 10.99).</small>
           </div>
           <div id="fileInputs">
             <!-- Initial file input field -->
@@ -70,23 +71,20 @@
             <button type="button" class="btn btn-primary" id="addFileInput">Add Another File</button>
           </div>
           <!-- Add more form fields as needed -->
-          <!-- Submit Button -->
           <div class="tiny-spacer"></div>
-          <div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </div>
-          <div class="tiny-spacer"></div>
-          <div>
-            <button type="save" class="btn btn-primary">Save</button>
-          </div>
-          <div class="text-center">
-            <a href="/pages/userPage/creatorPage">
-              <h4>Back to My Content Creator Page </h4>
-            </a>
-          </div>
         </form>
       </div>
     </div>
+    <div class="text-center mt-4"> <!-- Center align and add margin top -->
+      <button type="submit" class="btn btn-primary btn-lg mr-2" name="action" value="save">Save Changes</button> <!-- Large primary button with margin right -->
+      <button type="submit" class="btn btn-danger btn-lg" name="action" value="discard">Discard Changes</button> <!-- Large red button -->
+    </div>
+  </form>
+    <div class="text-center mt-4"> <!-- Center align and add margin top -->
+      <a href="/pages/userPage/creatorPage">
+        <h4>Back to My Content Creator Page </h4>
+      </a>
+    </div>    
   </div>
 
   </div>
@@ -156,6 +154,56 @@
         }
       });
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Event listener for the Save Changes button
+      document.querySelector('[name="action"][value="save"]').addEventListener('click', function() {
+          saveChanges();
+      });
+  
+      // Event listener for the Discard Changes button
+      document.querySelector('[name="action"][value="discard"]').addEventListener('click', function() {
+          discardChanges();
+      });
+  });
+    
+  function saveChanges() {
+      const form = document.querySelector('form');
+      const formData = new FormData(form);
+  
+      fetch('/pages/userPage/EditCreation', {
+          method: 'POST',
+          body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              alert('Changes saved successfully');
+              // You can update the page with new data if needed
+          } else {
+              alert('Failed to save changes: ' + data.message);
+          }
+      })
+      .catch(error => {
+          console.error('Error saving changes:', error);
+          alert('An error occurred while saving changes');
+      });
+  }
+  
+  function discardChanges() {
+      // Reset form fields to their original values
+      const form = document.querySelector('form');
+      form.reset(); // Reset the form to clear all fields
+  
+      // If you want to keep the image and some other elements unchanged
+      // Update them back to their original values
+      const img = document.querySelector('.item-image');
+      img.src = img.dataset.originalSrc; // Assuming you've set a data-original-src attribute on the image
+  
+      // Optionally, you can redirect the user back to the Edit Creation page
+      window.location.href = '/pages/userPage/creatorPage';
+  }
+  
     </script>
 
 </body>
