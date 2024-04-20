@@ -1,20 +1,20 @@
-const sequelize = require('../db')
-const { Model, DataTypes } = require('sequelize')
+const sequelize = require('../db');
+const { Model, DataTypes } = require('sequelize');
 const Purchase = require('./Purchase');
 
 class User extends Model {
 
     static async findUser(username, password){
         try {
-            const user = await User.findByPk(username)
+            const user = await User.findByPk(username);
             if(user && user.password === password){
-                return user
+                return user;
             }else{
-                return null
+                return null;
             }
         } catch (error) {
-            console.log(error)
-            return null
+            console.log(error);
+            return null;
         }
     }
 
@@ -49,6 +49,11 @@ User.init({
     allowNull: true,
     defaultValue: null
   },
+  isAdmin: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false // Default value set to false
+  }
 }, {
   sequelize, 
   modelName: 'User'
@@ -60,4 +65,4 @@ User.hasMany(Purchase, {
   onDelete: 'CASCADE'
 });
 
-module.exports = User
+module.exports = User;

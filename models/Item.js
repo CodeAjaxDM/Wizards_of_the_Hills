@@ -31,15 +31,20 @@ const Item = sequelize.define('Item', {
     },
     imageUrl: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true // Changed to allow null
     },
     filePath: {
-        type: Sequelize.STRING, // Path to the .zip file
+        type: Sequelize.STRING,
         allowNull: true
     },
     category: {
         type: DataTypes.STRING,
         allowNull: true
+    },
+    published: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false // Default value set to false
     }
 });
 
@@ -47,6 +52,6 @@ Item.belongsToMany(User, {
     through: Purchase,
     foreignKey: 'itemId',
     otherKey: 'userId'
-  });
+});
 
 module.exports = Item;

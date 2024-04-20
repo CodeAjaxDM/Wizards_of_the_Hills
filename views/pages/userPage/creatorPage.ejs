@@ -37,13 +37,20 @@
 
   <!-- Edit Author Name Section -->
   <section class="content-section">
-    <h2 class="text-center">Edit Author Name</h2>
+    <% if (msg) { %>
+      <div class="alert alert-<%= msg === 'Successfully updated' ? 'success' : 'danger' %>" id="alertMsg">
+        <%= msg %>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    <% } %>
     <div class="row">
       <div class="col-sm-6 col-sm-offset-3">
         <form id="editAuthorForm" action="/updateAuthorName" method="post">
           <div class="form-group">
             <label for="authorName">Author Name:</label>
-            <input type="text" class="form-control" id="authorName" name="authorName" value="<%= authorName %>" readonly>
+            <input type="text" class="form-control author-input" id="authorName" name="authorName" value="<%= authorName %>" readonly>
           </div>
           <button type="button" id="editBtn" class="btn btn-primary">Edit</button>
           <button type="submit" id="submitBtn" class="btn btn-success" style="display: none;">Submit</button>
@@ -52,134 +59,76 @@
     </div>
   </section>
 
-    <!-- Published Content Section -->
-    <section class="content-section">
-      <h2 class="text-center">Published Content</h2>
-      <div class="row content-viewer">
+<!-- Published Content Section -->
+<section class="content-section">
+  <h2 class="text-center">Published Content</h2>
+  <% if (authorName) { %>
+    <div class="text-right">
+      <a href="/pages/userPage/EditCreation?imagePath=/images/author-img.jpg&title=&description=&price=" class="btn btn-primary btn-lg">Create New Item</a>
+    </div>
+  <% } %>
+  <% if (authorName && publishedItems && publishedItems.length > 0) { %>
+    <div class="row content-viewer">
+      <% publishedItems.forEach((item, index) => { %>
         <div class="col-sm-3">
-          <a href="/pages/itemPages/owlfolkExpansion" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/owl.jpg" alt="The Owlfolk Expansion">
-              <div class="caption">
-                <h3>The Owlfolk Expansion</h3>
-                <p>$9.99</p>
+          <div class="thumbnail">
+            <a href="/pages/item/<%= item.itemNumber %>" class="thumbnail-link">
+              <div class="image-wrapper">
+                <img src="<%= item.imageUrl || '/images/default-image.jpg' %>" alt="<%= item.name %>" class="item-image">
+              </div>
+            </a>
+            <div class="caption">
+              <h3 class="item-title"><%= item.name %></h3>
+              <p class="item-price"><%= item.price === 0 ? 'FREE' : '$' + item.price %></p>
+              <div class="content-actions">
+                <a href="/pages/userPage/EditCreation?itemNumber=<%= item.itemNumber %>" class="btn btn-info" role="button">Edit</a>
               </div>
             </div>
-          </a>
-          <div class="content-download">
-            <a href="/pages/userPage/EditCreation" class="btn btn-info" role="button">Edit</a>
           </div>
         </div>
+        <% if ((index + 1) % 4 === 0) { %>
+          </div><div class="row content-viewer">
+        <% } %>
+      <% }); %>
+    </div>
+  <% } else { %>
+    <h4 class="text-center">No published items yet.</h4>
+  <% } %>
+</section>
+
+<!-- Unpublished Content Section -->
+<section class="content-section">
+  <h2 class="text-center">Unpublished Content</h2>
+  <% if (authorName && unpublishedItems && unpublishedItems.length > 0) { %>
+    <div class="row content-viewer">
+      <% unpublishedItems.forEach((item, index) => { %>
         <div class="col-sm-3">
-          <a href="/pages/itemPages/companionAnimalsExpanded" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/rat.jpg" alt="Companion Animals Expanded (5e)">
-              <div class="caption">
-                <h3>Companion Animals Expanded (5e)</h3>
-                <p>FREE</p>
+          <div class="thumbnail">
+            <a href="/pages/item/<%= item.itemNumber %>" class="thumbnail-link">
+              <div class="image-wrapper">
+                <img src="<%= item.imageUrl || '/images/default-image.jpg' %>" alt="<%= item.name %>" class="item-image">
+              </div>
+            </a>
+            <div class="caption">
+              <h3 class="item-title"><%= item.name %></h3>
+              <p class="item-price"><%= item.price === 0 ? 'FREE' : '$' + item.price %></p>
+              <div class="content-actions">
+                <a href="/pages/userPage/EditCreation?itemNumber=<%= item.itemNumber %>" class="btn btn-info" role="button">Edit</a>
               </div>
             </div>
-          </a>
-          <div class="content-download">
-            <a href="/pages/userPage/EditCreation" class="btn btn-info" role="button">Edit</a>
           </div>
         </div>
-        <div class="col-sm-3">
-          <a href="/pages/itemPages/nextLevelSpellbook" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/wizard.jpeg" alt="Next Level Spellbooks">
-              <div class="caption">
-                <h3>Next Level Spellbooks</h3>
-                <p>$12.49</p>
-              </div>
-            </div>
-          </a>
-          <div class="content-download">
-            <a href="/pages/userPage/EditCreation" class="btn btn-info" role="button">Edit</a>
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <a href="/pages/itemPages/escapeFromEthmoria" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/spooky.jpg" alt="Escape from Ethmoria">
-              <div class="caption">
-                <h3>Escape from Ethmoria (Adventure) </h3>
-                <p>$22.39</p>
-              </div>
-            </div>
-          </a>
-          <div class="content-download">
-            <a href="/pages/userPage/EditCreation" class="btn btn-info" role="button">Edit</a>
-          </div>
-        </div>
-      </div>
-    </section>
+        <% if ((index + 1) % 4 === 0) { %>
+          </div><div class="row content-viewer">
+        <% } %>
+      <% }); %>
+    </div>
+  <% } else { %>
+    <h4 class="text-center">No unpublished items yet.</h4>
+  <% } %>
+</section>
 
-    <div class="divider"></div>
 
-    <section class="content-section">
-      <h2 class="text-center">Unpublished Content</h2>
-      <div class="row content-viewer">
-        <div class="col-sm-4">
-          <a href="/pages/itemPages/companionAnimalsExpanded" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/Lamia_Tera_Milteir.webp" alt="Monstrous Myths">
-              <div class="caption">
-                <h3>Monstrous Myths</h3>
-                <p>$1.99</p>
-              </div>
-            </div>
-          </a>
-          <div class="content-download">
-            <a href="/pages/userPage/EditCreation" class="btn btn-info" role="button">Edit</a>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <a href="/pages/itemPages/companionAnimalsExpanded" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/elemental.png" alt="Elementals ETC">
-              <div class="caption">
-                <h3>Elementals etc</h3>
-                <p>3.99</p>
-              </div>
-            </div>
-          </a>
-          <div class="content-download">
-            <a href="/pages/userPage/EditCreation" class="btn btn-info" role="button">Edit</a>
-          </div>
-        </div>
-        <div class="col-sm-4">
-          <a href="/pages/itemPages/companionAnimalsExpanded" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images\beach.jpg" alt="outdoor encounters">
-              <div class="caption">
-                <h3>Outdoor Encounters</h3>
-                <p>$12.49</p>
-              </div>
-            </div>
-          </a>
-          <div class="content-download">
-            <a href="/pages/userPage/EditCreation" class="btn btn-info" role="button">Edit</a>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- Supported Authors Section -->
-    <section class="bg-light">
-      <div class="container">
-        <h2 class="text-center">Your Top Contributors</h2>
-        <ul class="author-list text-center">
-          <!-- Example list of supported authors -->
-          <li><a href="/pages/userPage/userPage">User 1</a></li>
-          <li><a href="/pages/userPage/userPage">User 2</a></li>
-          <li><a href="/pages/userPage/userPage">User 3</a></li>
-        </ul>
-      </div>
-    </section>
   </div>
 
 
@@ -210,6 +159,18 @@
     });
 
   });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const closeBtn = document.querySelector('#alertMsg .close');
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function() {
+        const alertMsg = document.getElementById('alertMsg');
+        alertMsg.style.display = 'none';
+      });
+    }
+  });
+  
 </script>
 
 
