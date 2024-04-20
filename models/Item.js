@@ -1,5 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../db');
+const User = require('./User');
+const Purchase = require('./Purchase');
 
 const Item = sequelize.define('Item', {
     itemNumber: {

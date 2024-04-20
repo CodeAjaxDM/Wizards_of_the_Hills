@@ -29,7 +29,6 @@ const app = express();
 app.set('view engine', 'ejs'); // Set EJS as the view engine
 app.set('views', path.join(__dirname, 'views')); // Set the directory where express looks for views
 
-
 /* GET home page. */
 router.get('/', async function (req, res, next) {
   try {
@@ -98,7 +97,6 @@ router.get('/logout', function (req, res) {
   }
 });
 
-
 // Define an array of routes and their corresponding page names
 const routes = [
   'userPage/userPage',
@@ -125,7 +123,9 @@ routes.forEach(route => {
   const path = `/pages/${route}`;
   const renderPath = `pages/${route}`;
 
-  router.get(path, function (req, res, next) {
+  router.get(path, async function (req, res, next) {
+    // Prepare the data object to pass to the view,
+    let data = {};
     if (req.query.msg) {
       data.msg = req.query.msg;  // Store message in data object to pass to EJS template
     }
@@ -138,16 +138,29 @@ routes.forEach(route => {
         data.description = req.query.description || '';
         data.price = req.query.price || '';
     }
+    else if (renderPath === 'pages/userPage/creatorPage') {
+      const user = await User.findByPk(req.session.user.username);
+      data.authorName = user ? user.authorName : '';
+    }
+
+    // Render the appropriate EJS template with the data object
+    res.render(renderPath, data);
   });
 });
 
 router.post('/pages/userPage/signIn', async (req, res) => {
+  const { username, password } = req.body;
   try {
-    const user = await User.findUser(req.body.username, req.body.password);
+    const user = await User.findOne({ where: { username: username } });
+    if (!user) {
+      return res.status(401).redirect('/pages/userPage/signIn?msg=User not found');
+    }
 
-    if (user !== null) {
+    if (password == user.password) {
+      console.log("Sign-in successful")
+
       // Create a session for the user
-      req.session.user = user;
+      req.session.user = user.dataValues;
 
       // Check if there's a returnTo URL in session
       const returnTo = req.session.returnTo || '/index';
@@ -162,8 +175,6 @@ router.post('/pages/userPage/signIn', async (req, res) => {
     res.status(500).redirect('/pages/userPage/signIn?msg=Error logging in');
   }
 });
-
-
 
 router.post('/pages/userPage/signUp', async (req, res) => {
   try {
@@ -243,7 +254,7 @@ router.post('/pages/userPage/EditCreation', upload.single('displayImage'), funct
     const title = req.body.title || "";
     const description = req.body.description || "";
     const price = req.body.price || "";
-
+    
     console.log(imagePath, title, description, price);
 
     // Here you would typically update the database with the new data
@@ -256,6 +267,22 @@ router.post('/pages/userPage/EditCreation', upload.single('displayImage'), funct
   }
 });
 
+router.post('/updateAuthorName', async function(req, res) {
+  const newAuthorName = req.body.authorName;
+  try {
+    const user = await User.findByPk(req.session.user.username);
+    if (user) {
+      user.authorName = newAuthorName;
+      await user.save();
+      res.redirect('/pages/userPage/creatorPage');
+    } else {
+      res.status(404).send('User not found');
+    }
+  } catch (error) {
+    console.error('Error updating author name:', error);
+    res.status(500).send('Error updating author name');
+  }
+});
 
 router.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {

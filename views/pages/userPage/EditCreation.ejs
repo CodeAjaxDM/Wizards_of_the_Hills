@@ -25,7 +25,11 @@
 
   <div class="container">
     <div class="nav-spacer"></div>
-
+    <div class="text-center mt-4"> <!-- Center align and add margin top -->
+      <a href="/pages/userPage/creatorPage">
+        <h4>Back to My Content Creator Page </h4>
+      </a>
+    </div>   
     <div class="row">
       <div class="col-md-6">
         <!-- Item Image -->
@@ -34,12 +38,10 @@
         <div class="tiny-spacer"></div>
         <button type="button" class="btn btn-secondary" id="editImageButton">Edit Display Image</button>
         <input type="file" id="imageUpload" name="displayImage" style="display:none;">
-        </form>
       </div>      
       <div class="col-md-6">
         <!-- Item Details Form -->
         <h2>Edit Item Details</h2>
-        <form method="POST" action="/pages/userPage/EditCreation" enctype="multipart/form-data">
           <div class="form-group">
             <label for="title">Title</label>
             <input type="text" class="form-control" id="title"  name="title" placeholder="Enter title" required>
@@ -51,7 +53,9 @@
           </div>
           <div class="form-group">
             <label for="price">Price</label>
-            <input type="number" class="form-control" id="price" placeholder="Enter price" name="price" required>
+            <input type="number" class="form-control" id="price" placeholder="Enter price" name="price" 
+                  required step="0.01" pattern="^\d+(\.\d{1,2})?$">
+            <small class="form-text text-muted">Please enter a valid dollar amount (e.g., 10.99).</small>
           </div>
           <div id="fileInputs">
             <!-- Initial file input field -->
@@ -75,6 +79,7 @@
       <button type="submit" class="btn btn-primary btn-lg mr-2" name="action" value="save">Save Changes</button> <!-- Large primary button with margin right -->
       <button type="submit" class="btn btn-danger btn-lg" name="action" value="discard">Discard Changes</button> <!-- Large red button -->
     </div>
+  </form>
     <div class="text-center mt-4"> <!-- Center align and add margin top -->
       <a href="/pages/userPage/creatorPage">
         <h4>Back to My Content Creator Page </h4>
