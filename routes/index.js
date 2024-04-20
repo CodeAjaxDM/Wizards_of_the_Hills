@@ -124,15 +124,21 @@ router.post('/pages/userPage/signUp', async (req, res) => {
     const user = await User.findUser(req.body.username, req.body.password);
 
     if (user !== null) {
+      console.log("Sign-in successful")
       req.session.user = user;
-      res.redirect(`/userPage`);
+      
+      // Check if there's a returnTo URL in session
+      const returnTo = req.session.returnTo || '/index';
+
+      // Redirect the user to the returnTo URL
+      res.redirect(returnTo);
     } else {
       const newUser = await User.create({
         username: req.body.username,
         password: req.body.password
       });
       console.log(newUser)
-      res.redirect("/pages/userPage/signIn?msg=please sign in");
+      res.redirect("/pages/userPage/signIn?msg=Account Created Successfully! Please Sign In to Continue");
     }
   } catch (error) {
     // Handle Sequelize validation or database errors
