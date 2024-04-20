@@ -34,7 +34,15 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="/pages/userPage/signIn">Login</a></li>
-        <li><a href="/pages/userPage/userPage">Account</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+            aria-expanded="false">Account <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/pages/userPage/userPage">View my User Page </a></li>
+            <li><a href="/pages/userPage/creatorPage">view my Creator Page </a></li>
+            <li><a href="/logout">logout </a></li>
+          </ul>
+        </li>
         <li><a href="/pages/cartPage/cartPage">My Cart </a></li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -47,3 +55,10 @@
   <script src="/js/bootstrap.min.js"></script>
   <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
   <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      // Initialize Bootstrap components
+      $('.dropdown-toggle').dropdown();
+    });
+  </script>
