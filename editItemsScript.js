@@ -16,7 +16,7 @@ async function updateItem() {
             //imageUrl: '/images/xenoblade-square.jpg'
             //category: 'character options'
             //authorWebsite: '/pages/userPage/authorPage'
-            published: 1
+            //published: 1
         };
 
         // Update item
