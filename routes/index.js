@@ -222,8 +222,8 @@ routes.forEach(route => {
         console.log(supportLink)
         data.supportLink = supportLink,
         data.authorName = user.authorName,
-        data.publishedItems = publishedItems,
-        data.unpublishedItems = unpublishedItems
+          data.publishedItems = publishedItems,
+          data.unpublishedItems = unpublishedItems
         data.user = user;
         data.author = author;
       }catch (error) {
@@ -414,7 +414,7 @@ router.post('/pages/userPage/EditCreation', upload.single('displayImage'), async
     const itemNumber = req.body.itemNumber || false;
     const itemCount = await Item.count();  // Count all items
     const newItemNumber = itemCount + 1;  // Generate the next item number
-    const category = req.body.category || "";
+    const category = (req.body.category || "").toLowerCase();
 
     console.log(imagePath, title, description, price, publishStatus, itemNumber, newItemNumber);
 
@@ -592,7 +592,7 @@ router.use((err, req, res, next) => {
   next(err);
 });
 
-router.get('/getAllUsers', async function(req, res) {
+router.get('/getAllUsers', async function (req, res) {
   try {
     const users = await User.findAll();
     res.json(users);
@@ -601,7 +601,7 @@ router.get('/getAllUsers', async function(req, res) {
   }
 });
 
-router.get('/getAllItems', async function(req, res) {
+router.get('/getAllItems', async function (req, res) {
   try {
     const items = await Item.findAll({
       attributes: ['itemNumber', 'name', 'authorName']
@@ -737,6 +737,67 @@ router.post('/banUser', async (req, res) => {
 
 router.post('/downloadItem', async (req, res) => {
   const itemNumber = req.body.itemNumber; // Assuming itemNumber is sent in the request body
+router.get('/browseAll', async (req, res) => {
+  try {
+    const items = await Item.findAll(); // Fetch all items from the database
+    res.render('pages/categories/browseAll', { items: items }); // Pass the items to the view
+  } catch (error) {
+    console.error('Error fetching items:', error);
+    res.status(500).send("Error loading the page");
+  }
+});
+
+router.get('/characterOptions', async (req, res, next) => {
+  try {
+    const characterOptionsItems = await Item.findAll({
+      where: { category: 'character options' } // Fetch items with category 'character options' from the database
+    });
+
+    res.render('pages/categories/characterOptions', { items: characterOptionsItems }); // Pass the items to the 'characterOptions.ejs' template
+  } catch (error) {
+    console.error('Error fetching character options items:', error);
+    res.status(500).send("Error loading the character options page");
+  }
+});
+
+router.get('/magicalItems', async (req, res, next) => {
+  try {
+    const magicalItemsItems = await Item.findAll({
+      where: { category: 'magical items' } // Fetch items with category 'character options' from the database
+    });
+
+    res.render('pages/categories/magicalItems', { items: magicalItemsItems }); // Pass the items to the 'characterOptions.ejs' template
+  } catch (error) {
+    console.error('Error fetching magical items items:', error);
+    res.status(500).send("Error loading the magical items page");
+  }
+});
+
+router.get('/prewrittenAdventures', async (req, res, next) => {
+  try {
+    const prewrittenAdventuresItems = await Item.findAll({
+      where: { category: 'prewritten adventures' } // Fetch items with category 'character options' from the database
+    });
+
+    res.render('pages/categories/prewrittenAdventures', { items: prewrittenAdventuresItems }); // Pass the items to the 'characterOptions.ejs' template
+  } catch (error) {
+    console.error('Error fetching prewritten adventures items:', error);
+    res.status(500).send("Error loading the prewritten adventures page");
+  }
+});
+
+router.get('/ruleBooks', async (req, res, next) => {
+  try {
+    const ruleBooksItems = await Item.findAll({
+      where: { category: 'rule books' } // Fetch items with category 'character options' from the database
+    });
+
+    res.render('pages/categories/ruleBooks', { items: ruleBooksItems }); // Pass the items to the 'characterOptions.ejs' template
+  } catch (error) {
+    console.error('Error fetching rule books items:', error);
+    res.status(500).send("Error loading the rule books page");
+  }
+});
 
   try {
     const item = await Item.findOne({ where: { itemNumber: itemNumber } });
