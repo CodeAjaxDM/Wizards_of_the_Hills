@@ -221,13 +221,13 @@ routes.forEach(route => {
         const supportLink = author ? author.supportLink : "";
         console.log(supportLink)
         data.supportLink = supportLink,
-        data.authorName = user.authorName,
+          data.authorName = user.authorName,
           data.publishedItems = publishedItems,
           data.unpublishedItems = unpublishedItems
         data.user = user;
         data.author = author;
-      }catch (error) {
-          next(error);
+      } catch (error) {
+        next(error);
       }
     }
     else if (renderPath === 'pages/cartPage/cartPage') {
@@ -626,7 +626,7 @@ router.get('/getAllItems', async function (req, res) {
   }
 });
 
-router.get('/getAllAuthors', async function(req, res) {
+router.get('/getAllAuthors', async function (req, res) {
   try {
     const authors = await Author.findAll();
     res.json(authors);
@@ -635,7 +635,7 @@ router.get('/getAllAuthors', async function(req, res) {
   }
 });
 
-router.get('/getPurchasesForAdmin', async function(req, res) {
+router.get('/getPurchasesForAdmin', async function (req, res) {
   try {
     // Fetch all purchases
     // For simplicity, we'll just send itemIds and userIds
@@ -683,15 +683,15 @@ router.get('/resetDatabase', async (req, res) => {
 
     if (janeDoeCreated) {
       console.log("Jane Doe instance created...");
-      
+
       // Add Jane Doe to the Author table
       await Author.create({
         authorName: "Jane Doe",
         authorImg: "/images/author-img.jpg"
       });
-      
+
       console.log("Jane Doe added to Author table...");
-      
+
     } else {
       console.log("Jane Doe already exists!");
 
@@ -806,6 +806,22 @@ router.get('/ruleBooks', async (req, res, next) => {
     console.error('Error fetching rule books items:', error);
     res.status(500).send("Error loading the rule books page");
   }
+});
+
+router.get('/contact', (req, res) => {
+  res.render('contact');
+});
+
+router.get('/privacyPolicy', (req, res) => {
+  res.render('privacyPolicy');
+});
+
+router.get('/aboutUs', (req, res) => {
+  res.render('aboutUs');
+});
+
+router.get('/newsletter', (req, res) => {
+  res.render('newsletter');
 });
 
 module.exports = router;
