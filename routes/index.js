@@ -820,4 +820,8 @@ router.get('/aboutUs', (req, res) => {
   res.render('aboutUs');
 });
 
+router.get('/newsletter', (req, res) => {
+  res.render('newsletter');
+});
+
 module.exports = router;
