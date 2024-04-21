@@ -49,10 +49,14 @@
                                                             alt="<%= item.name %>" style="width: 72px; height: 72px;">
                                                     </a>
                                                     <div class="media-body">
-                                                        <h4 class="media-heading"><a href="#">
+                                                        <h4 class="media-heading"><a
+                                                                href="/item/<%= item.itemNumber %>">
                                                                 <%= item.name %>
                                                             </a></h4>
-                                                        <h5 class="media-heading"> by <a href="#">User</a></h5>
+                                                        <h5 class="media-heading"> by <a
+                                                                href="<%= item.authorWebsite %>">
+                                                                <%= item.authorName %>
+                                                            </a></h5>
                                                     </div>
                                                 </div>
                                             </td>
@@ -89,8 +93,6 @@
                                                     </tr>
                                                     <% } %>
                                                         <tr>
-                                                            <td> </td>
-                                                            <td> </td>
                                                             <td> </td>
                                                             <td>
                                                                 <button type="button" class="btn btn-default"

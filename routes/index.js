@@ -325,6 +325,8 @@ router.post('/add-to-cart', async (req, res) => {
         itemImageUrl: item.imageUrl,
         name: item.name,
         price: item.price,
+        authorName: item.authorName,
+        authorWebsite: item.authorWebsite,
         quantity: 1 // Quantity left incase we want to add
       });
     }
