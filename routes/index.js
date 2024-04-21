@@ -1,6 +1,7 @@
 var express = require('express');
 const User = require('../models/User');
 const Item = require('../models/Item');
+const Purchase = require('../models/Purchase');
 var router = express.Router();
 var path = require('path');
 const multer = require('multer');
@@ -120,6 +121,7 @@ const routes = [
   'userPage/EditCreation',
   'userPage/signIn',
   'userPage/signUp',
+  'userPage/adminPage',
   'itemPages/companionAnimalsExpanded',
   'itemPages/escapeFromEthmoria',
   'itemPages/nextLevelSpellbook',
@@ -221,10 +223,11 @@ routes.forEach(route => {
         });
 
         data.authorName = user.authorName,
-          data.publishedItems = publishedItems,
-          data.unpublishedItems = unpublishedItems
-      } catch (error) {
-        next(error);
+        data.publishedItems = publishedItems,
+        data.unpublishedItems = unpublishedItems
+        data.user = user;
+      }catch (error) {
+          next(error);
       }
     }
     else if (renderPath === 'pages/cartPage/cartPage') {
@@ -517,5 +520,125 @@ router.use((err, req, res, next) => {
   }
   next(err);
 });
+
+router.get('/getAllUsers', async function(req, res) {
+  try {
+    const users = await User.findAll();
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching users' });
+  }
+});
+
+router.get('/getAllItems', async function(req, res) {
+  try {
+    const items = await Item.findAll({
+      attributes: ['itemNumber', 'name', 'authorName']
+    });
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching items' });
+  }
+});
+
+router.get('/getPurchasesForAdmin', async function(req, res) {
+  try {
+    // Fetch all purchases
+    // For simplicity, we'll just send itemIds and userIds
+    const purchases = await Purchase.findAll({
+      attributes: ['itemId', 'userId']
+    });
+    res.json(purchases);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching purchases' });
+  }
+});
+
+router.get('/resetDatabase', async (req, res) => {
+  try {
+    // Delete all items
+    await Item.destroy({ where: {} });
+
+    // Delete all users
+    await User.destroy({ where: {} });
+
+    // Create or update user "subu"
+    const [subu, subuCreated] = await User.findOrCreate({
+      where: { username: "subu" },
+      defaults: { password: "1234" }
+    });
+
+    if (subuCreated) {
+      console.log("subu instance created...");
+    } else {
+      console.log("subu already exists!");
+    }
+
+    // Create or update user "Jane Doe"
+    const [janeDoe, janeDoeCreated] = await User.findOrCreate({
+      where: { username: "Jane Doe" },
+      defaults: {
+        password: "admin",
+        isAdmin: true,
+        authorName: "Jane Doe"
+      }
+    });
+
+    if (janeDoeCreated) {
+      console.log("Jane Doe instance created...");
+    } else {
+      console.log("Jane Doe already exists!");
+    }
+
+    // Update "Jane Doe" if she already exists
+    if (!janeDoeCreated) {
+      await janeDoe.update({
+        password: "admin",
+        isAdmin: true,
+        authorName: "Jane Doe"
+      });
+      console.log("Jane Doe updated...");
+    }
+
+    // Run the addItemsScript.js to add items
+    const addItemsScript = require('../addItemsScript'); // Adjust the path as needed
+    await addItemsScript();
+
+    res.json({ msg: 'Database reset successfully' });
+  } catch (error) {
+    console.error("Error resetting database:", error);
+    res.status(500).json({ msg: 'Error resetting database' });
+  }
+});
+
+router.post('/banUser', async (req, res) => {
+  const usernameToBan = req.body.username; // Get the username from the request body
+
+  try {
+    // Find the user by username
+    const user = await User.findOne({ where: { username: usernameToBan } });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Delete the user
+    await user.destroy();
+
+    // Update items owned by the user
+    const items = await Item.update(
+      { ownedByAuthor: false },
+      { where: { authorName: usernameToBan } }
+    );
+
+    res.json({ success: true, message: 'User banned successfully' });
+
+  } catch (error) {
+    console.error('Error banning user:', error);
+    res.status(500).json({ success: false, message: 'Error banning user' });
+  }
+});
+
+
 
 module.exports = router;
