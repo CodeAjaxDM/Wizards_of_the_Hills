@@ -31,22 +31,32 @@ const Item = sequelize.define('Item', {
     },
     imageUrl: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true // Changed to allow null
     },
     filePath: {
-        type: Sequelize.STRING, // Path to the .zip file
+        type: Sequelize.STRING,
         allowNull: true
     },
     category: {
         type: DataTypes.STRING,
         allowNull: true
-    }
+    },
+    published: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false // Default value set to false
+    },
+    ownedByAuthor: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true // Default value set to true
+    },
 });
 
 Item.belongsToMany(User, {
     through: Purchase,
     foreignKey: 'itemId',
     otherKey: 'userId'
-  });
+});
 
 module.exports = Item;

@@ -99,18 +99,46 @@ app.use(function (err, req, res, next) {
 
 async function setup() {
   try {
-    const [user, created] = await User.findOrCreate({
+    // Create or update user "subu"
+    const [subu, subuCreated] = await User.findOrCreate({
       where: { username: "subu" },
       defaults: { password: "1234" }
     });
 
-    if (created) {
+    if (subuCreated) {
       console.log("subu instance created...");
     } else {
-      console.log("User already exists!");
+      console.log("subu already exists!");
     }
+
+    // Create or update user "Jane Doe"
+    const [janeDoe, janeDoeCreated] = await User.findOrCreate({
+      where: { username: "Jane Doe" },
+      defaults: {
+        password: "admin",
+        isAdmin: true,
+        authorName: "Jane Doe"
+      }
+    });
+
+    if (janeDoeCreated) {
+      console.log("Jane Doe instance created...");
+    } else {
+      console.log("Jane Doe already exists!");
+    }
+
+    // Update "Jane Doe" if she already exists
+    if (!janeDoeCreated) {
+      await janeDoe.update({
+        password: "admin",
+        isAdmin: true,
+        authorName: "Jane Doe"
+      });
+      console.log("Jane Doe updated...");
+    }
+
   } catch (error) {
-    console.error("Error creating user:", error);
+    console.error("Error setting up users:", error);
   }
 }
 
