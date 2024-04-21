@@ -456,6 +456,7 @@ router.post('/pages/userPage/EditCreation', upload.single('displayImage'), async
     res.json({ success: false, message: 'Error processing form data' });
   }
 });
+
 router.post('/pages/userPage/EditAuthorPage', upload.single('authorImageUpload'), async function (req, res, next) {
   try {
     // Check the value of the 'action' parameter from the form
@@ -470,8 +471,19 @@ router.post('/pages/userPage/EditAuthorPage', upload.single('authorImageUpload')
 
     // Capture about, authorImg, and supportLink from form data
     const about = req.body.about || "";
-    const authorImg = req.file ? `/users/${req.session.user.username}/${req.file.filename}` : "/images/author-img.jpg";
-    
+    console.log("About from form:", about);  // Debugging line
+
+    let authorImg = "/images/author-img.jpg";  // Default image
+
+    if (req.file) {
+      authorImg = `/users/${req.session.user.username}/${req.file.filename}`;
+    } else {
+      const existingAuthor = await Author.findByPk(authorName);
+      if (existingAuthor) {
+        authorImg = existingAuthor.authorImg;
+      }
+    }
+
     let supportLink = req.body.supportLink || "";  // This will get the supportLink as a string
 
     let author = await Author.findByPk(authorName);
@@ -482,6 +494,7 @@ router.post('/pages/userPage/EditAuthorPage', upload.single('authorImageUpload')
 
     // Update the Author object with new data
     author.about = about;
+    console.log("About before save:", author.about);  // Debugging line
     author.authorImg = authorImg;
     author.supportLink = supportLink;  // Update supportLink as a single string
 
@@ -508,6 +521,7 @@ router.post('/pages/userPage/EditAuthorPage', upload.single('authorImageUpload')
     res.json({ success: false, message: 'Error processing form data' });
   }
 });
+
 
 
 router.post('/updateAuthorName', async function (req, res) {
@@ -705,8 +719,6 @@ router.get('/resetDatabase', async (req, res) => {
   }
 });
 
-
-
 router.post('/banUser', async (req, res) => {
   const usernameToBan = req.body.username; // Get the username from the request body
 
@@ -734,9 +746,6 @@ router.post('/banUser', async (req, res) => {
     res.status(500).json({ success: false, message: 'Error banning user' });
   }
 });
-
-router.post('/downloadItem', async (req, res) => {
-  const itemNumber = req.body.itemNumber; // Assuming itemNumber is sent in the request body
 router.get('/browseAll', async (req, res) => {
   try {
     const items = await Item.findAll(); // Fetch all items from the database
@@ -796,22 +805,6 @@ router.get('/ruleBooks', async (req, res, next) => {
   } catch (error) {
     console.error('Error fetching rule books items:', error);
     res.status(500).send("Error loading the rule books page");
-  }
-});
-
-  try {
-    const item = await Item.findOne({ where: { itemNumber: itemNumber } });
-
-    if (item && item.published) {
-      // Logic to serve/download the file
-      // For example: res.download(item.filePath);
-      res.download(item.filePath); // Assuming filePath is the path to the file
-    } else {
-      res.status(404).send('Item not found or not published');
-    }
-  } catch (error) {
-    console.error('Error downloading item:', error);
-    res.status(500).send('Error downloading item');
   }
 });
 
