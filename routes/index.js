@@ -5,6 +5,8 @@ var router = express.Router();
 var path = require('path');
 const multer = require('multer');
 const fs = require('fs');
+const bodyParser = require('body-parser');
+const sequelize = require('../db');
 
 function requireLogin(req, res, next) {
   const allowedPaths = ['/signIn', '/signUp'];
@@ -23,6 +25,7 @@ function requireLogin(req, res, next) {
 router.use('/pages/userPage', requireLogin);
 router.use('/pages/cartPage', requireLogin);
 router.use('/pages/checkoutPage', requireLogin);
+router.use(bodyParser.urlencoded({ extended: true }));
 
 const app = express();
 
@@ -127,21 +130,91 @@ routes.forEach(route => {
   router.get(path, async function (req, res, next) {
     // Prepare the data object to pass to the view,
     let data = {};
+    let message = req.session?.msg;  // Store the message temporarily
+    let publishedItems = [];
+    let unpublishedItems = [];
+
+    if (message) {
+      data.msg = message;  // Store message in data object to pass to EJS template
+      delete req.session.msg;  // Delete the message from the session
+    }
+
     if (req.query.msg) {
       data.msg = req.query.msg;  // Store message in data object to pass to EJS template
     }
 
-    // Special handling for certain pages, like EditCreation
-    if (renderPath === 'pages/userPage/EditCreation') {
-      // Fetch title, description, and price from query parameters
-      data.imagePath = req.query.imagePath || '/images/rat.jpg';
-      data.title = req.query.title || '';
-      data.description = req.query.description || '';
-      data.price = req.query.price || '';
+    // Check if an item number is provided
+    if (req.query.itemNumber) {
+      try {
+        // Fetch item by item number
+        const item = await Item.findOne({
+          where: {
+            itemNumber: req.query.itemNumber
+          }
+        });
+
+        if (item) {
+          // Map item data to the required properties
+          data.imagePath = item.imageUrl || '/images/author-img.jpg';
+          data.title = item.name || '';
+          data.description = item.description || '';
+          data.price = item.price || '';
+          data.publishStatus = item.published ? 'publish' : 'unpublish';
+          data.itemNumber = item.itemNumber;
+          data.category = item.category || '';
+        } else {
+          return res.status(404).send('Item not found');
+        }
+      } catch (error) {
+        return next(error);
+      }
+    } else {
+      // Default values if no item number is provided
+
+      data.imagePath = '/images/author-img.jpg';
+      data.title = '';
+      data.description = '';
+      data.price = '';
+      data.publishStatus = 'unpublish';
+      data.itemNumber = false;
+      data.category = '';
     }
-    else if (renderPath === 'pages/userPage/creatorPage') {
-      const user = await User.findByPk(req.session.user.username);
-      data.authorName = user ? user.authorName : '';
+
+    if (renderPath === 'pages/userPage/creatorPage') {
+      try {
+        // Fetch the current user
+        const user = await User.findByPk(req.session.user.username);
+        if (!user) {
+          return res.status(404).send('User not found');
+        }
+
+        if (!data.msg) {
+          data.msg = null;  // Set msg to null if it wasn't set earlier
+        }
+
+        // Fetch items for the current author or where authorName is null
+        publishedItems = await Item.findAll({
+          where: {
+            authorName: user.authorName,
+            published: true,
+            ownedByAuthor: true
+          },
+        });
+
+        unpublishedItems = await Item.findAll({
+          where: {
+            authorName: user.authorName,
+            published: false,
+            ownedByAuthor: true
+          },
+        });
+
+        data.authorName = user.authorName,
+          data.publishedItems = publishedItems,
+          data.unpublishedItems = unpublishedItems
+      } catch (error) {
+        next(error);
+      }
     }
     else if (renderPath === 'pages/cartPage/cartPage') {
       res.render('pages/cartPage/cartPage', {
@@ -151,7 +224,27 @@ routes.forEach(route => {
 
     // Render the appropriate EJS template with the data object
     res.render(renderPath, data);
+
   });
+});
+
+router.get('/deleteItem', async function (req, res) {
+  const itemNumber = req.query.itemNumber;
+  try {
+    const item = await Item.findOne({ where: { itemNumber: itemNumber } });
+    if (item) {
+      item.ownedByAuthor = false; // Mark item as not owned by the author
+      await item.save();
+      req.session.msg = 'Item removed successfully';
+    } else {
+      req.session.msg = 'Item not found';
+    }
+  } catch (error) {
+    console.error('Error updating item:', error);
+    req.session.msg = 'Error updating item';
+  }
+
+  res.redirect('/pages/userPage/creatorPage?msg=' + req.session.msg);
 });
 
 router.post('/pages/userPage/signIn', async (req, res) => {
@@ -183,33 +276,37 @@ router.post('/pages/userPage/signIn', async (req, res) => {
 });
 
 router.post('/pages/userPage/signUp', async (req, res) => {
+  const { username, password } = req.body;
   try {
-    const user = await User.findUser(req.body.username, req.body.password);
+    // Check if user with the same username already exists
+    const existingUser = await User.findOne({ where: { username: username } });
 
-    if (user !== null) {
-      console.log("Sign-in successful")
-      req.session.user = user;
-
-      // Check if there's a returnTo URL in session
-      const returnTo = req.session.returnTo || '/index';
-
-      // Redirect the user to the returnTo URL
-      res.redirect(returnTo);
+    if (existingUser) {
+      // User with the same username already exists
+      console.log("Username already exists");
+      return res.redirect("/pages/userPage/signIn?msg=Username already taken. Please choose a different username.");
     } else {
+      // Create new user
       const newUser = await User.create({
-        username: req.body.username,
-        password: req.body.password
+        username: username,
+        password: password
       });
-      console.log(newUser)
+
+      console.log("Sign-up successful");
+      req.session.user = newUser;
       res.redirect("/pages/userPage/signIn?msg=Account Created Successfully! Please Sign In to Continue");
     }
   } catch (error) {
-    // Handle Sequelize validation or database errors
+    // Check for unique constraint error
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      console.error('Username already exists:', error);
+      return res.redirect("/pages/userPage/signUp?error=Username already taken. Please choose a different username.");
+    }
+
     console.error('Error creating user:', error);
     res.redirect("/pages/userPage/signUp?error=signup_failed");
   }
 });
-
 router.post('/add-to-cart', async (req, res) => {
   const { itemNumber } = req.body; // Ensure this matches the name attribute in the form
   const item = await Item.findOne({ where: { itemNumber: itemNumber } });
@@ -278,7 +375,7 @@ const upload = multer({
   }
 });
 
-router.post('/pages/userPage/EditCreation', upload.single('displayImage'), function (req, res, next) {
+router.post('/pages/userPage/EditCreation', upload.single('displayImage'), async function (req, res, next) {
   try {
     // Get the uploaded image path
 
@@ -290,18 +387,53 @@ router.post('/pages/userPage/EditCreation', upload.single('displayImage'), funct
       return res.redirect('/pages/userPage/creatorPage');
     }
 
-    const imagePath = req.file ? '/images/' + req.file.filename : '/images/rat.jpg';
+    const imagePath = req.file ? `/users/${req.session.user.username}/${req.file.filename}` : req.body.existingImagePath;
 
     // Capture title, description, and price from form data
     const title = req.body.title || "";
     const description = req.body.description || "";
     const price = req.body.price || "";
+    const publishStatus = req.body.publishStatus || 'unpublish';
+    const published = publishStatus === 'publish' ? true : false;
+    const itemNumber = req.body.itemNumber || false;
+    const itemCount = await Item.count();  // Count all items
+    const newItemNumber = itemCount + 1;  // Generate the next item number
+    const category = req.body.category || "";
 
-    console.log(imagePath, title, description, price);
+    console.log(imagePath, title, description, price, publishStatus, itemNumber, newItemNumber);
+
+    let item;
+    if (itemNumber) {
+      item = await Item.findOne({ where: { itemNumber: itemNumber } });
+      if (!item) {
+        return res.status(404).json({ success: false, message: 'Item not found' });
+      }
+      else {
+        item.name = title;
+        item.description = description;
+        item.price = price;
+        item.published = published;
+        item.imageUrl = imagePath;
+        item.category = category;
+      }
+    } else {
+      // If itemNumber is not provided, create a new item
+      item = await Item.create({
+        itemNumber: newItemNumber,
+        name: title,
+        description: description,
+        price: price,
+        authorName: req.session.user.authorName,
+        published: published,
+        imageUrl: imagePath,
+        category: category
+      });
+    }
+    await item.save();
 
     // Here you would typically update the database with the new data
     // For now, let's just send a success response
-    res.json({ success: true, imagePath, title, description, price });
+    res.json({ success: true, imagePath, title, description, price, publishStatus });
 
   } catch (error) {
     console.error('Error processing form data:', error);
@@ -311,19 +443,59 @@ router.post('/pages/userPage/EditCreation', upload.single('displayImage'), funct
 
 router.post('/updateAuthorName', async function (req, res) {
   const newAuthorName = req.body.authorName;
+  const oldAuthorName = req.session.user.authorName; // Get the old author name from session
+
   try {
-    const user = await User.findByPk(req.session.user.username);
-    if (user) {
-      user.authorName = newAuthorName;
-      await user.save();
-      res.redirect('/pages/userPage/creatorPage');
-    } else {
-      res.status(404).send('User not found');
+    // Check if the new author name is already taken
+    const existingUserWithSameAuthorName = await User.findOne({
+      where: {
+        authorName: newAuthorName
+      }
+    });
+
+    if (existingUserWithSameAuthorName && existingUserWithSameAuthorName.username !== req.session.user.username) {
+      // If the author name is not unique
+      req.session.msg = 'Author name taken';
+      return res.redirect('/pages/userPage/creatorPage?msg=' + req.session.msg);
     }
+
+    // Use a transaction to ensure data integrity
+    await sequelize.transaction(async (t) => {
+      // Update the current user's author name
+      const user = await User.findByPk(req.session.user.username, { transaction: t });
+      if (user) {
+        user.authorName = newAuthorName;
+        await user.save({ transaction: t });
+
+        // Update all items with the old author name to use the new author name
+        const [updatedItemCount, updatedItemRows] = await Item.update(
+          { authorName: newAuthorName },
+          {
+            where: {
+              authorName: oldAuthorName,
+              ownedByAuthor: true
+            },
+            returning: true, // Ensure that updated rows are returned
+            transaction: t
+          }
+        );
+
+        if (updatedItemCount !== updatedItemRows.length) {
+          // If the number of updated items doesn't match the number of items returned, the update failed
+          throw new Error('Item update failed');
+        }
+      }
+    });
+
+    req.session.user.authorName = newAuthorName; // Update session data
+    req.session.msg = 'Successfully updated';
   } catch (error) {
     console.error('Error updating author name:', error);
-    res.status(500).send('Error updating author name');
+    req.session.msg = 'Error updating author name';
   }
+
+  // Redirect to the creatorPage with the message
+  res.redirect('/pages/userPage/creatorPage?msg=' + req.session.msg);
 });
 
 router.use((err, req, res, next) => {

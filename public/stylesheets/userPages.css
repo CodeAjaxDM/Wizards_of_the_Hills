@@ -158,3 +158,100 @@
 .mr-2 {
   margin-right: 1rem;
 }
+
+/* Default styles */
+.author-input {
+  width: auto; /* Allows the input to expand to fit content */
+  min-width: 100px; /* Minimum width to ensure it doesn't become too small */
+  max-width: 200px; /* Maximum width to cap the width */
+}
+
+/* Media query for larger screens */
+@media screen and (min-width: 1200px) { /* Assuming 24-inch monitor is around 1200px wide */
+  .author-input {
+    width: auto; /* Allows the input to expand to fit content */
+    min-width: 100px; /* Minimum width */
+    max-width: 200px; /* Maximum width */
+  }
+}
+
+/* Larger Radio Buttons */
+.form-check-input[type="radio"] {
+  transform: scale(1.2); /* Increase scale for larger size */
+  margin-right: 10px; /* Add some space between the radio button and label */
+}
+
+/* Faded Blue Background for Selected Radio Button */
+.form-check-input[type="radio"]:checked + .form-check-label {
+  background-color: rgba(0, 123, 255, 0.5); /* Faded blue color */
+  border-radius: 5px; /* Rounded corners */
+  padding: 5px 10px; /* Add padding to create a rectangle around the button and text */
+  transition: background-color 0.3s ease;
+}
+
+/* Style for form-check-label */
+.form-check-label {
+  position: relative; /* Position relative for pseudo element */
+  transition: background-color 0.3s ease;
+}
+
+.content-viewer .col-sm-3 {
+  width: 25%;
+  float: left;
+}
+
+@media (max-width: 768px) {
+  .content-viewer .col-sm-3 {
+    width: 50%;
+  }
+}
+
+/* Allow item image to shrink to fit maintaining aspect ratio */
+.image-wrapper {
+  max-width: 100%; /* Maximum width for the item image wrapper */
+  max-height: 100%; /* Maximum height for the item image wrapper */
+  overflow: hidden; /* Hide overflow to prevent stretching */
+}
+
+.item-image {
+  width: auto;
+  max-width: 100%;
+  max-height: 100%; /* Maximum height for the item image */
+  height: auto;
+}
+
+.image-wrapper:hover .item-image {
+  transform: scale(1.1);
+}
+
+/* Adjust the caption height to fit content */
+.caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center align items horizontally */
+  justify-content: space-between; /* Space items evenly vertically */
+  height: 100%; /* Set height to 100% to take up full height of container */
+}
+
+/* Add margin to the Edit button and center it */
+.content-actions {
+  display: flex;
+  justify-content: center; /* Center align edit button horizontally */
+  align-items: flex-end; /* Align edit button to the bottom of the container */
+  margin-top: 15px; /* Add some margin to separate from item information */
+}
+
+/* Adjust vertical spacing for item title and price */
+.item-title, .item-price {
+  flex-shrink: 0; /* Prevent item title and price from shrinking */
+}
+
+.content-actions .btn {
+  margin-right: 10px; 
+}
+
+.delete-btn {
+  margin-left: 10px; 
+}
+
+
