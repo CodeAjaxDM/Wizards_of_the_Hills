@@ -63,6 +63,7 @@ router.get('/item/:itemNumber', async function (req, res, next) {
         itemName: item.name,
         itemDescription: item.description,
         itemPrice: item.price === 0 ? 'FREE' : `$${item.price.toFixed(2)}`,
+        itemNumber: item.itemNumber,
         authorName: item.authorName,
         authorWebsite: item.authorWebsite || '#', // Provide a fallback URL
         itemImageUrl: item.imageUrl
@@ -139,7 +140,7 @@ routes.forEach(route => {
       data.msg = message;  // Store message in data object to pass to EJS template
       delete req.session.msg;  // Delete the message from the session
     }
-    
+
     if (req.query.msg) {
       data.msg = req.query.msg;  // Store message in data object to pass to EJS template
     }
@@ -180,7 +181,7 @@ routes.forEach(route => {
       data.itemNumber = false;
       data.category = '';
     }
-    
+
     if (renderPath === 'pages/userPage/creatorPage') {
       try {
         // Fetch the current user
@@ -188,11 +189,11 @@ routes.forEach(route => {
         if (!user) {
           return res.status(404).send('User not found');
         }
-        
+
         if (!data.msg) {
           data.msg = null;  // Set msg to null if it wasn't set earlier
         }
-    
+
         // Fetch items for the current author or where authorName is null
         publishedItems = await Item.findAll({
           where: {
@@ -201,7 +202,7 @@ routes.forEach(route => {
             ownedByAuthor: true
           },
         });
-    
+
         unpublishedItems = await Item.findAll({
           where: {
             authorName: user.authorName,
@@ -209,7 +210,7 @@ routes.forEach(route => {
             ownedByAuthor: true
           },
         });
-        
+
         data.authorName = user.authorName,
         data.publishedItems = publishedItems,
         data.unpublishedItems = unpublishedItems
@@ -218,6 +219,11 @@ routes.forEach(route => {
           next(error);
       }
     }
+    else if (renderPath === 'pages/cartPage/cartPage') {
+      res.render('pages/cartPage/cartPage', {
+        items: req.session.cart || []
+      });
+    }
 
     // Render the appropriate EJS template with the data object
     res.render(renderPath, data);
@@ -225,7 +231,7 @@ routes.forEach(route => {
   });
 });
 
-router.get('/deleteItem', async function(req, res) {
+router.get('/deleteItem', async function (req, res) {
   const itemNumber = req.query.itemNumber;
   try {
     const item = await Item.findOne({ where: { itemNumber: itemNumber } });
@@ -240,7 +246,7 @@ router.get('/deleteItem', async function(req, res) {
     console.error('Error updating item:', error);
     req.session.msg = 'Error updating item';
   }
-  
+
   res.redirect('/pages/userPage/creatorPage?msg=' + req.session.msg);
 });
 
@@ -277,7 +283,7 @@ router.post('/pages/userPage/signUp', async (req, res) => {
   try {
     // Check if user with the same username already exists
     const existingUser = await User.findOne({ where: { username: username } });
-    
+
     if (existingUser) {
       // User with the same username already exists
       console.log("Username already exists");
@@ -288,7 +294,7 @@ router.post('/pages/userPage/signUp', async (req, res) => {
         username: username,
         password: password
       });
-      
+
       console.log("Sign-up successful");
       req.session.user = newUser;
       res.redirect("/pages/userPage/signIn?msg=Account Created Successfully! Please Sign In to Continue");
@@ -299,10 +305,48 @@ router.post('/pages/userPage/signUp', async (req, res) => {
       console.error('Username already exists:', error);
       return res.redirect("/pages/userPage/signUp?error=Username already taken. Please choose a different username.");
     }
-    
+
     console.error('Error creating user:', error);
     res.redirect("/pages/userPage/signUp?error=signup_failed");
   }
+});
+router.post('/add-to-cart', async (req, res) => {
+  const { itemNumber } = req.body; // Ensure this matches the name attribute in the form
+  const item = await Item.findOne({ where: { itemNumber: itemNumber } });
+
+  if (item) {
+    if (!req.session.cart) {
+      req.session.cart = [];
+    }
+    const cartItem = req.session.cart.find(i => i.itemNumber === item.itemNumber);
+    if (cartItem) {
+      cartItem.quantity += 1; // Increment quantity if item already in cart
+    } else {
+      // Add new item to cart
+      req.session.cart.push({
+        itemNumber: item.itemNumber,
+        itemImageUrl: item.imageUrl,
+        name: item.name,
+        price: item.price,
+        authorName: item.authorName,
+        authorWebsite: item.authorWebsite,
+        quantity: 1 // Quantity left incase we want to add
+      });
+    }
+
+    res.redirect('/pages/cartPage/cartPage'); // Redirect to the cart page
+  } else {
+    res.status(404).send('Item not found');
+  }
+});
+
+router.post('/remove-from-cart', (req, res) => {
+  const { itemNumber } = req.body;
+  if (req.session.cart) {
+    req.session.cart = req.session.cart.filter(item => item.itemNumber !== itemNumber);
+  }
+
+  res.redirect('/pages/cartPage/cartPage'); // Re-render cart for changes
 });
 
 // Multer storage settings
@@ -347,7 +391,7 @@ router.post('/pages/userPage/EditCreation', upload.single('displayImage'), async
       // Redirect back to the ContentCreator page
       return res.redirect('/pages/userPage/creatorPage');
     }
-    
+
     const imagePath = req.file ? `/users/${req.session.user.username}/${req.file.filename}` : req.body.existingImagePath;
 
     // Capture title, description, and price from form data
@@ -360,7 +404,7 @@ router.post('/pages/userPage/EditCreation', upload.single('displayImage'), async
     const itemCount = await Item.count();  // Count all items
     const newItemNumber = itemCount + 1;  // Generate the next item number
     const category = req.body.category || "";
-    
+
     console.log(imagePath, title, description, price, publishStatus, itemNumber, newItemNumber);
 
     let item;
@@ -402,7 +446,7 @@ router.post('/pages/userPage/EditCreation', upload.single('displayImage'), async
   }
 });
 
-router.post('/updateAuthorName', async function(req, res) {
+router.post('/updateAuthorName', async function (req, res) {
   const newAuthorName = req.body.authorName;
   const oldAuthorName = req.session.user.authorName; // Get the old author name from session
 

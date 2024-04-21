@@ -34,7 +34,10 @@
                             <p>Created by: <a href="<%= authorWebsite %>">
                                     <%= authorName %>
                                 </a></p>
-                            <button>Add to Cart</button>
+                            <form action="/add-to-cart" method="post">
+                                <input type="hidden" name="itemNumber" value="<%= itemNumber %>">
+                                <button type="submit" class="btn btn-primary">Add to Cart</button>
+                            </form>
                         </div>
                         <%- include('exploreCarousel.ejs') %>
                     </div>
