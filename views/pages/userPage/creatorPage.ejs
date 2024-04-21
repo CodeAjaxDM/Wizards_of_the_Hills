@@ -42,28 +42,30 @@
     <div class="divider"></div>
 
   <!-- Edit Author Name Section -->
-  <section class="content-section">
-    <% if (msg) { %>
-      <div class="alert alert-<%= msg === 'Successfully updated' ? 'success' : 'danger' %>" id="alertMsg">
-        <%= msg %>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-    <% } %>
-    <div class="row">
-      <div class="col-sm-6 col-sm-offset-3">
-        <form id="editAuthorForm" action="/updateAuthorName" method="post">
-          <div class="form-group">
-            <label for="authorName">Author Name:</label>
-            <input type="text" class="form-control author-input" id="authorName" name="authorName" value="<%= authorName %>" readonly>
-          </div>
-          <button type="button" id="editBtn" class="btn btn-primary">Edit</button>
-          <button type="submit" id="submitBtn" class="btn btn-success" style="display: none;">Submit</button>
-        </form>
-      </div>
+<section class="content-section">
+  <% if (msg) { %>
+    <div class="alert alert-<%= msg === 'Successfully updated' ? 'success' : 'danger' %>" id="alertMsg">
+      <%= msg %>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
-  </section>
+  <% } %>
+  <div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+      <!-- Add the link next to the author name input field -->
+      <a href="/pages/userPage/authorPage" class="btn btn-link">View/Edit My Author Page</a>
+      <form id="editAuthorForm" action="/updateAuthorName" method="post">
+        <div class="form-group">
+          <label for="authorName">Author Name:</label>
+          <input type="text" class="form-control author-input" id="authorName" name="authorName" value="<%= authorName %>" readonly>
+        </div>
+        <button type="button" id="editBtn" class="btn btn-primary">Edit</button>
+        <button type="submit" id="submitBtn" class="btn btn-success" style="display: none;">Submit</button>
+      </form>
+    </div>
+  </div>
+</section>
 
 <!-- Published Content Section -->
 <section class="content-section">

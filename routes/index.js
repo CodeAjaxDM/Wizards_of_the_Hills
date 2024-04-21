@@ -62,7 +62,7 @@ router.get('/item/:itemNumber', async function (req, res, next) {
       res.render('itemPage', {
         itemName: item.name,
         itemDescription: item.description,
-        itemPrice: item.price === 0 ? 'FREE' : `$${item.price.toFixed(2)}`,
+        itemPrice: item.price === 0 ? 'FREE' : `$${item.price}`,
         itemNumber: item.itemNumber,
         authorName: item.authorName,
         authorWebsite: item.authorWebsite || '#', // Provide a fallback URL
@@ -182,7 +182,7 @@ routes.forEach(route => {
       data.category = '';
     }
 
-    if (renderPath === 'pages/userPage/creatorPage') {
+    if (renderPath === 'pages/userPage/creatorPage' || renderPath === 'pages/userPage/userPage') {
       try {
         // Fetch the current user
         const user = await User.findByPk(req.session.user.username);
@@ -628,6 +628,23 @@ router.post('/banUser', async (req, res) => {
   }
 });
 
+router.post('/downloadItem', async (req, res) => {
+  const itemNumber = req.body.itemNumber; // Assuming itemNumber is sent in the request body
 
+  try {
+    const item = await Item.findOne({ where: { itemNumber: itemNumber } });
+
+    if (item && item.published) {
+      // Logic to serve/download the file
+      // For example: res.download(item.filePath);
+      res.download(item.filePath); // Assuming filePath is the path to the file
+    } else {
+      res.status(404).send('Item not found or not published');
+    }
+  } catch (error) {
+    console.error('Error downloading item:', error);
+    res.status(500).send('Error downloading item');
+  }
+});
 
 module.exports = router;
