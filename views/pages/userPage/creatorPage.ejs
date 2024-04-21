@@ -27,6 +27,12 @@
 
   <div class="nav-spacer"></div>
 
+  <% if (user && user.isAdminUser()) { %>
+    <div class="text-center">
+      <a href="/pages/adminPage">Show Admin Page</a>
+    </div>
+  <% } %>
+
     <h2> Welcome to your Content Creator</h2>
     <div class="text-center">
       <a href="/pages/userPage/userPage">
