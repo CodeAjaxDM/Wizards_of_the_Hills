@@ -13,7 +13,7 @@ async function updateItem() {
             //YOUR CHANGES WOULD GO HERE! 
             //price: 10.99, 
             //description: 'Updated description here.', 
-            imageUrl: '/images/item-bundle.png'
+            //imageUrl: '/images/item-bundle.png'
             //category: 'character options'
         };
 

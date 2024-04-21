@@ -75,6 +75,17 @@ router.get('/item/:itemNumber', async function (req, res, next) {
   }
 });
 
+router.get('/browseAll', async (req, res) => {
+  try {
+    const items = await Item.findAll(); // Fetch all items from the database
+    res.render('pages/categories/browseAll', { items: items }); // Pass the items to the view
+  } catch (error) {
+    console.error('Error fetching items:', error);
+    res.status(500).send("Error loading the page");
+  }
+});
+
+
 router.post('/login', async function (req, res, next) {
   const user = await User.findUser(req.body.username, req.body.password)
   if (user !== null) {
