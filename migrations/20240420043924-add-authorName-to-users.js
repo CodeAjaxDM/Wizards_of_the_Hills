@@ -62,23 +62,20 @@
 // };
 
 
-//3rd migration:
+// //3rd migration:
 
-'use strict';
+// 'use strict';
 
-module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    // Add ownedByAuthor to Items table
-    await queryInterface.addColumn('Items', 'ownedByAuthor', {
-      type: Sequelize.BOOLEAN,
-      allowNull: false,
-      defaultValue: true
-    });
-  },
+// module.exports = {
+//   up: async (queryInterface, Sequelize) => {
+//     await queryInterface.addColumn('Authors', 'authorImg', {
+//       type: Sequelize.STRING,
+//       allowNull: false,
+//       defaultValue: '/images/author-img.jpg'
+//     });
+//   },
 
-  down: async (queryInterface, Sequelize) => {
-    // Remove ownedByAuthor from Items table
-    await queryInterface.removeColumn('Items', 'ownedByAuthor');
-  }
-};
-
+//   down: async (queryInterface, Sequelize) => {
+//     await queryInterface.removeColumn('Authors', 'authorImg');
+//   }
+// };

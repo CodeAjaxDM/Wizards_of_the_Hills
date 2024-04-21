@@ -1,6 +1,7 @@
 var express = require('express');
 const User = require('../models/User');
 const Item = require('../models/Item');
+const Author = require('../models/author');
 const Purchase = require('../models/Purchase');
 var router = express.Router();
 var path = require('path');
@@ -62,7 +63,7 @@ router.get('/item/:itemNumber', async function (req, res, next) {
       res.render('itemPage', {
         itemName: item.name,
         itemDescription: item.description,
-        itemPrice: item.price === 0 ? 'FREE' : `$${item.price.toFixed(2)}`,
+        itemPrice: item.price === 0 ? 'FREE' : `$${item.price}`,
         itemNumber: item.itemNumber,
         authorName: item.authorName,
         authorWebsite: item.authorWebsite || '#', // Provide a fallback URL
@@ -106,6 +107,7 @@ router.get('/logout', function (req, res) {
 const routes = [
   'userPage/userPage',
   'userPage/authorPage',
+  'userPage/EditAuthorPage',
   'userPage/creatorPage',
   'userPage/EditCreation',
   'userPage/signIn',
@@ -182,12 +184,18 @@ routes.forEach(route => {
       data.category = '';
     }
 
-    if (renderPath === 'pages/userPage/creatorPage') {
+    if (renderPath === 'pages/userPage/creatorPage' || renderPath === 'pages/userPage/userPage' || renderPath === 'pages/userPage/authorPage' || renderPath === 'pages/userPage/EditAuthorPage') {
       try {
         // Fetch the current user
         const user = await User.findByPk(req.session.user.username);
         if (!user) {
           return res.status(404).send('User not found');
+        }
+
+        const author = await Author.findByPk(user.authorName);
+        if (!author) {
+          // For these pages, continue loading the page even if the author is not found
+          console.warn('Author not found');
         }
 
         if (!data.msg) {
@@ -210,11 +218,14 @@ routes.forEach(route => {
             ownedByAuthor: true
           },
         });
-
-        data.authorName = user.authorName,
+        const supportLink = author ? author.supportLink : "";
+        console.log(supportLink)
+        data.supportLink = supportLink,
+          data.authorName = user.authorName,
           data.publishedItems = publishedItems,
           data.unpublishedItems = unpublishedItems
         data.user = user;
+        data.author = author;
       } catch (error) {
         next(error);
       }
@@ -446,12 +457,79 @@ router.post('/pages/userPage/EditCreation', upload.single('displayImage'), async
   }
 });
 
+router.post('/pages/userPage/EditAuthorPage', upload.single('authorImageUpload'), async function (req, res, next) {
+  try {
+    // Check the value of the 'action' parameter from the form
+    const action = req.body.action;
+
+    if (action === 'discard') {
+      // Redirect back to the ContentCreator page
+      return res.redirect('/pages/userPage/creatorPage');
+    }
+
+    const authorName = req.session.user.authorName;
+
+    // Capture about, authorImg, and supportLink from form data
+    const about = req.body.about || "";
+    console.log("About from form:", about);  // Debugging line
+
+    let authorImg = "/images/author-img.jpg";  // Default image
+
+    if (req.file) {
+      authorImg = `/users/${req.session.user.username}/${req.file.filename}`;
+    } else {
+      const existingAuthor = await Author.findByPk(authorName);
+      if (existingAuthor) {
+        authorImg = existingAuthor.authorImg;
+      }
+    }
+
+    let supportLink = req.body.supportLink || "";  // This will get the supportLink as a string
+
+    let author = await Author.findByPk(authorName);
+
+    if (!author) {
+      return res.status(404).json({ success: false, message: 'Author not found' });
+    }
+
+    // Update the Author object with new data
+    author.about = about;
+    console.log("About before save:", author.about);  // Debugging line
+    author.authorImg = authorImg;
+    author.supportLink = supportLink;  // Update supportLink as a single string
+
+    try {
+      // Try to save the author with the provided supportLink
+      await author.save();
+    } catch (error) {
+      // If validation error due to invalid URL, fetch the existing supportLink for the author
+      if (error.name === 'SequelizeValidationError' && error.errors.some(err => err.path === 'supportLink' && err.validatorKey === 'isURL')) {
+        const existingAuthor = await Author.findByPk(authorName);
+        supportLink = existingAuthor.supportLink;  // Use the existing supportLink
+        author.supportLink = supportLink;  // Update author object
+        await author.save();  // Save the author again with the existing supportLink
+      } else {
+        throw error;  // If it's not a validation error or not related to supportLink, re-throw the error
+      }
+    }
+
+    // Redirect to a different page or render a view
+    res.redirect('/pages/userPage/authorPage');  // Change this to the appropriate page
+
+  } catch (error) {
+    console.error('Error processing form data:', error);
+    res.json({ success: false, message: 'Error processing form data' });
+  }
+});
+
+
+
 router.post('/updateAuthorName', async function (req, res) {
   const newAuthorName = req.body.authorName;
   const oldAuthorName = req.session.user.authorName; // Get the old author name from session
 
   try {
-    // Check if the new author name is already taken
+    // Check if the new author name is already taken in User model
     const existingUserWithSameAuthorName = await User.findOne({
       where: {
         authorName: newAuthorName
@@ -466,29 +544,46 @@ router.post('/updateAuthorName', async function (req, res) {
 
     // Use a transaction to ensure data integrity
     await sequelize.transaction(async (t) => {
-      // Update the current user's author name
+      // Update the current user's author name in User model
       const user = await User.findByPk(req.session.user.username, { transaction: t });
       if (user) {
         user.authorName = newAuthorName;
         await user.save({ transaction: t });
+      }
 
-        // Update all items with the old author name to use the new author name
-        const [updatedItemCount, updatedItemRows] = await Item.update(
-          { authorName: newAuthorName },
-          {
-            where: {
-              authorName: oldAuthorName,
-              ownedByAuthor: true
-            },
-            returning: true, // Ensure that updated rows are returned
-            transaction: t
-          }
-        );
-
-        if (updatedItemCount !== updatedItemRows.length) {
-          // If the number of updated items doesn't match the number of items returned, the update failed
-          throw new Error('Item update failed');
+      // Update or create the author name in Author model
+      let author = await Author.findByPk(newAuthorName, { transaction: t });
+      if (!author) {
+        // If the author doesn't exist, create a new one
+        author = await Author.create({
+          authorName: newAuthorName,
+          supportLink: "https://www.patreon.com/home",  // Set supportLink as a string
+          about: "I don't like to talk about myself"
+        }, { transaction: t });
+      } else {
+        // If the author exists, update the support link to default if not already set
+        if (!author.supportLink) {
+          author.supportLink = "https://www.patreon.com/home";
+          await author.save({ transaction: t });
         }
+      }
+
+      // Update all items with the old author name to use the new author name
+      const [updatedItemCount, updatedItemRows] = await Item.update(
+        { authorName: newAuthorName },
+        {
+          where: {
+            authorName: oldAuthorName,
+            ownedByAuthor: true
+          },
+          returning: true, // Ensure that updated rows are returned
+          transaction: t
+        }
+      );
+
+      if (updatedItemCount !== updatedItemRows.length) {
+        // If the number of updated items doesn't match the number of items returned, the update failed
+        throw new Error('Item update failed');
       }
     });
 
@@ -502,6 +597,7 @@ router.post('/updateAuthorName', async function (req, res) {
   // Redirect to the creatorPage with the message
   res.redirect('/pages/userPage/creatorPage?msg=' + req.session.msg);
 });
+
 
 router.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
@@ -530,6 +626,15 @@ router.get('/getAllItems', async function (req, res) {
   }
 });
 
+router.get('/getAllAuthors', async function (req, res) {
+  try {
+    const authors = await Author.findAll();
+    res.json(authors);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching authors' });
+  }
+});
+
 router.get('/getPurchasesForAdmin', async function (req, res) {
   try {
     // Fetch all purchases
@@ -550,6 +655,9 @@ router.get('/resetDatabase', async (req, res) => {
 
     // Delete all users
     await User.destroy({ where: {} });
+
+    // Reset Authors table
+    await Author.destroy({ where: {} });
 
     // Create or update user "subu"
     const [subu, subuCreated] = await User.findOrCreate({
@@ -575,18 +683,29 @@ router.get('/resetDatabase', async (req, res) => {
 
     if (janeDoeCreated) {
       console.log("Jane Doe instance created...");
+
+      // Add Jane Doe to the Author table
+      await Author.create({
+        authorName: "Jane Doe",
+        authorImg: "/images/author-img.jpg"
+      });
+
+      console.log("Jane Doe added to Author table...");
+
     } else {
       console.log("Jane Doe already exists!");
-    }
 
-    // Update "Jane Doe" if she already exists
-    if (!janeDoeCreated) {
-      await janeDoe.update({
-        password: "admin",
-        isAdmin: true,
-        authorName: "Jane Doe"
-      });
-      console.log("Jane Doe updated...");
+      // Update "Jane Doe" if she already exists in the Author table
+      const janeDoeAuthor = await Author.findByPk("Jane Doe");
+      if (!janeDoeAuthor) {
+        await Author.create({
+          authorName: "Jane Doe",
+          authorImg: "/images/author-img.jpg"
+        });
+        console.log("Jane Doe added to Author table...");
+      } else {
+        console.log("Jane Doe already exists in Author table!");
+      }
     }
 
     // Run the addItemsScript.js to add items
@@ -627,7 +746,6 @@ router.post('/banUser', async (req, res) => {
     res.status(500).json({ success: false, message: 'Error banning user' });
   }
 });
-
 router.get('/browseAll', async (req, res) => {
   try {
     const items = await Item.findAll(); // Fetch all items from the database

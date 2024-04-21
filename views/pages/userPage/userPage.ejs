@@ -27,6 +27,12 @@
     <!-- Header -->
     <div class="nav-spacer"></div>
 
+    <% if (user && user.isAdminUser()) { %>
+      <div class="text-center">
+        <a href="/pages/userPage/adminPage">Show Admin Page</a>
+      </div>
+    <% } %>
+
     <h2> Welcome to your User Page</h2>
     <div class="text-center">
       <a href="/pages/userPage/creatorPage">
@@ -34,78 +40,42 @@
       </a>
     </div>
     <div class="divider"></div>
-    <!-- Purchased Content Section -->
 
     <section class="content-section">
-      <h2 class="text-center">My Purchased Content</h2>
-      <div class="row content-viewer">
-        <div class="col-sm-3">
-          <a href="/pages/itemPages/owlfolkExpansion" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/owl.jpg" alt="The Owlfolk Expansion">
-              <div class="caption">
-                <h3>The Owlfolk Expansion</h3>
+      <h2 class="text-center">My Published Content</h2>
+      <% if (publishedItems && publishedItems.length > 0) { %>
+        <div class="row content-viewer">
+          <% publishedItems.forEach((item, index) => { %>
+            <% if (item.ownedByAuthor) { %>
+              <div class="col-sm-3">
+                <div class="thumbnail">
+                  <a href="/item/<%= item.itemNumber %>" class="thumbnail-link">
+                    <div class="image-wrapper">
+                      <img src="<%= item.imageUrl || '/images/default-image.jpg' %>" alt="<%= item.name %>" class="item-image">
+                    </div>
+                  </a>
+                  <div class="caption">
+                    <h3 class="item-title"><%= item.name %></h3>
+                    <p class="item-price"><%= item.price === 0 ? 'FREE' : '$' + item.price %></p>
+                    <div class="content-actions">
+                      <button class="btn btn-primary content-download" data-item-number="<%= item.itemNumber %>">Download</button>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </a>
-          <button href="#" class="content-download"> Download</button>
-        </div>
-        <div class="col-sm-3">
-          <a href="/pages/itemPages/companionAnimalsExpanded" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/rat.jpg" alt="Companion Animals Expanded (5e)">
-              <div class="caption">
-                <h3>Companion Animals Expanded (5e)</h3>
-              </div>
-            </div>
-          </a>
-          <button href="#" class="content-download"> Download</button>
-        </div>
-        <div class="col-sm-3">
-          <a href="/pages/itemPages/nextLevelSpellbook" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/wizard.jpeg" alt="Next Level Spellbooks">
-              <div class="caption">
-                <h3>Next Level Spellbooks</h3>
-              </div>
-            </div>
-          </a>
-          <button href="#" class="content-download"> Download</button>
-        </div>
-        <div class="col-sm-3">
-          <a href="/pages/itemPages/escapeFromEthmoria" class="thumbnail-link">
-            <div class="thumbnail">
-              <img src="/images/spooky.jpg" alt="Escape from Ethmoria">
-              <div class="caption">
-                <h3>Escape from Ethmoria (Adventure) </h3>
-              </div>
-            </div>
-          </a>
-          <button href="#" class="content-download"> Download</button>
-        </div>
+              <% if ((index + 1) % 4 === 0) { %>
+              </div><div class="row content-viewer">
+            <% } %>
+          <% } %>
+        <% }); %>
       </div>
-    </section>
+    <% } else { %>
+      <h4 class="text-center">No published items yet.</h4>
+    <% } %>
+  </section>
 
     <div class="divider"></div>
-
-    <!-- Supported Authors Section -->
-    <section class="bg-light">
-      <div class="container">
-        <h2 class="text-center">Supported Authors</h2>
-        <ul class="author-list text-center">
-          <!-- Example list of supported authors -->
-          <li><a href="#">Author 1</a></li>
-          <li><a href="#">Author 2</a></li>
-          <li><a href="#">Author 3</a></li>
-        </ul>
-      </div>
-    </section>
-
   </div>
-
-  <div class="big-spacer"></div>
-  <div class="big-spacer"></div>
-  <div class="big-spacer"></div>
   <%- include('../../footer.ejs') %>
 
 
@@ -118,5 +88,35 @@
   <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
   <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>
+
+<script>
+  window.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.content-download').forEach(button => {
+      button.addEventListener('click', function(event) {
+        const itemNumber = event.target.getAttribute('data-item-number');
+        // Initiate download by sending a POST request
+        fetch('/downloadItem', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ itemNumber: itemNumber })
+        })
+        .then(response => {
+          if (response.ok) {
+            // Handle successful download
+            // For example: show a success message or initiate download
+          } else {
+            // Handle error
+            console.error('Error initiating download:', response.statusText);
+          }
+        })
+        .catch(error => {
+          console.error('Fetch error:', error);
+        });
+      });
+    });
+  });
+</script>
 
 </html>
