@@ -1,6 +1,7 @@
 var express = require('express');
 const User = require('../models/User');
 const Item = require('../models/Item');
+const Purchase = require('../models/Purchase');
 var router = express.Router();
 var path = require('path');
 const multer = require('multer');
@@ -108,6 +109,7 @@ const routes = [
   'userPage/EditCreation',
   'userPage/signIn',
   'userPage/signUp',
+  'userPage/adminPage',
   'itemPages/companionAnimalsExpanded',
   'itemPages/escapeFromEthmoria',
   'itemPages/nextLevelSpellbook',
@@ -462,6 +464,76 @@ router.use((err, req, res, next) => {
     return res.status(500).send(err.message);
   }
   next(err);
+});
+
+router.get('/getAllUsers', async function(req, res) {
+  try {
+    const users = await User.findAll();
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching users' });
+  }
+});
+
+router.get('/getAllItems', async function(req, res) {
+  try {
+    const items = await Item.findAll({
+      attributes: ['itemNumber', 'name', 'authorName']
+    });
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching items' });
+  }
+});
+
+router.get('/getPurchasesForAdmin', async function(req, res) {
+  try {
+    // Fetch all purchases
+    // For simplicity, we'll just send itemIds and userIds
+    const purchases = await Purchase.findAll({
+      attributes: ['itemId', 'userId']
+    });
+    res.json(purchases);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching purchases' });
+  }
+});
+
+router.post('/assignPurchasesToUser', async function(req, res) {
+  const { items, user } = req.body;
+
+  try {
+    // Find the user
+    const foundUser = await User.findByPk(user);
+    if (!foundUser) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    // Find the items
+    const foundItems = await Item.findAll({
+      where: {
+        itemNumber: items
+      }
+    });
+
+    if (!foundItems || foundItems.length === 0) {
+      return res.status(404).json({ msg: 'No items found' });
+    }
+
+    // Create purchases for the user
+    const purchases = foundItems.map(item => ({
+      userId: foundUser.username,
+      itemId: item.itemNumber
+    }));
+
+    await Purchase.bulkCreate(purchases);
+
+    res.json({ msg: 'Purchases assigned to user successfully' });
+
+  } catch (error) {
+    console.error('Error assigning purchases to user:', error);
+    res.status(500).json({ msg: 'Error assigning purchases to user' });
+  }
 });
 
 module.exports = router;

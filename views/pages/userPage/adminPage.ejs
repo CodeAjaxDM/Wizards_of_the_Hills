@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="creator" content="">
+  <link rel="icon" href="../../favicon.ico">
+
+  <title>Admin Page</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <!-- Custom styles for this template -->
+  <link href="../../stylesheets/userPages.css" rel="stylesheet">
+  <script src="userPages.js"></script>
+</head>
+
+<body>
+  <% include('../../header.ejs'); %>
+
+  <div class="container mt-5">
+    <h2 class="text-center">Admin Actions</h2>
+    
+    <!-- Reset Database Button -->
+    <div class="text-center mb-5">
+        <button class="btn btn-danger btn-lg" id="resetDbBtn">Reset Database</button>
+    </div>
+    
+    <!-- Admin Actions -->
+    <div class="admin-action-row">
+  
+    <!-- Get All Users Section -->
+    <div class="admin-action-section">
+        <button class="btn btn-primary btn-lg" id="getAllUsersBtn">Get All Users</button>
+        <table class="table table-bordered" id="usersTable" style="display:none;">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody">
+          <!-- User rows will be populated here -->
+        </tbody>
+      </table>
+      <button class="btn btn-secondary btn-sm toggle-table" data-target="usersTable">Toggle Users Table</button>
+    </div>
+    
+    <!-- Get All Items Section -->
+    <div class="admin-action-section">
+    <button class="btn btn-info btn-lg" id="getAllItemsBtn">Get All Items</button>
+    <table class="table table-bordered" id="itemsTable" style="display:none;">
+        <thead>
+          <tr>
+            <th>Item Number</th>
+            <th>Title</th>
+            <th>Author Name</th>
+          </tr>
+        </thead>
+        <tbody id="itemsTableBody">
+          <!-- Item rows will be populated here -->
+        </tbody>
+      </table>
+      <button class="btn btn-secondary btn-sm toggle-table" data-target="itemsTable">Toggle Items Table</button>
+    </div>
+    
+    <!-- Assign Purchases to Users Section -->
+    <div class="text-center mb-5">
+        <button class="btn btn-success btn-lg" id="assignPurchasesBtn">Assign Purchases to Users</button>
+    </div>
+  
+    <div class="admin-action-row">
+        <div class="admin-action-section">
+            <div id="assignPurchasesDiv" style="display:none;">
+                <h4>Select Items:</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Item Number</th>
+                        </tr>
+                    </thead>
+                    <tbody id="assignItemsTableBody">
+                        <!-- Checkboxes for items will be populated here -->
+                    </tbody>
+                </table>
+                
+    
+                <!-- Move Assign to User Button here -->
+                <button class="btn btn-primary" id="assignToUserBtn">Assign to User</button>
+    
+                <h4>Select User:</h4>
+                <select id="selectUser" class="form-select mb-3">
+                    <!-- Users will be populated here -->
+                </select>
+            </div>
+        </div>
+    </div>
+
+  <% include('../../footer.ejs'); %>
+
+  <!-- Bootstrap core JavaScript
+    ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+  <script src="/js/bootstrap.min.js"></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Reset Database Button
+        const resetDbBtn = document.getElementById('resetDbBtn');
+        resetDbBtn.addEventListener('click', function() {
+          if (confirm('Are you sure you want to reset the database?')) {
+            fetch('/resetDatabase')
+              .then(response => response.json())
+              .then(data => {
+                alert(data.msg);
+              });
+          }
+        });
+      
+        // Get All Users Button
+        const getAllUsersBtn = document.getElementById('getAllUsersBtn');
+        const usersTable = document.getElementById('usersTable');
+        const usersTableBody = document.getElementById('usersTableBody');
+        
+        getAllUsersBtn.addEventListener('click', function() {
+          fetch('/getAllUsers')
+            .then(response => response.json())
+            .then(users => {
+              usersTable.style.display = 'table';
+              usersTableBody.innerHTML = '';
+              users.forEach(user => {
+                const row = `<tr>
+                              <td>${user.username}</td>
+                              <td><button class="btn btn-danger">Ban</button></td>
+                            </tr>`;
+                usersTableBody.innerHTML += row;
+              });
+            });
+        });
+      
+        // Get All Items Button
+        const getAllItemsBtn = document.getElementById('getAllItemsBtn');
+        const itemsTable = document.getElementById('itemsTable');
+        const itemsTableBody = document.getElementById('itemsTableBody');
+        
+        getAllItemsBtn.addEventListener('click', function() {
+          fetch('/getAllItems')
+            .then(response => response.json())
+            .then(items => {
+              itemsTable.style.display = 'table';
+              itemsTableBody.innerHTML = '';
+              items.forEach(item => {
+                const row = `<tr>
+                              <td>${item.itemNumber}</td>
+                              <td>${item.name}</td>
+                              <td>${item.authorName}</td>
+                            </tr>`;
+                itemsTableBody.innerHTML += row;
+              });
+            });
+        });
+      
+        // Assign Purchases to Users
+        const assignPurchasesBtn = document.getElementById('assignPurchasesBtn');
+        const assignPurchasesDiv = document.getElementById('assignPurchasesDiv');
+        const assignItemsTableBody = document.getElementById('assignItemsTableBody');
+        const selectUser = document.getElementById('selectUser');
+        
+        assignPurchasesBtn.addEventListener('click', function() {
+          // Fetch items
+          fetch('/getAllItems')
+            .then(response => response.json())
+            .then(items => {
+              assignPurchasesDiv.style.display = 'block';
+              assignItemsTableBody.innerHTML = '';
+              items.forEach(item => {
+                const checkbox = `<tr>
+                                    <td><input type="checkbox" value="${item.itemNumber}"></td>
+                                    <td>${item.itemNumber}</td>
+                                  </tr>`;
+                assignItemsTableBody.innerHTML += checkbox;
+              });
+            });
+      
+          // Fetch users
+          fetch('/getAllUsers')
+            .then(response => response.json())
+            .then(users => {
+              selectUser.innerHTML = '';
+              users.forEach(user => {
+                const option = `<option value="${user.username}">${user.username}</option>`;
+                selectUser.innerHTML += option;
+              });
+            });
+        });
+      
+        // Assign to User Button
+        const assignToUserBtn = document.getElementById('assignToUserBtn');
+        
+        assignToUserBtn.addEventListener('click', function() {
+          const selectedItems = Array.from(document.querySelectorAll('#assignItemsTableBody input:checked')).map(checkbox => checkbox.value);
+          const selectedUser = selectUser.value;
+      
+          // Here you can send the selected items and user to the server
+          fetch('/assignPurchasesToUser', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              items: selectedItems,
+              user: selectedUser
+            })
+          })
+          .then(response => response.json())
+          .then(data => {
+            alert(data.msg);
+          });
+        });
+      });
+
+      document.addEventListener('DOMContentLoaded', function() {
+        // ... (other code)
+    
+        // Toggle Table Buttons
+        const toggleTableButtons = document.querySelectorAll('.toggle-table');
+        
+        toggleTableButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const targetTable = document.getElementById(targetId);
+                
+                if (targetTable.style.display === 'none' || targetTable.style.display === '') {
+                    targetTable.style.display = 'table';
+                } else {
+                    targetTable.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
+
+</html>
