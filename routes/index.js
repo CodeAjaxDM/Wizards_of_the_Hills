@@ -816,4 +816,8 @@ router.get('/privacyPolicy', (req, res) => {
   res.render('privacyPolicy');
 });
 
+router.get('/aboutUs', (req, res) => {
+  res.render('aboutUs');
+});
+
 module.exports = router;
