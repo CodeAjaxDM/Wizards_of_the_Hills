@@ -2,6 +2,8 @@
 
 /*category pages*/
 .browse-container {
+    margin-left: 300px;
+    margin-right: 300px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
@@ -15,4 +17,15 @@
     margin-bottom: 20px;
     max-width: 200px;
     color: black;
+}
+
+#items-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.item img {
+    width: 100%;
+    height: auto;
 }

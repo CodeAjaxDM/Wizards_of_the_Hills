@@ -26,6 +26,7 @@
 
         <main>
             <div class="browse-container">
+                <div class="big-spacer"></div>
                 <h2>Browse All</h2>
                 <div class="divider"></div>
                 <div id="items-container">
@@ -36,12 +37,13 @@
                                 <h3>
                                     <%= item.name %>
                                 </h3>
-                                <p>Price: <%= item.price.toFixed(2) %>
+                                <p>$<%= item.price.toFixed(2) %>
                                 </p>
                             </a>
                         </div>
                         <% }); %>
                 </div>
+                <%- include('../../categoriesCarousel.ejs') %>
             </div>
         </main>
         <%- include('../../footer.ejs') %>
