@@ -690,5 +690,8 @@ router.get('/ruleBooks', async (req, res, next) => {
   }
 });
 
+router.get('/contact', (req, res) => {
+  res.render('contact');
+});
 
 module.exports = router;
