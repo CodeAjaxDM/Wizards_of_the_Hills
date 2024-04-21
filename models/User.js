@@ -32,6 +32,10 @@ class User extends Model {
         return false;
       }
     }
+
+    isAdminUser() {
+      return this.isAdmin;
+    }
 }
 
 User.init({

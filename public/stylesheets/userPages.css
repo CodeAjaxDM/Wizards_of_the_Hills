@@ -254,4 +254,19 @@
   margin-left: 10px; 
 }
 
+/* New classes for layout */
+.admin-action-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.admin-action-section {
+  text-align: center;
+}
+
+.admin-action-section table {
+  margin-top: 20px;
+}
 
