@@ -746,10 +746,13 @@ router.post('/banUser', async (req, res) => {
     res.status(500).json({ success: false, message: 'Error banning user' });
   }
 });
+
 router.get('/browseAll', async (req, res) => {
   try {
-    const items = await Item.findAll(); // Fetch all items from the database
-    res.render('pages/categories/browseAll', { items: items }); // Pass the items to the view
+    const items = await Item.findAll({
+      where: { published: 1 } // Add this to filter for published items
+    });
+    res.render('pages/categories/browseAll', { items: items });
   } catch (error) {
     console.error('Error fetching items:', error);
     res.status(500).send("Error loading the page");
@@ -759,10 +762,12 @@ router.get('/browseAll', async (req, res) => {
 router.get('/characterOptions', async (req, res, next) => {
   try {
     const characterOptionsItems = await Item.findAll({
-      where: { category: 'character options' } // Fetch items with category 'character options' from the database
+      where: {
+        category: 'character options',
+        published: 1
+      }
     });
-
-    res.render('pages/categories/characterOptions', { items: characterOptionsItems }); // Pass the items to the 'characterOptions.ejs' template
+    res.render('pages/categories/characterOptions', { items: characterOptionsItems });
   } catch (error) {
     console.error('Error fetching character options items:', error);
     res.status(500).send("Error loading the character options page");
@@ -772,7 +777,10 @@ router.get('/characterOptions', async (req, res, next) => {
 router.get('/magicalItems', async (req, res, next) => {
   try {
     const magicalItemsItems = await Item.findAll({
-      where: { category: 'magical items' } // Fetch items with category 'character options' from the database
+      where: {
+        category: 'magical items',
+        published: 1
+      } // Fetch items with category 'character options' from the database
     });
 
     res.render('pages/categories/magicalItems', { items: magicalItemsItems }); // Pass the items to the 'characterOptions.ejs' template
@@ -785,7 +793,10 @@ router.get('/magicalItems', async (req, res, next) => {
 router.get('/prewrittenAdventures', async (req, res, next) => {
   try {
     const prewrittenAdventuresItems = await Item.findAll({
-      where: { category: 'prewritten adventures' } // Fetch items with category 'character options' from the database
+      where: {
+        category: 'prewritten adventures',
+        published: 1
+      } // Fetch items with category 'character options' from the database
     });
 
     res.render('pages/categories/prewrittenAdventures', { items: prewrittenAdventuresItems }); // Pass the items to the 'characterOptions.ejs' template
@@ -798,7 +809,10 @@ router.get('/prewrittenAdventures', async (req, res, next) => {
 router.get('/ruleBooks', async (req, res, next) => {
   try {
     const ruleBooksItems = await Item.findAll({
-      where: { category: 'rule books' } // Fetch items with category 'character options' from the database
+      where: {
+        category: 'rule books',
+        published: 1
+      } // Fetch items with category 'character options' from the database
     });
 
     res.render('pages/categories/ruleBooks', { items: ruleBooksItems }); // Pass the items to the 'characterOptions.ejs' template
