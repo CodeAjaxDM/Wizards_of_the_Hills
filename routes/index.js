@@ -838,4 +838,41 @@ router.get('/newsletter', (req, res) => {
   res.render('newsletter');
 });
 
+const { Sequelize, Op } = require('sequelize');
+
+router.get('/search', async (req, res) => {
+  try {
+    // Retrieve the search query from the query string
+    const { q } = req.query;
+
+    if (q) {
+      const searchResults = await Item.findAll({
+        where: {
+          published: 1,
+          [Op.or]: [
+            { name: { [Op.like]: `%${q}%` } },
+            { category: { [Op.like]: `%${q}%` } },
+            { authorName: { [Op.like]: `%${q}%` } },
+          ]
+        },
+      });
+
+      // Check if searchResults is actually empty
+      if (searchResults.length === 0) {
+        console.log("No items matched the search criteria.");
+      }
+
+      // Render the search results page with the found items
+      res.render('searchResults', { items: searchResults, searchQuery: q });
+    } else {
+      console.log("No search query provided, redirecting to browse all.");
+      // If there is no search query, redirect to browse all
+      res.redirect('/browseAll');
+    }
+  } catch (error) {
+    console.error('Error performing search:', error);
+    res.status(500).send("Error loading the search results page");
+  }
+});
+
 module.exports = router;
