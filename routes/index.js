@@ -1,6 +1,7 @@
 var express = require('express');
 const User = require('../models/User');
 const Item = require('../models/Item');
+const Author = require('../models/author');
 const Purchase = require('../models/Purchase');
 var router = express.Router();
 var path = require('path');
@@ -451,7 +452,7 @@ router.post('/updateAuthorName', async function (req, res) {
   const oldAuthorName = req.session.user.authorName; // Get the old author name from session
 
   try {
-    // Check if the new author name is already taken
+    // Check if the new author name is already taken in User model
     const existingUserWithSameAuthorName = await User.findOne({
       where: {
         authorName: newAuthorName
@@ -466,29 +467,46 @@ router.post('/updateAuthorName', async function (req, res) {
 
     // Use a transaction to ensure data integrity
     await sequelize.transaction(async (t) => {
-      // Update the current user's author name
+      // Update the current user's author name in User model
       const user = await User.findByPk(req.session.user.username, { transaction: t });
       if (user) {
         user.authorName = newAuthorName;
         await user.save({ transaction: t });
+      }
 
-        // Update all items with the old author name to use the new author name
-        const [updatedItemCount, updatedItemRows] = await Item.update(
-          { authorName: newAuthorName },
-          {
-            where: {
-              authorName: oldAuthorName,
-              ownedByAuthor: true
-            },
-            returning: true, // Ensure that updated rows are returned
-            transaction: t
-          }
-        );
-
-        if (updatedItemCount !== updatedItemRows.length) {
-          // If the number of updated items doesn't match the number of items returned, the update failed
-          throw new Error('Item update failed');
+      // Update or create the author name in Author model
+      let author = await Author.findByPk(newAuthorName, { transaction: t });
+      if (!author) {
+        // If the author doesn't exist, create a new one
+        author = await Author.create({
+          authorName: newAuthorName,
+          supportLinks: ["https://www.patreon.com/home"],
+          about: "I don't like to talk about myself"
+        }, { transaction: t });
+      } else {
+        // If the author exists, update the support links to default if not already set
+        if (!author.supportLinks || author.supportLinks.length === 0) {
+          author.supportLinks = ["https://www.patreon.com/home"];
+          await author.save({ transaction: t });
         }
+      }
+
+      // Update all items with the old author name to use the new author name
+      const [updatedItemCount, updatedItemRows] = await Item.update(
+        { authorName: newAuthorName },
+        {
+          where: {
+            authorName: oldAuthorName,
+            ownedByAuthor: true
+          },
+          returning: true, // Ensure that updated rows are returned
+          transaction: t
+        }
+      );
+
+      if (updatedItemCount !== updatedItemRows.length) {
+        // If the number of updated items doesn't match the number of items returned, the update failed
+        throw new Error('Item update failed');
       }
     });
 
@@ -502,6 +520,7 @@ router.post('/updateAuthorName', async function (req, res) {
   // Redirect to the creatorPage with the message
   res.redirect('/pages/userPage/creatorPage?msg=' + req.session.msg);
 });
+
 
 router.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
