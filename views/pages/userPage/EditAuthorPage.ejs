@@ -25,24 +25,23 @@
   <%- include('../../header.ejs') %>
 
   <div class="container">
-    <div class="nav-spacer"></div>
+    <form method="POST" action="/pages/userPage/EditAuthorPage" enctype="multipart/form-data">
+      <div class="nav-spacer"></div>
 
-    <div class="text-center mt-4">
-      <a href="/pages/userPage/authorPage">
-        <h4>Leave and View my Author Page</h4>
-      </a>
-    </div>
+      <div class="text-center mt-4">
+        <a href="/pages/userPage/authorPage">
+          <h4>Leave and View my Author Page</h4>
+        </a>
+      </div>
 
-    <div class="row">
-      <div class="col-md-6">
-
-        <!-- Author Image -->
-        <form method="POST" action="/pages/userPage/EditAuthor" enctype="multipart/form-data">
+      <div class="row">
+        <div class="col-md-6">
+          <!-- Author Image -->
           <input type="hidden" name="existingAuthorImg" value="<%= author.authorImg %>">
           <img src="<%= author.authorImg || '/images/default-author-img.jpg' %>" alt="Author Image" class="img-fluid author-image">
           <div class="tiny-spacer"></div>
           <button type="button" class="btn btn-secondary" id="editAuthorImageButton">Edit Author Image</button>
-          <input type="file" id="authorImageUpload" name="authorImage" style="display:none;">
+          <input type="file" id="authorImageUpload" name="authorImageUpload" style="display:none;">
         </div>
 
         <div class="col-md-6">
@@ -53,31 +52,29 @@
             <textarea class="form-control" id="aboutAuthor" rows="3" name="aboutAuthor" placeholder="Enter about the author"><%= author.about %></textarea>
           </div>
 
-          <!-- Support Links -->
-          <div id="supportLinks">
-            <% if (author.supportLinks && author.supportLinks.length > 0) { %>
-              <% author.supportLinks.forEach((link, index) => { %>
-                <div class="form-group">
-                  <label for="supportLink<%= index %>">Support Link <%= index + 1 %></label>
-                  <input type="text" class="form-control" id="supportLink<%= index %>" name="supportLinks[]" placeholder="Enter support link" value="<%= link %>">
-                </div>
-              <% }); %>
-            <% } %>
-          </div>
+          <!-- Support Link -->
+          <div class="form-group">
+            <label for="supportLink">Support Link</label>
+            <input type="text" class="form-control" id="supportLink" name="supportLink" placeholder="Enter support link" value="<%= author.supportLink %>">
+        </div>
         </div>
       </div>
 
-    <div class="text-center mt-4">
-      <button type="submit" class="btn btn-primary btn-lg mr-2" name="action" value="save">Save Changes</button>
-      <button type="button" class="btn btn-danger btn-lg" id="discardChanges">Discard Changes</button>
-    </div>
-  </form>
+      <div class="text-center mt-4">
+        <button type="submit" class="btn btn-primary btn-lg mr-2" name="action" value="save">Save Changes</button>
+        <button type="button" class="btn btn-danger btn-lg" id="discardChanges">Discard Changes</button>
+      </div>
+    </form>
 
-  <div class="text-center mt-4">
-    <a href="/pages/userPage/authorPage">
-      <h4>Leave and View my Author Page</h4>
-    </a>
-  </div>
+    <div class="text-center mt-4">
+      <a href="/pages/userPage/authorPage">
+        <h4>Leave and View my Author Page</h4>
+      </a>
+    </div>
+    <div class="big-spacer"></div>
+    <div class="big-spacer"></div>
+    <div class="big-spacer"></div>
+    <div class="big-spacer"></div>
   </div>
 
   <%- include('../../footer.ejs') %>

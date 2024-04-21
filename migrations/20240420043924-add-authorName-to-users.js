@@ -62,20 +62,20 @@
 // };
 
 
-//3rd migration:
+// //3rd migration:
 
-'use strict';
+// 'use strict';
 
-module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn('Authors', 'authorImg', {
-      type: Sequelize.STRING,
-      allowNull: false,
-      defaultValue: '/images/author-img.jpg'
-    });
-  },
+// module.exports = {
+//   up: async (queryInterface, Sequelize) => {
+//     await queryInterface.addColumn('Authors', 'authorImg', {
+//       type: Sequelize.STRING,
+//       allowNull: false,
+//       defaultValue: '/images/author-img.jpg'
+//     });
+//   },
 
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.removeColumn('Authors', 'authorImg');
-  }
-};
+//   down: async (queryInterface, Sequelize) => {
+//     await queryInterface.removeColumn('Authors', 'authorImg');
+//   }
+// };

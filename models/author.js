@@ -2,17 +2,17 @@ const sequelize = require('../db');
 const { Model, DataTypes } = require('sequelize');
 
 class Author extends Model {
-    static async updateSupportLinks(authorName, supportLinks) {
+    static async updateSupportLink(authorName, supportLink) {
         try {
             const author = await Author.findByPk(authorName);
             if (author) {
-                author.supportLinks = supportLinks;
+                author.supportLink = supportLink;
                 await author.save();
                 return true;
             }
             return false;
         } catch (error) {
-            console.error('Error updating support links:', error);
+            console.error('Error updating support link:', error);
             return false;
         }
     }
@@ -24,20 +24,14 @@ Author.init({
         primaryKey: true,
         allowNull: false
     },
-    supportLinks: {
-        type: DataTypes.JSON, // Store as JSON array of links
+    supportLink: {
+        type: DataTypes.STRING, // Store as a single string
         allowNull: false,
-        defaultValue: ["https://www.patreon.com/home"], // Default value
+        defaultValue: "https://www.patreon.com/home", // Default value
         validate: {
-            validateLinks(value) {
-                if (!Array.isArray(value) || value.length === 0 || value.length > 3) {
-                    throw new Error('Support links must be an array with 1 to 3 entries');
-                }
-                value.forEach(link => {
-                    if (typeof link !== 'string') {
-                        throw new Error('Each support link must be a string');
-                    }
-                });
+            isURL: {
+                args: true,
+                msg: "Support link must be a valid URL"
             }
         }
     },

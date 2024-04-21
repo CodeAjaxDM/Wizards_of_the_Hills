@@ -28,34 +28,22 @@
     <div class="nav-spacer"></div>
 
     <!-- Support the author -->
-<section class="author-support-section">
-  <div class="container">
-    <h2 class="text-center" style="color: rgb(0, 0, 0);">Support the Author on their Support Page</h2>
-    <div class="row">
-      <% if (supportLinks && supportLinks.length > 0) { %>
-        <% if (supportLinks.length === 1) { %>
-          <div class="col-md-12 text-center">
-            <div class="support-item">
-              <p>Support the author through this link</p>
-              <a href="<%= supportLinks[0] %>" class="btn btn-primary">Support</a>
+    <section class="author-support-section">
+      <div class="container">
+        <h2 class="text-center" style="color: rgb(0, 0, 0);">Support the Author on their Support Page</h2>
+        <div class="row">
+          <div class="form-group">
+            <label for="supportLink">Support Link</label>
+            <div class="input-group">
+              <span class="input-group-btn">
+                <a href="<%= supportLink %>" class="btn btn-success" target="_blank">Support Me!</a>
+              </span>
             </div>
           </div>
-        <% } else { %>
-          <% supportLinks.forEach((link, index) => { %>
-            <div class="col-md-<%= supportLinks.length === 1 ? '12' : '4' %>">
-              <div class="support-item text-center">
-                <p>Support the author through this link</p>
-                <a href="<%= link %>" class="btn btn-primary">Support</a>
-              </div>
-            </div>
-          <% }); %>
-        <% } %>
-      <% } else { %>
-        <p class="text-center">No support links available.</p>
-      <% } %>
-    </div>
-  </div>
-</section>
+          
+        </div>
+      </div>
+    </section>
 
     <div class="support-spacer"></div>
     <div class="divider"></div>

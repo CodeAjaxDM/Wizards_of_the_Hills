@@ -218,9 +218,9 @@ routes.forEach(route => {
             ownedByAuthor: true
           },
         });
-        const supportLinks = author ? author.supportLinks : [];
-        console.log(supportLinks)
-        data.supportLinks = supportLinks,
+        const supportLink = author ? author.supportLink : "";
+        console.log(supportLink)
+        data.supportLink = supportLink,
         data.authorName = user.authorName,
         data.publishedItems = publishedItems,
         data.unpublishedItems = unpublishedItems
@@ -456,6 +456,59 @@ router.post('/pages/userPage/EditCreation', upload.single('displayImage'), async
     res.json({ success: false, message: 'Error processing form data' });
   }
 });
+router.post('/pages/userPage/EditAuthorPage', upload.single('authorImageUpload'), async function (req, res, next) {
+  try {
+    // Check the value of the 'action' parameter from the form
+    const action = req.body.action;
+
+    if (action === 'discard') {
+      // Redirect back to the ContentCreator page
+      return res.redirect('/pages/userPage/creatorPage');
+    }
+
+    const authorName = req.session.user.authorName;
+
+    // Capture about, authorImg, and supportLink from form data
+    const about = req.body.about || "";
+    const authorImg = req.file ? `/users/${req.session.user.username}/${req.file.filename}` : "/images/author-img.jpg";
+    
+    let supportLink = req.body.supportLink || "";  // This will get the supportLink as a string
+
+    let author = await Author.findByPk(authorName);
+
+    if (!author) {
+      return res.status(404).json({ success: false, message: 'Author not found' });
+    }
+
+    // Update the Author object with new data
+    author.about = about;
+    author.authorImg = authorImg;
+    author.supportLink = supportLink;  // Update supportLink as a single string
+
+    try {
+      // Try to save the author with the provided supportLink
+      await author.save();
+    } catch (error) {
+      // If validation error due to invalid URL, fetch the existing supportLink for the author
+      if (error.name === 'SequelizeValidationError' && error.errors.some(err => err.path === 'supportLink' && err.validatorKey === 'isURL')) {
+        const existingAuthor = await Author.findByPk(authorName);
+        supportLink = existingAuthor.supportLink;  // Use the existing supportLink
+        author.supportLink = supportLink;  // Update author object
+        await author.save();  // Save the author again with the existing supportLink
+      } else {
+        throw error;  // If it's not a validation error or not related to supportLink, re-throw the error
+      }
+    }
+
+    // Redirect to a different page or render a view
+    res.redirect('/pages/userPage/authorPage');  // Change this to the appropriate page
+
+  } catch (error) {
+    console.error('Error processing form data:', error);
+    res.json({ success: false, message: 'Error processing form data' });
+  }
+});
+
 
 router.post('/updateAuthorName', async function (req, res) {
   const newAuthorName = req.body.authorName;
@@ -490,13 +543,13 @@ router.post('/updateAuthorName', async function (req, res) {
         // If the author doesn't exist, create a new one
         author = await Author.create({
           authorName: newAuthorName,
-          supportLinks: ["https://www.patreon.com/home"],
+          supportLink: "https://www.patreon.com/home",  // Set supportLink as a string
           about: "I don't like to talk about myself"
         }, { transaction: t });
       } else {
-        // If the author exists, update the support links to default if not already set
-        if (!author.supportLinks || author.supportLinks.length === 0) {
-          author.supportLinks = ["https://www.patreon.com/home"];
+        // If the author exists, update the support link to default if not already set
+        if (!author.supportLink) {
+          author.supportLink = "https://www.patreon.com/home";
           await author.save({ transaction: t });
         }
       }
@@ -559,6 +612,15 @@ router.get('/getAllItems', async function(req, res) {
   }
 });
 
+router.get('/getAllAuthors', async function(req, res) {
+  try {
+    const authors = await Author.findAll();
+    res.json(authors);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching authors' });
+  }
+});
+
 router.get('/getPurchasesForAdmin', async function(req, res) {
   try {
     // Fetch all purchases
@@ -579,6 +641,9 @@ router.get('/resetDatabase', async (req, res) => {
 
     // Delete all users
     await User.destroy({ where: {} });
+
+    // Reset Authors table
+    await Author.destroy({ where: {} });
 
     // Create or update user "subu"
     const [subu, subuCreated] = await User.findOrCreate({
@@ -604,18 +669,29 @@ router.get('/resetDatabase', async (req, res) => {
 
     if (janeDoeCreated) {
       console.log("Jane Doe instance created...");
+      
+      // Add Jane Doe to the Author table
+      await Author.create({
+        authorName: "Jane Doe",
+        authorImg: "/images/author-img.jpg"
+      });
+      
+      console.log("Jane Doe added to Author table...");
+      
     } else {
       console.log("Jane Doe already exists!");
-    }
 
-    // Update "Jane Doe" if she already exists
-    if (!janeDoeCreated) {
-      await janeDoe.update({
-        password: "admin",
-        isAdmin: true,
-        authorName: "Jane Doe"
-      });
-      console.log("Jane Doe updated...");
+      // Update "Jane Doe" if she already exists in the Author table
+      const janeDoeAuthor = await Author.findByPk("Jane Doe");
+      if (!janeDoeAuthor) {
+        await Author.create({
+          authorName: "Jane Doe",
+          authorImg: "/images/author-img.jpg"
+        });
+        console.log("Jane Doe added to Author table...");
+      } else {
+        console.log("Jane Doe already exists in Author table!");
+      }
     }
 
     // Run the addItemsScript.js to add items
@@ -628,6 +704,8 @@ router.get('/resetDatabase', async (req, res) => {
     res.status(500).json({ msg: 'Error resetting database' });
   }
 });
+
+
 
 router.post('/banUser', async (req, res) => {
   const usernameToBan = req.body.username; // Get the username from the request body

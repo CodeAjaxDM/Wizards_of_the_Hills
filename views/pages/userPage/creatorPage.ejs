@@ -54,7 +54,9 @@
   <div class="row">
     <div class="col-sm-6 col-sm-offset-3">
       <!-- Add the link next to the author name input field -->
-      <a href="/pages/userPage/EditAuthorPage" class="btn btn-link">View/Edit My Author Page</a>
+      <% if (authorName) { %>
+        <a href="/pages/userPage/EditAuthorPage" class="btn btn-link">View/Edit My Author Page</a>
+      <% } %>
       <form id="editAuthorForm" action="/updateAuthorName" method="post">
         <div class="form-group">
           <label for="authorName">Author Name:</label>
