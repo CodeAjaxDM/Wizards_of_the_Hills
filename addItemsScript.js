@@ -138,3 +138,5 @@ async function addItems() {
 addItems().catch(error => {
     console.error("Error in addItems:", error);
 });
+
+module.exports = addItems;

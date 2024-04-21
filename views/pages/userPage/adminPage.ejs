@@ -20,8 +20,8 @@
 </head>
 
 <body>
-  <% include('../../header.ejs'); %>
-
+  <%- include('../../header.ejs') %>
+  <div class="container">
   <div class="container mt-5">
     <h2 class="text-center">Admin Actions</h2>
     
@@ -68,40 +68,8 @@
       <button class="btn btn-secondary btn-sm toggle-table" data-target="itemsTable">Toggle Items Table</button>
     </div>
     
-    <!-- Assign Purchases to Users Section -->
-    <div class="text-center mb-5">
-        <button class="btn btn-success btn-lg" id="assignPurchasesBtn">Assign Purchases to Users</button>
-    </div>
-  
-    <div class="admin-action-row">
-        <div class="admin-action-section">
-            <div id="assignPurchasesDiv" style="display:none;">
-                <h4>Select Items:</h4>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Select</th>
-                            <th>Item Number</th>
-                        </tr>
-                    </thead>
-                    <tbody id="assignItemsTableBody">
-                        <!-- Checkboxes for items will be populated here -->
-                    </tbody>
-                </table>
-                
-    
-                <!-- Move Assign to User Button here -->
-                <button class="btn btn-primary" id="assignToUserBtn">Assign to User</button>
-    
-                <h4>Select User:</h4>
-                <select id="selectUser" class="form-select mb-3">
-                    <!-- Users will be populated here -->
-                </select>
-            </div>
-        </div>
-    </div>
-
-  <% include('../../footer.ejs'); %>
+  </div>
+  <%- include('../../footer.ejs') %>
 
   <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -125,29 +93,61 @@
                 alert(data.msg);
               });
           }
+        });      
+
+  const getAllUsersBtn = document.getElementById('getAllUsersBtn');
+  const usersTable = document.getElementById('usersTable');
+  const usersTableBody = document.getElementById('usersTableBody');
+
+  getAllUsersBtn.addEventListener('click', function() {
+    fetch('/getAllUsers')
+      .then(response => response.json())
+      .then(users => {
+        usersTable.style.display = 'table';
+        usersTableBody.innerHTML = '';
+        users.forEach(user => {
+          const row = `<tr>
+                        <td>${user.username}</td>
+                        <td><button class="btn btn-danger ban-user-btn" data-username="${user.username}">Ban</button></td>
+                      </tr>`;
+          usersTableBody.innerHTML += row;
         });
-      
-        // Get All Users Button
-        const getAllUsersBtn = document.getElementById('getAllUsersBtn');
-        const usersTable = document.getElementById('usersTable');
-        const usersTableBody = document.getElementById('usersTableBody');
         
-        getAllUsersBtn.addEventListener('click', function() {
-          fetch('/getAllUsers')
-            .then(response => response.json())
-            .then(users => {
-              usersTable.style.display = 'table';
-              usersTableBody.innerHTML = '';
-              users.forEach(user => {
-                const row = `<tr>
-                              <td>${user.username}</td>
-                              <td><button class="btn btn-danger">Ban</button></td>
-                            </tr>`;
-                usersTableBody.innerHTML += row;
-              });
-            });
-        });
+        // Add event listeners to the newly generated ban buttons
+        const banUserButtons = document.querySelectorAll('.ban-user-btn');
+        banUserButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            const usernameToBan = this.getAttribute('data-username');
       
+            if (confirm(`Are you sure you want to ban ${usernameToBan}?`)) {
+              fetch('/banUser', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username: usernameToBan }),
+              })
+              .then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  alert(data.message);
+                  // Refresh the page or update the user list
+                  window.location.reload();
+                } else {
+                  alert(data.message);
+                }
+              })
+              .catch(error => {
+                console.error('Error banning user:', error);
+                alert('Error banning user');
+            });
+          }
+        });
+      });
+    });
+  });
+
+
         // Get All Items Button
         const getAllItemsBtn = document.getElementById('getAllItemsBtn');
         const itemsTable = document.getElementById('itemsTable');
@@ -170,28 +170,6 @@
             });
         });
       
-        // Assign Purchases to Users
-        const assignPurchasesBtn = document.getElementById('assignPurchasesBtn');
-        const assignPurchasesDiv = document.getElementById('assignPurchasesDiv');
-        const assignItemsTableBody = document.getElementById('assignItemsTableBody');
-        const selectUser = document.getElementById('selectUser');
-        
-        assignPurchasesBtn.addEventListener('click', function() {
-          // Fetch items
-          fetch('/getAllItems')
-            .then(response => response.json())
-            .then(items => {
-              assignPurchasesDiv.style.display = 'block';
-              assignItemsTableBody.innerHTML = '';
-              items.forEach(item => {
-                const checkbox = `<tr>
-                                    <td><input type="checkbox" value="${item.itemNumber}"></td>
-                                    <td>${item.itemNumber}</td>
-                                  </tr>`;
-                assignItemsTableBody.innerHTML += checkbox;
-              });
-            });
-      
           // Fetch users
           fetch('/getAllUsers')
             .then(response => response.json())
@@ -203,31 +181,6 @@
               });
             });
         });
-      
-        // Assign to User Button
-        const assignToUserBtn = document.getElementById('assignToUserBtn');
-        
-        assignToUserBtn.addEventListener('click', function() {
-          const selectedItems = Array.from(document.querySelectorAll('#assignItemsTableBody input:checked')).map(checkbox => checkbox.value);
-          const selectedUser = selectUser.value;
-      
-          // Here you can send the selected items and user to the server
-          fetch('/assignPurchasesToUser', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              items: selectedItems,
-              user: selectedUser
-            })
-          })
-          .then(response => response.json())
-          .then(data => {
-            alert(data.msg);
-          });
-        });
-      });
 
       document.addEventListener('DOMContentLoaded', function() {
         // ... (other code)
@@ -248,6 +201,10 @@
             });
         });
     });
+    
+
+
+
 </script>
 
 </html>

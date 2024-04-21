@@ -543,41 +543,91 @@ router.get('/getPurchasesForAdmin', async function(req, res) {
   }
 });
 
-router.post('/assignPurchasesToUser', async function(req, res) {
-  const { items, user } = req.body;
-
+router.get('/resetDatabase', async (req, res) => {
   try {
-    // Find the user
-    const foundUser = await User.findByPk(user);
-    if (!foundUser) {
-      return res.status(404).json({ msg: 'User not found' });
+    // Delete all items
+    await Item.destroy({ where: {} });
+
+    // Delete all users
+    await User.destroy({ where: {} });
+
+    // Create or update user "subu"
+    const [subu, subuCreated] = await User.findOrCreate({
+      where: { username: "subu" },
+      defaults: { password: "1234" }
+    });
+
+    if (subuCreated) {
+      console.log("subu instance created...");
+    } else {
+      console.log("subu already exists!");
     }
 
-    // Find the items
-    const foundItems = await Item.findAll({
-      where: {
-        itemNumber: items
+    // Create or update user "Jane Doe"
+    const [janeDoe, janeDoeCreated] = await User.findOrCreate({
+      where: { username: "Jane Doe" },
+      defaults: {
+        password: "admin",
+        isAdmin: true,
+        authorName: "Jane Doe"
       }
     });
 
-    if (!foundItems || foundItems.length === 0) {
-      return res.status(404).json({ msg: 'No items found' });
+    if (janeDoeCreated) {
+      console.log("Jane Doe instance created...");
+    } else {
+      console.log("Jane Doe already exists!");
     }
 
-    // Create purchases for the user
-    const purchases = foundItems.map(item => ({
-      userId: foundUser.username,
-      itemId: item.itemNumber
-    }));
+    // Update "Jane Doe" if she already exists
+    if (!janeDoeCreated) {
+      await janeDoe.update({
+        password: "admin",
+        isAdmin: true,
+        authorName: "Jane Doe"
+      });
+      console.log("Jane Doe updated...");
+    }
 
-    await Purchase.bulkCreate(purchases);
+    // Run the addItemsScript.js to add items
+    const addItemsScript = require('../addItemsScript'); // Adjust the path as needed
+    await addItemsScript();
 
-    res.json({ msg: 'Purchases assigned to user successfully' });
-
+    res.json({ msg: 'Database reset successfully' });
   } catch (error) {
-    console.error('Error assigning purchases to user:', error);
-    res.status(500).json({ msg: 'Error assigning purchases to user' });
+    console.error("Error resetting database:", error);
+    res.status(500).json({ msg: 'Error resetting database' });
   }
 });
+
+router.post('/banUser', async (req, res) => {
+  const usernameToBan = req.body.username; // Get the username from the request body
+
+  try {
+    // Find the user by username
+    const user = await User.findOne({ where: { username: usernameToBan } });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Delete the user
+    await user.destroy();
+
+    // Update items owned by the user
+    const items = await Item.update(
+      { ownedByAuthor: false },
+      { where: { authorName: usernameToBan } }
+    );
+
+    res.json({ success: true, message: 'User banned successfully' });
+
+  } catch (error) {
+    console.error('Error banning user:', error);
+    res.status(500).json({ success: false, message: 'Error banning user' });
+  }
+});
+
+
 
 module.exports = router;
