@@ -68,17 +68,14 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    // Add ownedByAuthor to Items table
-    await queryInterface.addColumn('Items', 'ownedByAuthor', {
-      type: Sequelize.BOOLEAN,
+    await queryInterface.addColumn('Authors', 'authorImg', {
+      type: Sequelize.STRING,
       allowNull: false,
-      defaultValue: true
+      defaultValue: '/images/author-img.jpg'
     });
   },
 
   down: async (queryInterface, Sequelize) => {
-    // Remove ownedByAuthor from Items table
-    await queryInterface.removeColumn('Items', 'ownedByAuthor');
+    await queryInterface.removeColumn('Authors', 'authorImg');
   }
 };
-

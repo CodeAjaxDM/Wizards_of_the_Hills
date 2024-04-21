@@ -9,6 +9,7 @@ const multer = require('multer');
 
 const User = require('./models/User');
 const Item = require('./models/Item');
+const Author = require('./models/author');
 var indexRouter = require('./routes/index');
 
 var app = express();
@@ -123,24 +124,36 @@ async function setup() {
 
     if (janeDoeCreated) {
       console.log("Jane Doe instance created...");
+      
+      // Add Jane Doe to the Author table
+      await Author.create({
+        authorName: "Jane Doe",
+        authorImg: "/images/author-img.jpg"
+      });
+
+      console.log("Jane Doe added to Author table...");
+      
     } else {
       console.log("Jane Doe already exists!");
-    }
 
-    // Update "Jane Doe" if she already exists
-    if (!janeDoeCreated) {
-      await janeDoe.update({
-        password: "admin",
-        isAdmin: true,
-        authorName: "Jane Doe"
-      });
-      console.log("Jane Doe updated...");
+      // Update "Jane Doe" if she already exists in the Author table
+      const janeDoeAuthor = await Author.findByPk("Jane Doe");
+      if (!janeDoeAuthor) {
+        await Author.create({
+          authorName: "Jane Doe",
+          authorImg: "/images/author-img.jpg"
+        });
+        console.log("Jane Doe added to Author table...");
+      } else {
+        console.log("Jane Doe already exists in Author table!");
+      }
     }
 
   } catch (error) {
     console.error("Error setting up users:", error);
   }
 }
+
 
 sequelize.sync().then(() => {
   console.log("Sequelize Sync Completed...");

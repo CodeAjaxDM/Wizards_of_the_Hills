@@ -107,6 +107,7 @@ router.get('/logout', function (req, res) {
 const routes = [
   'userPage/userPage',
   'userPage/authorPage',
+  'userPage/EditAuthorPage',
   'userPage/creatorPage',
   'userPage/EditCreation',
   'userPage/signIn',
@@ -183,12 +184,18 @@ routes.forEach(route => {
       data.category = '';
     }
 
-    if (renderPath === 'pages/userPage/creatorPage' || renderPath === 'pages/userPage/userPage') {
+    if (renderPath === 'pages/userPage/creatorPage' || renderPath === 'pages/userPage/userPage' || renderPath === 'pages/userPage/authorPage' || renderPath === 'pages/userPage/EditAuthorPage') {
       try {
         // Fetch the current user
         const user = await User.findByPk(req.session.user.username);
         if (!user) {
           return res.status(404).send('User not found');
+        }
+
+        const author = await Author.findByPk(user.authorName);
+        if (!author) {
+          // For these pages, continue loading the page even if the author is not found
+          console.warn('Author not found');
         }
 
         if (!data.msg) {
@@ -211,11 +218,14 @@ routes.forEach(route => {
             ownedByAuthor: true
           },
         });
-
+        const supportLinks = author ? author.supportLinks : [];
+        console.log(supportLinks)
+        data.supportLinks = supportLinks,
         data.authorName = user.authorName,
         data.publishedItems = publishedItems,
         data.unpublishedItems = unpublishedItems
         data.user = user;
+        data.author = author;
       }catch (error) {
           next(error);
       }

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="../../favicon.ico">
+
+  <title>Edit Author Page</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <!-- Custom styles for this template -->
+  <link href="../../stylesheets/userPages.css" rel="stylesheet">
+  <script src="userPages.js"></script>
+
+</head>
+
+<body>
+
+  <%- include('../../header.ejs') %>
+
+  <div class="container">
+    <div class="nav-spacer"></div>
+
+    <div class="text-center mt-4">
+      <a href="/pages/userPage/authorPage">
+        <h4>Leave and View my Author Page</h4>
+      </a>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+
+        <!-- Author Image -->
+        <form method="POST" action="/pages/userPage/EditAuthor" enctype="multipart/form-data">
+          <input type="hidden" name="existingAuthorImg" value="<%= author.authorImg %>">
+          <img src="<%= author.authorImg || '/images/default-author-img.jpg' %>" alt="Author Image" class="img-fluid author-image">
+          <div class="tiny-spacer"></div>
+          <button type="button" class="btn btn-secondary" id="editAuthorImageButton">Edit Author Image</button>
+          <input type="file" id="authorImageUpload" name="authorImage" style="display:none;">
+        </div>
+
+        <div class="col-md-6">
+          <!-- Author Details Form -->
+          <h2>Edit Author Details</h2>
+          <div class="form-group">
+            <label for="aboutAuthor">About the Author</label>
+            <textarea class="form-control" id="aboutAuthor" rows="3" name="aboutAuthor" placeholder="Enter about the author"><%= author.about %></textarea>
+          </div>
+
+          <!-- Support Links -->
+          <div id="supportLinks">
+            <% if (author.supportLinks && author.supportLinks.length > 0) { %>
+              <% author.supportLinks.forEach((link, index) => { %>
+                <div class="form-group">
+                  <label for="supportLink<%= index %>">Support Link <%= index + 1 %></label>
+                  <input type="text" class="form-control" id="supportLink<%= index %>" name="supportLinks[]" placeholder="Enter support link" value="<%= link %>">
+                </div>
+              <% }); %>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-primary btn-lg mr-2" name="action" value="save">Save Changes</button>
+      <button type="button" class="btn btn-danger btn-lg" id="discardChanges">Discard Changes</button>
+    </div>
+  </form>
+
+  <div class="text-center mt-4">
+    <a href="/pages/userPage/authorPage">
+      <h4>Leave and View my Author Page</h4>
+    </a>
+  </div>
+  </div>
+
+  <%- include('../../footer.ejs') %>
+
+
+  <!-- Bootstrap core JavaScript
+    ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+  <script src="/js/bootstrap.min.js"></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const editAuthorImageButton = document.getElementById('editAuthorImageButton');
+    const authorImageUpload = document.getElementById('authorImageUpload');
+  
+    editAuthorImageButton.addEventListener('click', function() {
+      authorImageUpload.click();
+    });
+  
+    authorImageUpload.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+  
+        reader.addEventListener('load', function() {
+          const img = document.querySelector('.author-image');
+          img.src = reader.result;
+        });
+  
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Event listener for the Discard Changes button
+    document.getElementById('discardChanges').addEventListener('click', function() {
+      window.location.href = '/pages/userPage/authorPage';
+    });
+  });
+</script>
+
+</html>

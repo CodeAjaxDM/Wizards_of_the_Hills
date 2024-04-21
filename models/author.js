@@ -45,6 +45,11 @@ Author.init({
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: "I don't like to talk about myself"
+    },
+    authorImg: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: '/images/author-img.jpg'
     }
 }, {
     sequelize,
