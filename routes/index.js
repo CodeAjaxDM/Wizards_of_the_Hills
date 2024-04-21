@@ -211,6 +211,7 @@ routes.forEach(route => {
         data.authorName = user.authorName,
         data.publishedItems = publishedItems,
         data.unpublishedItems = unpublishedItems
+        data.user = user;
       }catch (error) {
           next(error);
       }
