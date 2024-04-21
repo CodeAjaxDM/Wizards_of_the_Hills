@@ -403,7 +403,7 @@ router.post('/pages/userPage/EditCreation', upload.single('displayImage'), async
     const itemNumber = req.body.itemNumber || false;
     const itemCount = await Item.count();  // Count all items
     const newItemNumber = itemCount + 1;  // Generate the next item number
-    const category = req.body.category || "";
+    const category = (req.body.category || "").toLowerCase();
 
     console.log(imagePath, title, description, price, publishStatus, itemNumber, newItemNumber);
 
