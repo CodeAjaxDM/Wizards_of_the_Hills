@@ -67,6 +67,24 @@
       </table>
       <button class="btn btn-secondary btn-sm toggle-table" data-target="itemsTable">Toggle Items Table</button>
     </div>
+
+    <!-- Get All Authors Section -->
+<div class="admin-action-section">
+  <button class="btn btn-warning btn-lg" id="getAllAuthorsBtn">Get All Authors</button>
+  <table class="table table-bordered" id="authorsTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>Author Name</th>
+          <th>About</th>
+          <th>Author Img</th>
+        </tr>
+      </thead>
+      <tbody id="authorsTableBody">
+        <!-- Author rows will be populated here -->
+      </tbody>
+  </table>
+  <button class="btn btn-secondary btn-sm toggle-table" data-target="authorsTable">Toggle Authors Table</button>
+</div>
     
   </div>
   </div>
@@ -185,6 +203,28 @@
             });
         });
 
+        // Get All Authors Button
+        const getAllAuthorsBtn = document.getElementById('getAllAuthorsBtn');
+        const authorsTable = document.getElementById('authorsTable');
+        const authorsTableBody = document.getElementById('authorsTableBody');
+
+        getAllAuthorsBtn.addEventListener('click', function() {
+          fetch('/getAllAuthors')
+            .then(response => response.json())
+            .then(authors => {
+              authorsTable.style.display = 'table';
+              authorsTableBody.innerHTML = '';
+              authors.forEach(author => {
+                const row = `<tr>
+                              <td>${author.authorName}</td>
+                              <td>${author.about || 'N/A'}</td>
+                              <td><img src="${author.authorImg || '/images/default-author-img.jpg'}" style="max-width: 100px;"></td>
+                            </tr>`;
+                authorsTableBody.innerHTML += row;
+              });
+            });
+        });
+
       document.addEventListener('DOMContentLoaded', function() {
         // ... (other code)
     
@@ -204,6 +244,8 @@
             });
         });
     });
+
+
     
 
 
