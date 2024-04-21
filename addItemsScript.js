@@ -82,10 +82,10 @@ async function addItems() {
                 authorName: 'Jane Doe',
                 authorWebsite: 'http://google.com',
                 description: 'Begin a fantastical new journey in the universe of Xenoblade Chronicles with this Dungeons & Dragons adventure module! Players will explore the expansive landscapes atop colossal Titans, uncover ancient technologies, and navigate the complex politics of different factions. As they quest for the legendary Aegis sword, heroes must forge alliances and combat fierce enemies, including Mechon invaders and mysterious Telethia. With rich lore, dynamic characters, and epic battles, this adventure promises to be an unforgettable addition to any gaming table.',
-                imageUrl: '/images/xenoblade.jpg',
+                imageUrl: '/images/xenoblade-square.jpg',
                 filePath: null,
                 category: 'prewritten adventures'
-    
+
             }
         },
         {
@@ -96,7 +96,7 @@ async function addItems() {
                 authorName: 'Jane Doe',
                 authorWebsite: 'http://google.com',
                 description: 'Introducing The Grand Bazaar Lantern, a unique magical item designed for the discerning Dungeons & Dragons adventurer. This enchanted lantern does more than light the dark corners of the world; it also captures and stores the essence of fallen creatures. Each soul enhances the lanterns glow and grants the bearer access to rare insights and arcane knowledge from the souls within. Perfect for illuminating hidden truths and unlocking the mysteries of the past, The Grand Bazaar Lantern is an indispensable tool for any quest!',
-                imageUrl: '/images/grand-bazaar-lantern.jpg',
+                imageUrl: '/images/grand-bazaar-lantern-square.jpg',
                 filePath: null,
                 category: 'magical items'
             }
@@ -109,9 +109,9 @@ async function addItems() {
                 authorName: 'Jane Doe',
                 authorWebsite: 'http://google.com',
                 description: 'Discover the mysteries of the unknown with the Eldritch Item Bundle, a collection of arcane artifacts designed for Dungeons & Dragons adventurers who dare to delve into the supernatural. This bundle includes items like the Whispering Skull, which offers cryptic guidance and visions at a price; the Cloak of Starless Nights, which shrouds the wearer in shadows and silence; and the Sigil of Dreaming, a powerful amulet that allows manipulation of the dreamscape. Each piece is steeped in eerie power, perfect for those seeking to wield the darker, more enigmatic forces of the cosmos.',
-                imageUrl: '/images/magical-items.jpg',
+                imageUrl: '/images/item-bundle-square.png',
                 filePath: null,
-                category: 'magical items'    
+                category: 'magical items'
             }
         },
         {
@@ -122,7 +122,7 @@ async function addItems() {
                 authorName: 'Jane Doe',
                 authorWebsite: 'http://google.com',
                 description: 'Introducing the Leporids, a new playable race of rabbit people for Dungeons & Dragons! Known for their agility and keen senses, Leporids make excellent scouts and thieves. They possess a natural aptitude for evading danger, with abilities that enhance their speed and stealth. Leporids have a strong sense of community and a deep connection to nature, often aligning with classes like rangers and druids. Their unique racial traits include enhanced jumping capabilities and superior hearing. Players choosing to embody a Leporid will find themselves hopping into adventure with both charm and resilience!',
-                imageUrl: '/images/rabbit-race.jpg',
+                imageUrl: '/images/rabbit-race-square.jpg',
                 filePath: null,
                 category: 'character options'
             }

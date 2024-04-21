@@ -2,104 +2,61 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <link rel="icon" href="../../favicon.ico">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
 
-  <title>Author Page</title>
+    <title>Author Page</title>
 
-  <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="/css/bootstrap.min.css" />
-  <!-- Custom styles for this template -->
-  <link href="../../stylesheets/categories.css" rel="stylesheet">
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <!-- Custom styles for this template -->
+    <link href="../../stylesheets/categories.css" rel="stylesheet">
 
 
 </head>
 
 <body>
 
-  <%- include('../../header.ejs') %>
+    <%- include('../../header.ejs') %>
 
-  <main>
-    <div class="browse-container">
-        <h2>Browse All</h2>
-        <div class="divider"></div>
-        <a href="/pages/itemPages/companionAnimalsExpanded" class="browse-item">
-            <img src="/images/book1.jpg">
-            <h3>Tabletop Star Wars Manual </h3>
-            <p>$49.99</p>
-        </a>
-        <a href="/pages/itemPages/companionAnimalsExpanded" class="browse-item">
-            <img src="/images/book3.jpg">
-            <h3>5th Edition Unleashed</h3>
-            <p>$9.99</p>
-        </a>
-        <a href="/pages/itemPages/companionAnimalsExpanded" class="browse-item">
-            <img src="/images/book4.jpg">
-            <h3>Alignment Remastered</h3>
-            <p>$7.99</p>
-        </a>
-        <a href="/pages/itemPages/companionAnimalsExpanded" class="browse-item">
-            <img src="/images/book5.jpg">
-            <h3>Spirit World Revisited</h3>
-            <p>$6.66</p>
-        </a>
-        <a href="/pages/itemPages/companionAnimalsExpanded" class="browse-item">
-            <img src="/images/book2.jpg">
-            <h3>Star Trek RPG Guide</h3>
-            <p>$29.99</p>
-        </a>
-        <a href="/pages/itemPages/companionAnimalsExpanded" class="browse-item">
-            <img src="/images/book6.jpg">
-            <h3>LOTR Tabletop Rule Book v2.0</h3>
-            <p>$20.00</p>
-            <a href="/pages/itemPages/nextLevelSpellbook" class="browse-item">
-                <img src="/images/wizard.jpeg">
-                <h3>Next Level Spellbooks</h3>
-                <p>$12.49</p>
-            </a>
-            <a href="/pages/itemPages/companionAnimalsExpanded" class="browse-item">
-                <img src="/images/book7.jpg">
-                <h3>LOTR Tabletop Rule Book v1.0</h3>
-                <p>$10.29</p>
-            </a>
-            <a href="/pages/itemPages/companionAnimalsExpanded" class="browse-item">
-                <img src="/images/book8.jpg">
-                <h3>Dragonrealm</h3>
-                <p>$19.99</p>
-            </a>
-            <a href="/pages/itemPages/companionAnimalsExpanded" class="browse-item">
-                <img src="/images/rat.jpg">
-                <h3>Companion Animals Expanded (5e)</h3>
-                <p>FREE</p>
-            </a>
-            <a href="/pages/itemPages/companionAnimalsExpanded" class="browse-item">
-                <img src="/images/book9.jpg">
-                <h3>MAGIC UNCHAINED</h3>
-                <p>$69.99</p>
-            </a>
-            <a href="/pages/itemPages/companionAnimalsExpanded" class="browse-item">
-                <img src="/images/book10.jpg">
-                <h3>Pet Overhaul</h3>
-                <p>$3.99</p>
-            </a>
-    </div>
-</main>
-  <%- include('../../footer.ejs') %>
+        <main>
+            <div class="browse-container">
+                <div class="big-spacer"></div>
+                <h2>Browse All</h2>
+                <div class="divider"></div>
+                <div id="items-container">
+                    <% items.forEach(item=> { %>
+                        <div class="item">
+                            <a href="/item/<%= item.itemNumber %>">
+                                <img src="<%= item.imageUrl %>" alt="<%= item.name %>">
+                                <h3>
+                                    <%= item.name %>
+                                </h3>
+                                <p>$<%= item.price.toFixed(2) %>
+                                </p>
+                            </a>
+                        </div>
+                        <% }); %>
+                </div>
+                <%- include('../../categoriesCarousel.ejs') %>
+            </div>
+        </main>
+        <%- include('../../footer.ejs') %>
 
 
-  <!-- Bootstrap core JavaScript
+            <!-- Bootstrap core JavaScript
     ================================================== -->
-  <!-- Placed at the end of the document so the pages load faster -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-  <script src="/js/bootstrap.min.js"></script>
-  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-  <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+            <!-- Placed at the end of the document so the pages load faster -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+            <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+            <script src="/js/bootstrap.min.js"></script>
+            <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+            <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>
 
 </html>
