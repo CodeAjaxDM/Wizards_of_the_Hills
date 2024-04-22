@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link href="../../stylesheets/categories.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <%- include('header.ejs') %>
+
+        <main>
+            <div class="browse-container">
+                <form class="form-inline mb-3" action="/search" method="get">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="searchQuery" name="q"
+                            placeholder="Find your next great adventure...">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+                <h2>Search Results for "<%= searchQuery %>"</h2>
+                <div class="divider"></div>
+                <div id="items-container">
+                    <% if(items.length===0) { %>
+                        <p>No items found matching your search criteria.</p>
+                        <% } else { %>
+                            <% items.forEach(item=> { %>
+                                <div class="item">
+                                    <a href="/item/<%= item.itemNumber %>">
+                                        <img src="<%= item.imageUrl %>" alt="<%= item.name %>">
+                                        <h3>
+                                            <%= item.name %>
+                                        </h3>
+                                        <p>$<%= item.price.toFixed(2) %>
+                                        </p>
+                                    </a>
+                                </div>
+                                <% }); %>
+                                    <% } %>
+                </div>
+                <%- include('categoriesCarousel.ejs') %>
+            </div>
+        </main>
+
+        <%- include('footer.ejs') %>
+
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+            <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+            <script src="/js/bootstrap.min.js"></script>
+            <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+
+</html>

@@ -14,9 +14,10 @@
 <body>
   <%- include('header.ejs') %>
     <div class="container">
-      <form class="form-inline mb-3">
+      <form class="form-inline mb-3" action="/search" method="get">
         <div class="form-group">
-          <input type="text" class="form-control" id="searchQuery" placeholder="Find your next great adventure...">
+          <input type="text" class="form-control" id="searchQuery" name="q"
+            placeholder="Find your next great adventure...">
         </div>
         <button type="submit" class="btn btn-primary">Search</button>
       </form>
