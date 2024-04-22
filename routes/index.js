@@ -1012,7 +1012,48 @@ router.post('/downloadItem', async (req, res) => {
   }
 });
 
+router.get('/author', async (req, res, next) => {
+  const authorName = req.query.authorName; // Access authorName from query parameters
+  try {
+    let data = {};
+    
+    // Fetch the author based on authorName
+    const author = await Author.findByPk(authorName);
+    if (!author) {
+      console.warn('Author not found');
+      return res.status(404).send('Author not found');
+    }
 
+    // Fetch the user based on the author's username
+    const user = await Author.findOne({ where: { authorName: authorName } });
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
 
+    // Fetch items for the current author
+    const publishedItems = await Item.findAll({
+      where: {
+        authorName: user.authorName,
+        published: true,
+        ownedByAuthor: true
+      },
+    });
+
+    const supportLink = author.supportLink || "";
+    data.supportLink = supportLink;
+    data.authorName = user.authorName;
+    data.publishedItems = publishedItems;
+    data.user = user;
+    data.author = author;
+
+    // Define the renderPath (make sure it's correctly defined in your route)
+    const renderPath = 'pages/userPage/authorPage'; // Replace with your actual path
+
+    // Render the appropriate EJS template with the data object
+    res.render(renderPath, data);
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;
