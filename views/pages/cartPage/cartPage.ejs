@@ -53,10 +53,9 @@
                                                                 href="/item/<%= item.itemNumber %>">
                                                                 <%= item.name %>
                                                             </a></h4>
-                                                        <h5 class="media-heading"> by <a
-                                                                href="<%= item.authorWebsite %>">
-                                                                <%= item.authorName %>
-                                                            </a></h5>
+                                                        <h5 class="media-heading"> by <a href="/author?authorName=<%= encodeURIComponent(item.authorName) %>">
+                                                            <%= item.authorName %>
+                                                        </a></h5>
                                                     </div>
                                                 </div>
                                             </td>
