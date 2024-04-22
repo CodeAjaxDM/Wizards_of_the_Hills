@@ -87,7 +87,26 @@
 </div>
     
   </div>
+
+  
   </div>
+
+  <!-- Get All Purchases Section -->
+<div class="admin-action-section">
+  <button class="btn btn-success btn-lg" id="getAllPurchasesBtn">Get All Purchases</button>
+  <table class="table table-bordered" id="purchasesTable" style="display:none;">
+    <thead>
+      <tr>
+        <th>Item Number</th>
+        <th>Username</th>
+      </tr>
+    </thead>
+    <tbody id="purchasesTableBody">
+      <!-- Purchase rows will be populated here -->
+    </tbody>
+  </table>
+  <button class="btn btn-secondary btn-sm toggle-table" data-target="purchasesTable">Toggle Purchases Table</button>
+</div>
   </div>
 
   <%- include('../../footer.ejs') %>
@@ -190,6 +209,38 @@
               });
             });
         });
+
+// Get All Purchases Button
+const getAllPurchasesBtn = document.getElementById('getAllPurchasesBtn');
+const purchasesTable = document.getElementById('purchasesTable');
+const purchasesTableBody = document.getElementById('purchasesTableBody');
+
+getAllPurchasesBtn.addEventListener('click', function() {
+  fetch('/getPurchasesForAdmin')
+    .then(response => response.json())
+    .then(purchases => {
+      // Filter out duplicates based on itemNumber and username
+      const distinctPurchases = Array.from(new Set(purchases.map(a => a.itemNumber + '|' + a.username)))
+        .map(item => {
+          const parts = item.split('|');
+          return {
+            itemNumber: parts[0],
+            username: parts[1]
+          };
+        });
+
+      purchasesTable.style.display = 'table';
+      purchasesTableBody.innerHTML = '';
+      distinctPurchases.forEach(purchase => {
+        const row = `<tr>
+                      <td>${purchase.itemNumber}</td>
+                      <td>${purchase.username}</td>
+                    </tr>`;
+        purchasesTableBody.innerHTML += row;
+      });
+    });
+});
+
       
           // Fetch users
           fetch('/getAllUsers')
@@ -226,8 +277,6 @@
         });
 
       document.addEventListener('DOMContentLoaded', function() {
-        // ... (other code)
-    
         // Toggle Table Buttons
         const toggleTableButtons = document.querySelectorAll('.toggle-table');
         

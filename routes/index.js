@@ -218,12 +218,28 @@ routes.forEach(route => {
             ownedByAuthor: true
           },
         });
+
+        // Fetch purchased items for the user
+        const purchasedItems = await Purchase.findAll({
+          where: {
+            username: req.session.user.username
+          },
+        });
+
+        // Fetch items based on the purchased item numbers
+        const purchasedItemNumbers = purchasedItems.map(item => item.itemNumber);
+        const purchasedContent = await Item.findAll({
+          where: {
+            itemNumber: purchasedItemNumbers,
+          },
+        });
+
         const supportLink = author ? author.supportLink : "";
-        console.log(supportLink)
+        data.purchasedItems = purchasedContent;
         data.supportLink = supportLink,
-          data.authorName = user.authorName,
-          data.publishedItems = publishedItems,
-          data.unpublishedItems = unpublishedItems
+        data.authorName = user.authorName,
+        data.publishedItems = publishedItems,
+        data.unpublishedItems = unpublishedItems
         data.user = user;
         data.author = author;
       } catch (error) {
@@ -695,8 +711,17 @@ router.get('/getAllAuthors', async function (req, res) {
 
 router.get('/getPurchasesForAdmin', async function (req, res) {
   try {
-    // Fetch all purchases
-    // For simplicity, we'll just send itemIds and userIds
+    const purchases = await Purchase.findAll();
+    res.json(purchases);
+    console.log(purchases);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching purchases' });
+  }
+});
+
+router.get('/getPurchasesForAdmin', async function (req, res) {
+  try {
+    // Fetch all purchases with attributes itemId and userId
     const purchases = await Purchase.findAll({
       attributes: ['itemId', 'userId']
     });
@@ -716,6 +741,8 @@ router.get('/resetDatabase', async (req, res) => {
 
     // Reset Authors table
     await Author.destroy({ where: {} });
+
+    await Purchase.destroy({ where: {} });
 
     // Create or update user "subu"
     const [subu, subuCreated] = await User.findOrCreate({
@@ -769,6 +796,18 @@ router.get('/resetDatabase', async (req, res) => {
     // Run the addItemsScript.js to add items
     const addItemsScript = require('../addItemsScript'); // Adjust the path as needed
     await addItemsScript();
+
+    await Purchase.findOrCreate({
+      where: {
+        username: "Jane Doe",
+        itemNumber: "001"
+      },
+      defaults: {
+        username: "Jane Doe",
+        itemNumber: "001"
+      }
+    });
+    console.log("Initial purchase entry created for Jane Doe...");
 
     res.json({ msg: 'Database reset successfully' });
   } catch (error) {

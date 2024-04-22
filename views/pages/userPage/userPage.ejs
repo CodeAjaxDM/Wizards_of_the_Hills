@@ -41,6 +41,44 @@
     </div>
     <div class="divider"></div>
 
+    <!-- My Purchased Content Section -->
+<section class="content-section">
+  <h2 class="text-center">My Purchased Content</h2>
+  <% if (purchasedItems && purchasedItems.length > 0) { %>
+    <div class="row content-viewer">
+      <% purchasedItems.forEach((item, index) => { %>
+        <div class="col-sm-3">
+          <div class="thumbnail">
+            <form action="/downloadItem" method="post">
+              <input type="hidden" name="itemNumber" value="<%= item.itemNumber %>">
+              <div class="image-wrapper">
+                <a href="/item/<%= item.itemNumber %>" class="thumbnail-link">
+                  <img src="<%= item.imageUrl || '/images/default-image.jpg' %>" alt="<%= item.name %>" class="item-image">
+                </a>
+              </div>
+              <div class="caption">
+                <a href="/item/<%= item.itemNumber %>" class="thumbnail-link">
+                  <h3 class="item-title"><%= item.name %></h3>
+                </a>
+                <p class="item-price"><%= item.price === 0 ? 'FREE' : '$' + item.price %></p>
+                <div class="content-actions">
+                  <button type="submit" class="btn btn-primary content-download">Download</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <% if ((index + 1) % 4 === 0) { %>
+          </div><div class="row content-viewer">
+        <% } %>
+      <% }); %>
+    </div>
+  <% } else { %>
+    <h4 class="text-center">No purchased items yet.</h4>
+  <% } %>
+</section>
+
+  <!-- My Published Content Section -->
     <section class="content-section">
       <h2 class="text-center">My Published Content</h2>
       <% if (publishedItems && publishedItems.length > 0) { %>

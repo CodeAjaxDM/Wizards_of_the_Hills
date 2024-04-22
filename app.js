@@ -10,6 +10,7 @@ const multer = require('multer');
 const User = require('./models/User');
 const Item = require('./models/Item');
 const Author = require('./models/author');
+const Purchase = require('./models/Purchase');
 var indexRouter = require('./routes/index');
 
 var app = express();
@@ -149,9 +150,21 @@ async function setup() {
       }
     }
 
+    const janeDoePurchase = await Purchase.findByPk("Jane Doe");
+    if(!janeDoePurchase){
+      await Purchase.create({
+        username: "Jane Doe",
+        itemNumber: '001'
+      });
+      console.log("Jane Doe - Item 001 added to Purchase Table...")
+    }else {
+      console.log("Jane Doe  Item 001 already exists in Purchase table!");
+    }
+
   } catch (error) {
     console.error("Error setting up users:", error);
   }
+  
 }
 
 
