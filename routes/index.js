@@ -875,4 +875,48 @@ router.get('/search', async (req, res) => {
   }
 });
 
+router.post('/downloadItem', async (req, res) => {
+  const itemNumber = req.body.itemNumber; // Get item number from request body
+
+  try {
+    // Fetch item by item number from the database
+    const item = await Item.findOne({ where: { itemNumber: itemNumber } });
+    console.log(itemNumber, item);
+
+    if (item) {
+      // Check if the item has an imageUrl
+      if (item.imageUrl) {
+        const fileName = path.resolve(__dirname, '..', 'public', item.imageUrl.substring(1));
+        console.log(fileName);
+
+        // Check if the file exists
+        if (fs.existsSync(fileName)) {
+          res.setHeader('Content-Disposition', `attachment; filename=${item.imageUrl}`);
+          res.setHeader('Content-Type', 'application/octet-stream');
+
+          // Create a read stream from the file path and pipe it to the response
+          const fileStream = fs.createReadStream(fileName);
+          fileStream.pipe(res);
+        } else {
+          // If the file doesn't exist
+          res.status(404).send('File not found');
+        }
+      } else {
+        // If the item doesn't have an imageUrl
+        res.status(404).send('Image URL not available for the item');
+      }
+    } else {
+      // If the item doesn't exist
+      res.status(404).send('Item not found');
+    }
+  } catch (error) {
+    // If there's an error
+    console.error('Error fetching item:', error);
+    res.status(500).send('Error fetching item');
+  }
+});
+
+
+
+
 module.exports = router;
