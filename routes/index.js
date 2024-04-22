@@ -384,7 +384,7 @@ router.post('/process-checkout', async (req, res) => {
       // Clear the cart after processing
       req.session.cart = [];
 
-      res.redirect('/pages/cartPage/cartPage'); // Redirect to a success page
+      res.redirect('/index'); // Redirect to a success page
     } catch (error) {
       console.error('Checkout processing error:', error);
       res.redirect('pages/checkoutPage/checkout?msg=Card Declined');
@@ -405,8 +405,6 @@ function validateExpiryDate(exp) {
   const currentMonth = new Date().getMonth() + 1;
   const [expMonth, expYear] = exp.split('/').map(num => parseInt(num, 10));
   if (expYear < currentYear || (expYear === currentYear && expMonth < currentMonth)) {
-    alert('The expiration date must be in the future.');
-    expInput.value = ''; // Clear the invalid expiration date
     return false;
   }
 
