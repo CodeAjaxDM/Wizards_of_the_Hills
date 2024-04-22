@@ -236,6 +236,12 @@ routes.forEach(route => {
       });
     }
 
+    else if (renderPath === 'pages/checkoutPage/checkout') {
+      res.render('pages/checkoutPage/checkout', {
+        items: req.session.cart || []
+      });
+    }
+
     // Render the appropriate EJS template with the data object
     res.render(renderPath, data);
 
@@ -321,6 +327,7 @@ router.post('/pages/userPage/signUp', async (req, res) => {
     res.redirect("/pages/userPage/signUp?error=signup_failed");
   }
 });
+
 router.post('/add-to-cart', async (req, res) => {
   const { itemNumber } = req.body; // Ensure this matches the name attribute in the form
   const item = await Item.findOne({ where: { itemNumber: itemNumber } });
@@ -359,6 +366,57 @@ router.post('/remove-from-cart', (req, res) => {
 
   res.redirect('/pages/cartPage/cartPage'); // Re-render cart for changes
 });
+
+router.post('/process-checkout', async (req, res) => {
+  const { cardName, cardNumber, cardExp, cardCVC } = req.body;
+  if (validateCreditCard(cardNumber) && validateExpiryDate(cardExp) && validateCVC(cardCVC)) {
+    try {
+      // Assuming the user's session is correctly set
+      const username = req.session.user.username;
+
+      // Process each item in the cart
+      for (const cartItem of req.session.cart) {
+        await Purchase.create({
+          username: username,
+          itemNumber: cartItem.itemNumber
+        });
+      }
+      // Clear the cart after processing
+      req.session.cart = [];
+
+      res.redirect('/pages/cartPage/cartPage'); // Redirect to a success page
+    } catch (error) {
+      console.error('Checkout processing error:', error);
+      res.redirect('pages/checkoutPage/checkout?msg=Card Declined');
+    }
+  } else {
+    res.redirect('pages/checkoutPage/checkout?msg=Card Invalid');
+  }
+});
+
+function validateCreditCard(name, number) {
+  // Implement or use a library for the Luhn algorithm to check credit card validity
+  return true; // Placeholder return
+}
+
+function validateExpiryDate(exp) {
+  // Simple validation for expiration date
+  const currentYear = new Date().getFullYear() % 100; // Get the last two digits of the current year
+  const currentMonth = new Date().getMonth() + 1;
+  const [expMonth, expYear] = exp.split('/').map(num => parseInt(num, 10));
+  if (expYear < currentYear || (expYear === currentYear && expMonth < currentMonth)) {
+    alert('The expiration date must be in the future.');
+    expInput.value = ''; // Clear the invalid expiration date
+    return false;
+  }
+
+  return true;
+}
+
+function validateCVC(cvc) {
+  // Simple CVC check (3-4 digits) for now
+  return cvc.length === 3 || cvc.length === 4;
+}
 
 // Multer storage settings
 const storage = multer.diskStorage({
@@ -746,7 +804,6 @@ router.post('/banUser', async (req, res) => {
     res.status(500).json({ success: false, message: 'Error banning user' });
   }
 });
-
 router.get('/browseAll', async (req, res) => {
   try {
     const items = await Item.findAll({

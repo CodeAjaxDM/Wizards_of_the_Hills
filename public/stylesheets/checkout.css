@@ -60,11 +60,12 @@ label.radio input:checked+span {
 }
 
 .form-control.credit-inputs {
+    background: rgb(102, 102, 221);
     width: 100% !important;
 }
 
 .form-control.credit-inputs:focus {
-    background: rgb(102, 102, 221);
+    background: rgb(57, 57, 132);
     border: rgb(102, 102, 221);
 }
 
