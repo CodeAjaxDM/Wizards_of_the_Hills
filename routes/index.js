@@ -218,12 +218,28 @@ routes.forEach(route => {
             ownedByAuthor: true
           },
         });
+
+        // Fetch purchased items for the user
+        const purchasedItems = await Purchase.findAll({
+          where: {
+            username: req.session.user.username
+          },
+        });
+
+        // Fetch items based on the purchased item numbers
+        const purchasedItemNumbers = purchasedItems.map(item => item.itemNumber);
+        const purchasedContent = await Item.findAll({
+          where: {
+            itemNumber: purchasedItemNumbers,
+          },
+        });
+
         const supportLink = author ? author.supportLink : "";
-        console.log(supportLink)
+        data.purchasedItems = purchasedContent;
         data.supportLink = supportLink,
-          data.authorName = user.authorName,
-          data.publishedItems = publishedItems,
-          data.unpublishedItems = unpublishedItems
+        data.authorName = user.authorName,
+        data.publishedItems = publishedItems,
+        data.unpublishedItems = unpublishedItems
         data.user = user;
         data.author = author;
       } catch (error) {
@@ -693,8 +709,17 @@ router.get('/getAllAuthors', async function (req, res) {
 
 router.get('/getPurchasesForAdmin', async function (req, res) {
   try {
-    // Fetch all purchases
-    // For simplicity, we'll just send itemIds and userIds
+    const purchases = await Purchase.findAll();
+    res.json(purchases);
+    console.log(purchases);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching purchases' });
+  }
+});
+
+router.get('/getPurchasesForAdmin', async function (req, res) {
+  try {
+    // Fetch all purchases with attributes itemId and userId
     const purchases = await Purchase.findAll({
       attributes: ['itemId', 'userId']
     });
@@ -714,6 +739,8 @@ router.get('/resetDatabase', async (req, res) => {
 
     // Reset Authors table
     await Author.destroy({ where: {} });
+
+    await Purchase.destroy({ where: {} });
 
     // Create or update user "subu"
     const [subu, subuCreated] = await User.findOrCreate({
@@ -767,6 +794,18 @@ router.get('/resetDatabase', async (req, res) => {
     // Run the addItemsScript.js to add items
     const addItemsScript = require('../addItemsScript'); // Adjust the path as needed
     await addItemsScript();
+
+    await Purchase.findOrCreate({
+      where: {
+        username: "Jane Doe",
+        itemNumber: "001"
+      },
+      defaults: {
+        username: "Jane Doe",
+        itemNumber: "001"
+      }
+    });
+    console.log("Initial purchase entry created for Jane Doe...");
 
     res.json({ msg: 'Database reset successfully' });
   } catch (error) {
@@ -927,6 +966,91 @@ router.get('/search', async (req, res) => {
   } catch (error) {
     console.error('Error performing search:', error);
     res.status(500).send("Error loading the search results page");
+  }
+});
+
+router.post('/downloadItem', async (req, res) => {
+  const itemNumber = req.body.itemNumber; // Get item number from request body
+
+  try {
+    // Fetch item by item number from the database
+    const item = await Item.findOne({ where: { itemNumber: itemNumber } });
+    console.log(itemNumber, item);
+
+    if (item) {
+      // Check if the item has an imageUrl
+      if (item.imageUrl) {
+        const fileName = path.resolve(__dirname, '..', 'public', item.imageUrl.substring(1));
+        console.log(fileName);
+
+        // Check if the file exists
+        if (fs.existsSync(fileName)) {
+          res.setHeader('Content-Disposition', `attachment; filename=${item.imageUrl}`);
+          res.setHeader('Content-Type', 'application/octet-stream');
+
+          // Create a read stream from the file path and pipe it to the response
+          const fileStream = fs.createReadStream(fileName);
+          fileStream.pipe(res);
+        } else {
+          // If the file doesn't exist
+          res.status(404).send('File not found');
+        }
+      } else {
+        // If the item doesn't have an imageUrl
+        res.status(404).send('Image URL not available for the item');
+      }
+    } else {
+      // If the item doesn't exist
+      res.status(404).send('Item not found');
+    }
+  } catch (error) {
+    // If there's an error
+    console.error('Error fetching item:', error);
+    res.status(500).send('Error fetching item');
+  }
+});
+
+router.get('/author', async (req, res, next) => {
+  const authorName = req.query.authorName; // Access authorName from query parameters
+  try {
+    let data = {};
+    
+    // Fetch the author based on authorName
+    const author = await Author.findByPk(authorName);
+    if (!author) {
+      console.warn('Author not found');
+      return res.status(404).send('Author not found');
+    }
+
+    // Fetch the user based on the author's username
+    const user = await Author.findOne({ where: { authorName: authorName } });
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    // Fetch items for the current author
+    const publishedItems = await Item.findAll({
+      where: {
+        authorName: user.authorName,
+        published: true,
+        ownedByAuthor: true
+      },
+    });
+
+    const supportLink = author.supportLink || "";
+    data.supportLink = supportLink;
+    data.authorName = user.authorName;
+    data.publishedItems = publishedItems;
+    data.user = user;
+    data.author = author;
+
+    // Define the renderPath (make sure it's correctly defined in your route)
+    const renderPath = 'pages/userPage/authorPage'; // Replace with your actual path
+
+    // Render the appropriate EJS template with the data object
+    res.render(renderPath, data);
+  } catch (error) {
+    next(error);
   }
 });
 

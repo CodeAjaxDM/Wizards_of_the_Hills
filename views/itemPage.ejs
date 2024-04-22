@@ -31,9 +31,9 @@
                             <p>
                                 <%= itemPrice %>
                             </p>
-                            <p>Created by: <a href="<%= authorWebsite %>">
-                                    <%= authorName %>
-                                </a></p>
+                            <p>Created by: <a href="/author?authorName=<%= encodeURIComponent(authorName) %>">
+                                <%= authorName %>
+                            </a></p>                            
                             <form action="/add-to-cart" method="post">
                                 <input type="hidden" name="itemNumber" value="<%= itemNumber %>">
                                 <button type="submit" class="btn btn-primary">Add to Cart</button>
