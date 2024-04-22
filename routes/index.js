@@ -382,17 +382,6 @@ router.post('/process-checkout', async (req, res) => {
         });
       }
 
-
-      // Debugging
-      sequelize.query("SELECT name FROM sqlite_master WHERE type='table' AND name='Purchase';")
-        .then((result) => {
-          console.log("Tables in the database:", result);
-        }).catch((error) => {
-          console.error("Error checking tables:", error);
-        });
-      // Clear the cart after processing
-      req.session.cart = [];
-
       res.redirect('/pages/cartPage/cartPage'); // Redirect to a success page
     } catch (error) {
       console.error('Checkout processing error:', error);
