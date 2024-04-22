@@ -221,13 +221,13 @@ routes.forEach(route => {
         const supportLink = author ? author.supportLink : "";
         console.log(supportLink)
         data.supportLink = supportLink,
-        data.authorName = user.authorName,
+          data.authorName = user.authorName,
           data.publishedItems = publishedItems,
           data.unpublishedItems = unpublishedItems
         data.user = user;
         data.author = author;
-      }catch (error) {
-          next(error);
+      } catch (error) {
+        next(error);
       }
     }
     else if (renderPath === 'pages/cartPage/cartPage') {
@@ -377,19 +377,24 @@ router.post('/process-checkout', async (req, res) => {
       // Process each item in the cart
       for (const cartItem of req.session.cart) {
         await Purchase.create({
-          userId: username,
-          itemId: cartItem.itemNumber
+          username: username,
+          itemNumber: cartItem.itemNumber
         });
       }
-      // Commit transaction
-      await t.commit();
 
+
+      // Debugging
+      sequelize.query("SELECT name FROM sqlite_master WHERE type='table' AND name='Purchase';")
+        .then((result) => {
+          console.log("Tables in the database:", result);
+        }).catch((error) => {
+          console.error("Error checking tables:", error);
+        });
       // Clear the cart after processing
       req.session.cart = [];
 
       res.redirect('/pages/cartPage/cartPage'); // Redirect to a success page
     } catch (error) {
-      await t.rollback();
       console.error('Checkout processing error:', error);
       res.redirect('pages/checkoutPage/checkout?msg=Card Declined');
     }
@@ -688,7 +693,7 @@ router.get('/getAllItems', async function (req, res) {
   }
 });
 
-router.get('/getAllAuthors', async function(req, res) {
+router.get('/getAllAuthors', async function (req, res) {
   try {
     const authors = await Author.findAll();
     res.json(authors);
@@ -697,7 +702,7 @@ router.get('/getAllAuthors', async function(req, res) {
   }
 });
 
-router.get('/getPurchasesForAdmin', async function(req, res) {
+router.get('/getPurchasesForAdmin', async function (req, res) {
   try {
     // Fetch all purchases
     // For simplicity, we'll just send itemIds and userIds
@@ -745,15 +750,15 @@ router.get('/resetDatabase', async (req, res) => {
 
     if (janeDoeCreated) {
       console.log("Jane Doe instance created...");
-      
+
       // Add Jane Doe to the Author table
       await Author.create({
         authorName: "Jane Doe",
         authorImg: "/images/author-img.jpg"
       });
-      
+
       console.log("Jane Doe added to Author table...");
-      
+
     } else {
       console.log("Jane Doe already exists!");
 
