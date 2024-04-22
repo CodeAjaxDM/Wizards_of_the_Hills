@@ -4,38 +4,38 @@ const Purchase = require('./Purchase');
 
 class User extends Model {
 
-  static async findUser(username, password) {
-    try {
-      const user = await User.findByPk(username);
-      if (user && user.password === password) {
-        return user;
-      } else {
-        return null;
-      }
-    } catch (error) {
-      console.log(error);
-      return null;
+    static async findUser(username, password){
+        try {
+            const user = await User.findByPk(username);
+            if(user && user.password === password){
+                return user;
+            }else{
+                return null;
+            }
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
     }
-  }
 
-  static async updateAuthorName(username, newAuthorName) {
-    try {
-      const user = await User.findByPk(username);
-      if (user) {
-        user.authorName = newAuthorName;
-        await user.save();
-        return true;
+    static async updateAuthorName(username, newAuthorName) {
+      try {
+        const user = await User.findByPk(username);
+        if (user) {
+          user.authorName = newAuthorName;
+          await user.save();
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.error('Error updating author name:', error);
+        return false;
       }
-      return false;
-    } catch (error) {
-      console.error('Error updating author name:', error);
-      return false;
     }
-  }
 
-  isAdminUser() {
-    return this.isAdmin;
-  }
+    isAdminUser() {
+      return this.isAdmin;
+    }
 }
 
 User.init({
@@ -59,8 +59,14 @@ User.init({
     defaultValue: false // Default value set to false
   }
 }, {
-  sequelize,
+  sequelize, 
   modelName: 'User'
+});
+
+User.hasMany(Purchase, {
+  foreignKey: 'userId',
+  sourceKey: 'username',
+  onDelete: 'CASCADE'
 });
 
 module.exports = User;

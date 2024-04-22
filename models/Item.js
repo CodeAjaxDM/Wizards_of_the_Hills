@@ -1,11 +1,9 @@
-const { Sequelize, DataTypes, Model } = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../db');
 const User = require('./User');
 const Purchase = require('./Purchase');
 
-class Item extends Model { }
-
-Item.init({
+const Item = sequelize.define('Item', {
     itemNumber: {
         type: DataTypes.STRING,
         primaryKey: true,
@@ -53,9 +51,12 @@ Item.init({
         allowNull: false,
         defaultValue: true // Default value set to true
     },
-}, {
-    sequelize,
-    modelName: 'Item'
+});
+
+Item.belongsToMany(User, {
+    through: Purchase,
+    foreignKey: 'itemId',
+    otherKey: 'userId'
 });
 
 module.exports = Item;

@@ -2,140 +2,116 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="../../favicon.ico">
 
-    <title>Author Page</title>
+  <title>Author Page</title>
 
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css" />
-    <!-- Custom styles for this template -->
-    <link href="../../stylesheets/checkout.css" rel="stylesheet">
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <!-- Custom styles for this template -->
+  <link href="../../stylesheets/checkout.css" rel="stylesheet">
 
 </head>
 
 <body>
 
-    <%- include('../../header.ejs') %>
+  <%- include('../../header.ejs') %>
 
-        <!-- Checkout -->
-        <div class="container" style="padding-bottom: 20px;">
-            <div class="big-spacer"></div>
-            <div class="payment-info">
-                <h1 style="padding-left: 20px;">Card details</h1>
-                <p style="text-align: center;">Card type</p>
-                <% if (typeof msg !=='undefined' ) { %>
-                    <div style="color: red;">
-                        <p>
-                            <%= msg %>
-                        </p>
-                    </div>
-                    <% } %>
-                        <div class="cards">
-                            <label class="radio" style="border: 0px;"><input type="radio" name="card" value="payment"
-                                    checked>
-                                <span style="border: 0px;">
-                                    <img width="0" src="https://img.icons8.com/color/48/000000/mastercard.png" />
-                                    <p></p>
-                                </span>
-                            </label>
-                            <label class="radio"><input type="radio" name="card" value="payment" checked>
-                                <span>
-                                    <img width="70" src="https://img.icons8.com/color/48/000000/mastercard.png" />
-                                    <p>Mastercard</p>
-                                </span>
-                            </label>
-                            <label class="radio"> <input type="radio" name="card" value="payment">
-                                <span>
-                                    <img width="70" src="https://img.icons8.com/officel/48/000000/visa.png" />
-                                    <p>Visa</p>
-                                </span>
-                            </label>
-                            <label class="radio"> <input type="radio" name="card" value="payment">
-                                <span>
-                                    <img width="70" src="https://img.icons8.com/ultraviolet/48/000000/amex.png" />
-                                    <p>AMEX</p>
-                                </span>
-                            </label>
-                            <label class="radio"> <input type="radio" name="card" value="payment">
-                                <span>
-                                    <img width="70" src="https://img.icons8.com/officel/48/000000/paypal.png" />
-                                    <p>Paypal</p>
-                                </span>
-                            </label>
-                        </div>
-                        <br>
-                        <form action="/process-checkout" method="post">
-                            <div style="padding-left: 20px; padding-right: 20px;">
-                                <label class="credit-card-label" for="cardName">Card Name:</label>
-                                <input class="form-control credit-inputs" type="text" placeholder="Name" id="cardNname"
-                                    name="cardNname" required>
-                            </div>
-                            <br>
-                            <div style="padding-left: 20px; padding-right: 20px;">
-                                <label class="credit-card-label" for="cardNumber">Card Number:</label>
-                                <input class="form-control credit-inputs" placeholder="0000 0000 0000 0000" type="text"
-                                    id="cardNumber" name="cardNumber" pattern="\d{16}"
-                                    title="Credit card number must be 16 digits" required>
-                            </div>
-                            <br>
-                            <div class="extra-card-info">
-                                <div class="col-sm-2">
-                                    <label class="credit-card-label" for="cardExpYear">Expiration Date:</label>
-                                    <input class="form-control credit-inputs" placeholder="12/24" type="text"
-                                        id="cardExp" name="cardExp" pattern="(0[1-9]|1[0-2])\/[0-9]{2}"
-                                        title="month year" required>
-                                </div>
-                                <div class="col-sm-2">
-                                    <label class="credit-card-label" for="cardCVC">CVC:</label>
-                                    <input class="form-control credit-inputs" type="text" id="cardCVC" placeholder="000"
-                                        name="cardCVC" pattern="^\d{3,4}$" title="CVC" required>
-                                </div>
-                            </div>
-                            <hr class="line">
-                            <% if (items && items.length> 0) { %>
-                                <% let subtotal=0; %>
-                                    <% items.forEach(function(item) { %>
-                                        <% subtotal +=item.price * (item.quantity || 1); %>
-                                            <% }); %>
-                                                <div class="d-flex justify-content-between information">
-                                                    <span>Subtotal</span><span>$<%= subtotal.toFixed(2) %></span>
-                                                </div>
-                                                <div class="d-flex justify-content-between information">
-                                                    <span>Tax</span><span>$<%= (subtotal * 0.10).toFixed(2) %></span>
-                                                </div>
-                                                <div class="d-flex justify-content-between information">
-                                                    <span>Total</span><span>$<%= (subtotal + subtotal * 0.10).toFixed(2)
-                                                            %>
-                                                    </span>
-                                                </div>
-                                                <button
-                                                    class="btn btn-primary btn-block d-flex justify-content-between mt-3"
-                                                    type="submit">
-                                                    <span>Checkout</span>
-                                                </button>
-                                                <% } %>
+  <!-- Checkout -->
+  <div class="container" style="padding-bottom: 20px;">
+    <div class="big-spacer"></div>
+    <div class="payment-info">
+        <h1 style="padding-left: 20px;">Card details</h1>
+        <p style="text-align: center;">Card type</p>
 
-                        </form>
+        <div class="cards">
+            <label class="radio" style="border: 0px;"><input type="radio" name="card" value="payment" checked>
+                <span style="border: 0px;">
+                    <img width="0" src="https://img.icons8.com/color/48/000000/mastercard.png" />
+                    <p></p>
+                </span>
+            </label>
+            <label class="radio"><input type="radio" name="card" value="payment" checked>
+                <span>
+                    <img width="70" src="https://img.icons8.com/color/48/000000/mastercard.png" />
+                    <p>Mastercard</p>
+                </span>
+            </label>
+            <label class="radio"> <input type="radio" name="card" value="payment">
+                <span>
+                    <img width="70" src="https://img.icons8.com/officel/48/000000/visa.png" />
+                    <p>Visa</p>
+                </span>
+            </label>
+            <label class="radio"> <input type="radio" name="card" value="payment">
+                <span>
+                    <img width="70" src="https://img.icons8.com/ultraviolet/48/000000/amex.png" />
+                    <p>AMEX</p>
+                </span>
+            </label>
+            <label class="radio"> <input type="radio" name="card" value="payment">
+                <span>
+                    <img width="70" src="https://img.icons8.com/officel/48/000000/paypal.png" />
+                    <p>Paypal</p>
+                </span>
+            </label>
+        </div>
+        <br>
+        <div style="padding-left: 20px; padding-right: 20px;">
+            <label class="credit-card-label">Name on card</label>
+            <input type="text" class="form-control credit-inputs" placeholder="Name">
+        </div>
+        <br>
+        <div style="padding-left: 20px; padding-right: 20px;">
+            <label class="credit-card-label">Card number</label>
+            <input type="text" class="form-control credit-inputs" placeholder="0000 0000 0000 0000">
+        </div>
+        <br>
+        <div class="extra-card-info">
+            <div class="col-sm-2">
+                <label class="credit-card-label">Date</label>
+                <input type="text" class="form-control credit-inputs" placeholder="12/24">
+            </div>
+            <div class="col-sm-2">
+                <label class="credit-card-label">CVV</label>
+                <input type="text" class="form-control credit-inputs" placeholder="000">
             </div>
         </div>
 
-        <%- include('../../footer.ejs') %>
+        <hr class="line">
+
+        <div class="d-flex justify-content-between information">
+            <span>Subtotal</span><span>$3000.00</span>
+        </div>
+        <div class="d-flex justify-content-between information">
+            <span>Tax</span><span>$20.00</span>
+        </div>
+        <div class="d-flex justify-content-between information">
+            <span>Total(Including taxes)</span><span>$3020.00</span>
+        </div>
+        <button class="btn btn-primary btn-block d-flex justify-content-between mt-3" type="button">
+            <span>Checkout</span>
+        </button>
+    </div>
+</div>
+
+  <%- include('../../footer.ejs') %>
 
 
-            <!-- Bootstrap core JavaScript
+  <!-- Bootstrap core JavaScript
     ================================================== -->
-            <!-- Placed at the end of the document so the pages load faster -->
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-            <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-            <script src="/js/bootstrap.min.js"></script>
-            <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-            <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+  <script src="/js/bootstrap.min.js"></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
 </body>
 
 </html>

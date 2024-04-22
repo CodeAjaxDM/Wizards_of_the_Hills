@@ -1,16 +1,24 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../db')
 
-class Purchase extends Model { }
+class Purchase extends Model {}
 
 Purchase.init({
-  username: {
+  userId: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    references: {
+      model: 'User',
+      key: 'username'
+    }
   },
-  itemNumber: {
+  itemId: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    references: {
+      model: 'Item',
+      key: 'id'
+    }
   }
 }, {
   sequelize,
