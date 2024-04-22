@@ -381,6 +381,8 @@ router.post('/process-checkout', async (req, res) => {
           itemNumber: cartItem.itemNumber
         });
       }
+      // Clear the cart after processing
+      req.session.cart = [];
 
       res.redirect('/pages/cartPage/cartPage'); // Redirect to a success page
     } catch (error) {
